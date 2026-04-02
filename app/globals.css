@@ -1,26 +1,75 @@
-@import "tailwindcss";
+:root{
+	--layer-1: rgb(17, 17, 17);
+	--layer-1-translucent: rgba(17, 17, 17, 0.85);
+	--layer-1-border: rgb(34, 34, 34);
+	--layer-1-light: #666666;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+	--layer-2: rgb(34, 34, 34);
+	--layer-2-translucent: rgba(34, 34, 34, 0.85);
+	--layer-2-border: rgb(51, 51, 51);
+	--layer-2-light: #777777;
+
+	--layer-3: rgb(51, 51, 51);
+	--layer-3-translucent: rgba(51, 51, 51, 0.85);
+	--layer-3-border: rgb(68, 68, 68);
+	--layer-3-light: #888888;
+
+	--layer-4: #444444;
+	--layer-4-translucent: rgba(68, 68, 68, 0.85);
+	--layer-4-border: #555555;
+	--layer-4-light: #999999;
+
+	--white: #ffffff;
+	--yellow: #ffd60a;
+	--green: rgb(50, 215, 75);
+	--accent: var(--yellow);
+
+	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--font-size: 13px;
+	--font-size-small: 10px;
+	--sidebar-width: 100px;
+	--border-width: 1px;
+	--spacing-very-small: 4px;
+	--spacing-small: 6px;
+	--spacing-medium: 12px;
+	--border-radius: 6px;
+	--field-size: 32px;
+	--inner-field-size: 24px;
+	--blur: 12px;
+	--modal-width: 360px;
+	--modal-height: 600px;
+	--transition: 0.15s ease-in-out;
+	--icon-size: 13px;
+
+	/* Variables used for scaling inputs so they don't zoom on mobile */
+	--font-size-number: 13; /* needs to match --font-size */
+	--field-size-number: 32; /* needs to match --field-size */
+	--spacing-small-number: 6; /* needs to match --spacing-small */
+	--spacing-medium-number: 12; /* needs to match spacing large number */
+	--scale: calc(var(--font-size-number) / 16);
+	--scaled-width-and-height: calc(calc(16 / var(--font-size-number)) * 100%);
+	--scaled-spacing-small: calc(calc(calc(16 / var(--font-size-number)) * var(--spacing-small-number)) * var(--border-width));
+	--scaled-spacing-medium: calc(calc(calc(16 / var(--font-size-number)) * var(--spacing-medium-number)) *var(--border-width));
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*{
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none;  /* IE and Edge */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+html{
+	background-color: var(--layer-1);
+}
+
+body{
+	background-color: var(--layer-1);
+	font-family: var(--font);
+	font-size: var(--font-size);
+	color: var(--white);
+	line-height: 1.5; /* TextArea scaling won't work unless line-height is set to a fixed value */
+	scroll-behavior: smooth;
 }

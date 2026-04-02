@@ -1,0 +1,81 @@
+/* ----------------------------- */
+/*  Modern CSS Reset / Defaults  */
+/* ----------------------------- */
+
+/* Box sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove default body spacing and set sensible defaults */
+html, body {
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: normal;
+  color: #000;
+  background-color: #fff;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove default styles for headings, paragraphs, lists */
+h1, h2, h3, h4, h5, h6,
+p, ol, ul, li,
+figure, blockquote, dl, dd {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+/* Remove list styles */
+ol, ul {
+  list-style: none;
+}
+
+/* Remove link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Remove default image borders */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Form elements */
+input, button, textarea, select {
+  font: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  color: inherit;
+  resize: none;
+}
+
+/* Remove button styling */
+button {
+  cursor: pointer;
+}
+
+/* Remove quotes from blockquote and q */
+blockquote, q {
+  quotes: none;
+}
+
+blockquote::before, blockquote::after,
+q::before, q::after {
+  content: "";
+  content: none;
+}
+
+/* Table defaults */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}

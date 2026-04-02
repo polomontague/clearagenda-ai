@@ -1,0 +1,93 @@
+.background{
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 1;
+}
+
+.background > .btn{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--field-size);
+    height: var(--field-size);
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--border-radius);
+}
+
+.background > .btn > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--accent);
+}
+
+.background > .btn.selected{
+    background-color: var(--accent);
+    border: none;
+}
+
+.background > .btn.selected > svg{
+    fill: var(--white);
+}
+
+.menuAnchor{
+    height: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.menuAnchor.open{
+    display: block;
+}
+
+.menuAnchor.closed{
+    display: none;
+}
+
+.overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.lstBtns{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--border-width);
+    background-color: var(--layer-2-border);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-top: var(--spacing-small);
+    position: relative;
+    z-index: 3;
+}
+
+.lstBtns .btn{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    width: 100%;
+    height: var(--field-size);
+    padding-right: var(--spacing-medium);
+    padding-left: var(--spacing-medium);
+    background-color: var(--layer-2);
+}
+
+.lstBtns .btn > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--accent);
+}
+
+.lstBtns .btn > .label{
+    color: var(--accent);
+}

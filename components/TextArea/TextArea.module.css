@@ -1,0 +1,40 @@
+.containerPadding{
+    padding: var(--spacing-small) 0 var(--spacing-small) 0;
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.containerPadding.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.containerScale{
+    
+}
+
+.textArea{
+    display: block;
+    width: 100%;
+    padding-right: var(--spacing-medium);
+    padding-left: var(--spacing-medium);
+}
+
+.containerScale.mounted .textArea{
+    width: var(--scaled-width-and-height);
+    padding-right: var(--scaled-spacing-medium);
+    padding-left: var(--scaled-spacing-medium);
+    font-size: 16px;
+    transform: scale(var(--scale));
+    transform-origin: top left;
+}
+
+.textArea::placeholder {
+    color: var(--layer-3-light);
+    opacity: 1; /* Firefox */
+}
+
+.textArea::-ms-input-placeholder { /* Edge 12 -18 */
+    color: var(--grey);
+}
