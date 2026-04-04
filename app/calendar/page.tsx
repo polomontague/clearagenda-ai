@@ -4,9 +4,15 @@ import Modal from "@/components/Modal"
 import TaskForm from "@/components/TaskForm"
 import SelectButton from "@/components/SelectButton"
 import { PlusIcon } from "@/components/Icons"
+import Task from "@/types/Task"
 
 export default function Calendar() {
     const [addTaskOpen, setAddTaskOpen] = useState(false)
+
+    const handleAddTaskSuccess = (task: Task) => {
+        setAddTaskOpen(false)
+        console.log(task)
+    }
 
     return (
         <div>
@@ -31,7 +37,7 @@ export default function Calendar() {
                 onRequestCancel={() => setAddTaskOpen(false)}
                 onRequestDone={() => {}}
             >
-                <TaskForm />
+                <TaskForm type="new" onSuccess={handleAddTaskSuccess} />
             </Modal>
         </div>
     )

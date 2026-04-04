@@ -1,0 +1,37 @@
+.frame{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: var(--spacing-medium);
+}
+
+.background{
+    padding: 2px;
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--border-radius);
+}
+
+.lstOptions{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+}
+
+.btn{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    height: var(--field-size);
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    font-weight: bolder;
+    color: var(--layer-2-light);
+}
+
+.btn.selected{
+    background-color: var(--accent);
+    color: var(--white);
+}

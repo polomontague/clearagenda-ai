@@ -1,0 +1,17 @@
+.box{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    padding-left: var(--spacing-medium);
+    padding-top: var(--spacing-small);
+    padding-right: var(--spacing-medium);
+    padding-bottom: var(--spacing-small);
+    background-color: var(--layer-3);
+    border-radius: var(--border-radius);
+    border: var(--border-width) solid var(--layer-3-border);
+}
+
+.box.fieldset{
+    border: none;
+    border-radius: 0;
+}

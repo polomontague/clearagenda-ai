@@ -2,7 +2,7 @@ import "./reset.css"
 import "./globals.css"
 import { ReactNode } from "react"
 import NavigationFrame from "@/components/NavigationFrame"
-import { CalendarIcon } from "@/components/Icons"
+import { CalendarIcon, BrainIcon } from "@/components/Icons"
 
 type RootLayoutProps = {
 	children: ReactNode
@@ -18,6 +18,11 @@ export default function RootLayout(props: RootLayoutProps) {
 						icon: <CalendarIcon />,
 						href: "/calendar",
 						label: "Calendar"
+					},
+					{
+						icon: <BrainIcon />,
+						href: "/memory",
+						label: "Memory"
 					}
 				]}
 			>

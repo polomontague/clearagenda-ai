@@ -27,19 +27,22 @@
 	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	--font-size: 13px;
 	--font-size-small: 10px;
-	--sidebar-width: 100px;
+	--sidebar-width: 200px;
 	--border-width: 1px;
 	--spacing-very-small: 4px;
 	--spacing-small: 6px;
 	--spacing-medium: 12px;
 	--border-radius: 6px;
 	--field-size: 32px;
-	--inner-field-size: 24px;
 	--blur: 12px;
 	--modal-width: 360px;
 	--modal-height: 600px;
 	--transition: 0.15s ease-in-out;
 	--icon-size: 13px;
+	--alert-width: 180px;
+	--inner-field-size: 24px;
+	--inner-icon-size: 11px;
+	--inner-font-size: 11px;
 
 	/* Variables used for scaling inputs so they don't zoom on mobile */
 	--font-size-number: 13; /* needs to match --font-size */
@@ -53,6 +56,7 @@
 }
 
 *{
+	font-size: var(--font-size);
 	scrollbar-width: none; /* Firefox */
 	-ms-overflow-style: none;  /* IE and Edge */
 }
@@ -68,7 +72,6 @@ html{
 body{
 	background-color: var(--layer-1);
 	font-family: var(--font);
-	font-size: var(--font-size);
 	color: var(--white);
 	line-height: 1.5; /* TextArea scaling won't work unless line-height is set to a fixed value */
 	scroll-behavior: smooth;

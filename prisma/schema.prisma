@@ -12,18 +12,12 @@ datasource db {
   	provider = "mysql"
 }
 
-model items {
-  	id Int @id @default(autoincrement())
-	name String @db.VarChar(200)
-	duration Int
-	created DateTime @default(now())
-	updated DateTime @updatedAt
-}
-
 model tasks {
 	id Int @id @default(autoincrement())
 	steps task_steps[]
-	duration Int
+	name String @db.VarChar(100)
+	notes String? @db.VarChar(300)
+	description String? @db.Text
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 }
@@ -32,4 +26,7 @@ model task_steps {
 	id Int @id @default(autoincrement())
 	task_id Int
 	task tasks @relation(fields: [task_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	notes String @db.VarChar(300)
+	duration Int
 }

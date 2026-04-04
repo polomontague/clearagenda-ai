@@ -1,0 +1,25 @@
+.btn{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-very-small);
+    height: var(--inner-field-size);
+    padding-left: var(--spacing-small);
+    padding-right: var(--spacing-small);
+    background-color: var(--layer-4);
+    border: var(--border-width) solid var(--layer-4-border);
+    border-radius: var(--border-radius);
+}
+
+.btn > svg{
+    width: var(--inner-icon-size);
+    height: var(--inner-icon-size);
+    fill: var(--accent);
+}
+
+.btn > .label{
+    font-size: var(--inner-font-size);
+    color: var(--accent);
+    white-space: nowrap;
+}

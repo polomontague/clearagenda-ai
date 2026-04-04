@@ -21,7 +21,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     return (
         <div className={styles.frame}>
             <aside className={styles.sidebar}>
-                <nav>
+                <nav className={styles.nav}>
                     <ul className={styles.lstLinks}>
                         {props.links.map((link, i) => {
                             const selected = link.href === pathname

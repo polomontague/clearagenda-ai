@@ -50,10 +50,11 @@
     height: 100%;
     padding-right: var(--spacing-medium);
     padding-left: var(--spacing-medium);
+    color: var(--accent);
 }
 
-.header > .btn{
-    color: var(--accent);
+.header > .btn:disabled{
+    color: var(--layer-2-light);
 }
 
 .header > .label{
@@ -74,4 +75,8 @@
 
 .containerChildren{
     padding: var(--spacing-medium);
+}
+
+.btnGhost{
+    display: none;
 }
