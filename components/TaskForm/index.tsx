@@ -11,6 +11,7 @@ import { DoneButton } from "@/components/Modal"
 import axios from "axios"
 import Alert from "@/components/Alert"
 import Task from "@/types/Task"
+import DatePicker from "@/components/DatePicker"
 
 type BaseProps = {
     onSuccess: (task: Task) => void
@@ -35,6 +36,8 @@ export default function TaskForm(props: TaskFormProps) {
     const [doneDisabled, setDoneDisabled] = useState(true)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
+    const [hasDeadline, setHasDeadline] = useState(false)
+    const [deadline, setDeadline] = useState(new Date())
 
     useEffect(() => {
         if (props.type === "edit") {
@@ -43,12 +46,16 @@ export default function TaskForm(props: TaskFormProps) {
                 setName(props.task.name)
                 setNotes(props.task.notes ?? "")
                 setDescription("")
+                setHasDeadline(false)
+                setDeadline(new Date())
             }
             if (props.task.type === "complex") {
                 setComplex(true)
                 setName(props.task.name)
                 setNotes("")
                 setDescription(props.task.description)
+                setHasDeadline(props.task.deadline ? true : false)
+                setDeadline(props.task.deadline ? new Date(props.task.deadline) : new Date())
             }
         }
     }, [ props.type === "edit" ? props.task : null ])
@@ -74,10 +81,12 @@ export default function TaskForm(props: TaskFormProps) {
         const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/tasks${props.type === "edit" ? `/${props.task.id}` : ""}`
         const body = complex ? {
             name,
-            description
+            description,
+            deadline: hasDeadline ? deadline.toISOString() : undefined
         } : {
             name,
-            notes: notes ? notes : undefined
+            notes: notes ? notes : undefined,
+            deadline: hasDeadline ? deadline.toISOString() : undefined
         }
         axios[method](url, body).then(res => {
             if (props.type === "new") {
@@ -85,6 +94,8 @@ export default function TaskForm(props: TaskFormProps) {
                 setName("")
                 setNotes("")
                 setDescription("")
+                setHasDeadline(false)
+                setDeadline(new Date())
             }
             props.onSuccess(res.data.data.task)
         }).catch(err => {
@@ -106,7 +117,7 @@ export default function TaskForm(props: TaskFormProps) {
                 {complex ? (
                     <>
                         <TextInput placeholder="Name..." value={name} onChange={(val) => setName(val)} />
-                        <TextArea rows={6} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
+                        <TextArea rows={8} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
                     </>
                 ) : (
                     <>
@@ -114,6 +125,14 @@ export default function TaskForm(props: TaskFormProps) {
                         <TextArea rows={6} placeholder="Notes..." value={notes} onChange={(val) => setNotes(val)} />
                     </>
                 )}
+                <Fieldset>
+                    <LabelField fieldset label="Deadline">
+                        <Toggle on={hasDeadline} onChange={(val) => setHasDeadline(val)} />
+                    </LabelField>
+                    {hasDeadline ? (
+                        <DatePicker fieldset value={deadline} onChange={(val) => setDeadline(val)} />
+                    ) : null}
+                </Fieldset>
             </FieldFrame>
             <Alert open={alertOpen} message={alertMessage} onRequestClose={() => setAlertOpen(false)} />
             <DoneButton disabled={doneDisabled} />

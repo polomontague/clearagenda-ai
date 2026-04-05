@@ -16,6 +16,7 @@ const assembleTask = (result: TaskResult): Task => {
             notes: step.notes,
             duration: step.duration
         })),
+        deadline: result.deadline ? result.deadline.toISOString() : undefined,
         created: result.created.toISOString(),
         updated: result.updated.toISOString()
     } : {
@@ -23,6 +24,8 @@ const assembleTask = (result: TaskResult): Task => {
         id: result.id,
         name: result.name,
         notes: result.notes ?? undefined,
+        duration: result.duration!,
+        deadline: result.deadline ? result.deadline.toISOString() : undefined,
         created: result.created.toISOString(),
         updated: result.updated.toISOString()
     }

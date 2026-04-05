@@ -1,0 +1,46 @@
+.background{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    height: 150px;
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.lstOptions{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+    flex: 1;
+    height: 100%;
+    padding-top: var(--spacing-small);
+    padding-bottom: var(--spacing-small);
+    overflow: scroll;
+}
+
+.btnOption{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: var(--inner-field-size);
+    border-radius: var(--inner-border-radius);
+    font-size: var(--inner-font-size);
+    color: var(--layer-2-light);
+}
+
+.btnOption.selected{
+    background-color: var(--accent);
+    font-weight: bolder;
+    color: var(--white);
+}

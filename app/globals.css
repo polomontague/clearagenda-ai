@@ -43,6 +43,7 @@
 	--inner-field-size: 24px;
 	--inner-icon-size: 11px;
 	--inner-font-size: 11px;
+	--inner-border-radius: 4px;
 
 	/* Variables used for scaling inputs so they don't zoom on mobile */
 	--font-size-number: 13; /* needs to match --font-size */

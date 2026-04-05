@@ -1,0 +1,100 @@
+.background{
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.header{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    width: 100%;
+    height: var(--field-size);
+    border-bottom: var(--border-width) solid var(--layer-3-border);
+}
+
+.header > .wide{
+    flex: 1;
+}
+
+.header .btnMonth{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    height: 100%;
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+    font-weight: bolder;
+}
+
+.header .btnMonth > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--accent);
+}
+
+.containerDates{
+    padding-left: var(--spacing-medium);
+    padding-top: var(--spacing-small);
+    padding-right: var(--spacing-medium);
+    padding-bottom: var(--spacing-small);
+}
+
+.lstWeekdays{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: var(--spacing-small);
+    margin-bottom: var(--spacing-small);
+}
+
+.lstWeekdays > li{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+}
+
+.lstWeekdays .label{
+    font-size: var(--font-size-small);
+    color: var(--layer-3-light);
+    line-height: normal;
+}
+
+.lstDates{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: var(--spacing-small);
+}
+
+.lstDates > li{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+}
+
+.btnDate{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--field-size);
+    height: var(--field-size);
+    border-radius: var(--border-radius);
+    color: var(--layer-3-light);
+}
+
+.btnDate.today{
+    font-weight: bolder;
+    color: var(--accent);
+}
+
+.btnDate.selected{
+    background-color: var(--accent);
+    font-weight: bolder;
+    color: var(--white);
+}

@@ -1,0 +1,36 @@
+.btn{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--field-size);
+    height: var(--field-size);
+}
+
+.containerIcon{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--inner-field-size);
+    height: var(--inner-field-size);
+    border-radius: var(--inner-border-radius);
+}
+
+.containerIcon > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--accent);
+}
+
+.btn:hover > .containerIcon,
+.btn:active > .containerIcon,
+.btn:focus > .containerIcon{
+    background-color: var(--accent);
+}
+
+.btn:hover > .containerIcon > svg,
+.btn:active > .containerIcon > svg,
+.btn:focus > .containerIcon > svg{
+    fill: var(--white);
+}

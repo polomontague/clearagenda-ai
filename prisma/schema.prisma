@@ -18,6 +18,8 @@ model tasks {
 	name String @db.VarChar(100)
 	notes String? @db.VarChar(300)
 	description String? @db.Text
+	duration Int?
+	deadline DateTime?
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 }

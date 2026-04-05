@@ -3,6 +3,8 @@ export type SimpleTask = {
     id: number,
     name: string,
     notes?: string,
+    duration: number,
+    deadline?: string,
     created: string,
     updated: string
 }
@@ -20,6 +22,7 @@ export type ComplexTask = {
     name: string,
     description: string,
     steps: ComplexTaskStep[],
+    deadline?: string,
     created: string,
     updated: string
 }

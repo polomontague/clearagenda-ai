@@ -19,13 +19,17 @@ export const POST = async (req: NextRequest) => {
             task = await TasksDAO.createTask({
                 name: body.name,
                 description: body.description,
-                steps
+                steps,
+                deadline: body.deadline
             })
         } else {
             // Simple Task
+            const duration = await AI.estimateTaskDuration(body.name, body.notes)
             task = await TasksDAO.createTask({
                 name: body.name,
-                notes: body.notes
+                notes: body.notes,
+                duration,
+                deadline: body.deadline
             })
         }
 

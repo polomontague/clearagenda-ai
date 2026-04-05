@@ -4,6 +4,7 @@ const taskBaseQuery = {
         name: true,
         notes: true,
         description: true,
+        duration: true,
         steps: {
             select: {
                 id: true,
@@ -12,6 +13,7 @@ const taskBaseQuery = {
                 duration: true
             }
         },
+        deadline: true,
         created: true,
         updated: true
     }

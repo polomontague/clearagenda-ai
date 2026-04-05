@@ -13,6 +13,8 @@ import FieldFrame from "@/components/FieldFrame"
 import InnerButton from "@/components/InnerButton"
 import { DownArrowIcon } from "@/components/Icons"
 import Fieldset from "@/components/Fieldset"
+import Utility from "@/lib/Utility"
+import InnerValue from "@/components/InnerValue"
 
 export default function TaskList() {
     const [tasks, setTasks] = useState<Task[]>([])
@@ -63,6 +65,13 @@ export default function TaskList() {
         })
     }
 
+    const getDuration = (task: Task) => {
+        if (task.type === "simple") return task.duration
+        let duration = 0
+        task.steps.forEach(step => duration += step.duration)
+        return duration
+    }
+
     return (
         <div>
             <ul className={styles.lstTasks}>
@@ -95,6 +104,9 @@ export default function TaskList() {
                                         </LabelField>
                                     </>
                                 ) : <></>}
+                                <LabelField label="Duration">
+                                    <InnerValue label={Utility.formatTime(getDuration(task))} />
+                                </LabelField>
                             </FieldFrame>
                         </Card>
                     </li>

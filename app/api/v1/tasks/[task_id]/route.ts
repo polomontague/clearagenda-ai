@@ -37,9 +37,11 @@ export const PUT = async (req: NextRequest, props: { params: Promise<{ task_id: 
                 steps
             })
         } else {
+            const duration = await AI.estimateTaskDuration(body.name, body.notes)
             task = await TasksDAO.updateTask(params.task_id, {
                 name: body.name,
-                notes: body.notes
+                notes: body.notes,
+                duration
             })
         }
 
