@@ -33,10 +33,11 @@ enum accent {
 
 model users {
 	id Int @id @default(autoincrement())
+	tasks tasks[]
 	first_name String @db.VarChar(30)
 	last_name String @db.VarChar(60)
-	email String @db.VarChar(100)
-	phone String @db.VarChar(11)
+	email String @db.VarChar(100) @unique
+	phone String @db.VarChar(11) @unique
 	password String @db.VarChar(255)
 	theme theme @default(light)
 	accent accent @default(yellow)
@@ -53,6 +54,8 @@ model users {
 
 model tasks {
 	id Int @id @default(autoincrement())
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 	steps task_steps[]
 	name String @db.VarChar(100)
 	notes String? @db.VarChar(300)
@@ -62,6 +65,7 @@ model tasks {
 	importance Float // normalized 0-1
 	created DateTime @default(now())
 	updated DateTime @updatedAt
+	completed DateTime?
 }
 
 model task_steps {
@@ -71,4 +75,5 @@ model task_steps {
 	name String @db.VarChar(100)
 	notes String @db.VarChar(300)
 	duration Int
+	completed DateTime?
 }

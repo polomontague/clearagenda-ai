@@ -2,22 +2,23 @@ import styles from "./Fieldset.module.css"
 import { ReactNode } from "react"
 
 type FieldsetProps = {
+    layer?: 2 | 3,
     label?: string,
     description?: string,
     children: ReactNode
 }
 
-export default function Fieldset(props: FieldsetProps) {
+export default function Fieldset({ layer = 3, label, description, children }: FieldsetProps) {
     return (
-        <div className={styles.background}>
-            {props.label ? (
-                <p className={styles.label}>{props.label.toUpperCase()}</p>
+        <div className={`${styles.background} ${styles[`layer${layer}`]}`}>
+            {label ? (
+                <p className={styles.label}>{label.toUpperCase()}</p>
             ) : null}
             <div className={styles.frame}>
-                {props.children}
+                {children}
             </div>
-            {props.description ? (
-                <p className={styles.description}>{props.description}</p>
+            {description ? (
+                <p className={styles.description}>{description}</p>
             ) : null}
         </div>
     )

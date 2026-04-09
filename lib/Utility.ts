@@ -1,4 +1,8 @@
 const Utility = {
+    formatDate: (date: Date) => {
+        const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+        return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
+    },
     formatTime: (minutes: number, hoursInDay: number = 24) => {
         const MINUTES_IN_HOUR = 60
         const MINUTES_IN_DAY = 60 * hoursInDay

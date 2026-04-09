@@ -1,6 +1,5 @@
-import styles from "./TaskList.module.css"
 import Task from "@/types/Task"
-import Card from "@/components/Card"
+import ControlCard from "@/components/ControlCard"
 import ValueBox from "@/components/ValueBox"
 import Confirm from "@/components/Confirm"
 import { useState, useEffect, useContext } from "react"
@@ -17,6 +16,8 @@ import Utility from "@/lib/Utility"
 import InnerValue from "@/components/InnerValue"
 import UserContext from "@/contexts/UserContext"
 import User from "@/types/User"
+import { useCookies } from "react-cookie"
+import List, { ListItem } from "@/components/List"
 
 export default function TaskList() {
     const [tasks, setTasks] = useState<Task[]>([])
@@ -27,9 +28,14 @@ export default function TaskList() {
     const [alertOpen, setAlertOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const { user } = useContext(UserContext)
+    const [cookies] = useCookies()
 
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/tasks`).then(res => {
+        axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/tasks`, {
+            headers: {
+                Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
+            }
+        }).then(res => {
             setTasks(res.data.data.tasks)
         })
     }, [])
@@ -87,10 +93,10 @@ export default function TaskList() {
 
     return (
         <div>
-            <ul className={styles.lstTasks}>
+            <List>
                 {tasks.map((task, i) => (
-                    <li key={i}>
-                        <Card
+                    <ListItem key={i}>
+                        <ControlCard
                             label={task.name}
                             onRequestEdit={() => handleRequestEdit(task)}
                             onRequestDelete={() => handleRequestDelete(task)}
@@ -121,10 +127,10 @@ export default function TaskList() {
                                     <InnerValue label={Utility.formatTime(getDuration(task), averageHours(user))} />
                                 </LabelField>
                             </FieldFrame>
-                        </Card>
-                    </li>
+                        </ControlCard>
+                    </ListItem>
                 ))}
-            </ul>
+            </List>
             <FormModal
                 label="Edit Task"
                 open={editModalOpen}

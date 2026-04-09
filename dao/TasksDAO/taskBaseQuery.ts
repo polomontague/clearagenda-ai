@@ -1,6 +1,9 @@
+import simpleUsersBaseQuery from "@/dao/UsersDAO/simpleUsersBaseQuery"
+
 const taskBaseQuery = {
     select: {
         id: true,
+        user: simpleUsersBaseQuery,
         name: true,
         notes: true,
         description: true,
@@ -10,13 +13,15 @@ const taskBaseQuery = {
                 id: true,
                 name: true,
                 notes: true,
-                duration: true
+                duration: true,
+                completed: true
             }
         },
         deadline: true,
         importance: true,
         created: true,
-        updated: true
+        updated: true,
+        completed: true
     }
 }
 

@@ -1,61 +1,100 @@
-.card{
+.background{
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
     border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
 }
 
 .header{
     display: -webkit-flex;
     display: flex;
-    gap: var(--spacing-small);
+    align-items: center;
     width: 100%;
     height: var(--field-size);
     border-bottom: var(--border-width) solid var(--layer-2-border);
-    
-}
-
-.label{
-    display: -webkit-flex;
-    display: flex;
-    align-items: center;
-    flex: 1;
-    height: 100%;
-    padding-left: var(--spacing-medium);
-    font-weight: bolder;
-    white-space: nowrap;
-    overflow: hidden;
     position: relative;
 }
 
-.label > .fade{
+.label{
+    padding-left: var(--spacing-medium);
+    font-weight: bolder;
+    white-space: nowrap;
+}
+
+.fade{
     width: var(--field-size);
     height: 100%;
     background: linear-gradient(90deg, transparent, var(--layer-2));
     position: absolute;
     top: 0;
     right: 0;
-}
-
-.containerBtns{
-    display: -webkit-flex;
-    display: flex;
-}
-
-.btn{
-    display: -webkit-flex;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: var(--field-size);
-    height: 100%;
-}
-
-.btn > svg{
-    width: var(--icon-size);
-    height: var(--icon-size);
-    fill: var(--accent);
+    bottom: 0;
 }
 
 .containerChildren{
     padding: var(--spacing-medium);
+    position: relative;
+}
+
+.overlayLocked{
+    justify-content: center;
+    align-items: center;
+    background-color: var(--layer-2-translucent);
+    backdrop-filter: blur(var(--blur));
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.overlayLocked > svg{
+    width: var(--field-size);
+    height: var(--field-size);
+    fill: var(--layer-2-light);
+}
+
+.locked .overlayLocked{
+    display: -webkit-flex;
+    display: flex;
+}
+
+.unlocked .overlayLocked{
+    display: none;
+}
+
+/* Completed Styles */
+.completed .label{
+    color: var(--layer-2-light);
+    text-decoration: line-through;
+}
+
+.overlayCompleted{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--layer-2-translucent);
+    backdrop-filter: blur(var(--blur));
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.incomplete .overlayCompleted{
+    display: none;
+}
+
+.completed .overlayCompleted > svg{
+    width: var(--field-size);
+    height: var(--field-size);
+    fill: var(--layer-2-light);
 }

@@ -6,12 +6,15 @@ import Error from "@/lib/Error"
 import { taskBodySchema, taskParamsSchema } from "@/schemas/tasks"
 import TasksDAO from "@/dao/TasksDAO"
 import AI from "@/lib/AI"
+import Auth from "@/lib/Auth"
 
 export const GET = async (req: NextRequest, props: { params: Promise<{ task_id: string }> }) => {
     try {
+        const user = await Auth.authenticate(req)
         const params = await Request.params(props, taskParamsSchema)
-
         const task = await TasksDAO.getTaskById(params.task_id)
+        if (!task) throw new HttpError(Response.notFound())
+        if (user.id !== task.user.id) throw new HttpError(Response.forbidden())
         
         return Response.ok({ task })
     } catch (err) {
@@ -23,9 +26,13 @@ export const GET = async (req: NextRequest, props: { params: Promise<{ task_id: 
 
 export const PUT = async (req: NextRequest, props: { params: Promise<{ task_id: string }> }) => {
     try {
+        const user = await Auth.authenticate(req)
         const params = await Request.params(props, taskParamsSchema)
         const body = await Request.body(req, taskBodySchema)
-
+        const currentTask = await TasksDAO.getTaskById(params.task_id)
+        if (!currentTask) throw new HttpError(Response.notFound())
+        if (user.id !== currentTask.user.id) throw new HttpError(Response.forbidden())
+        
         let task
         if ("description" in body) {
             // Complex Task
@@ -69,8 +76,11 @@ export const PUT = async (req: NextRequest, props: { params: Promise<{ task_id: 
 
 export const DELETE = async (req: NextRequest, props: { params: Promise<{ task_id: string }> }) => {
     try {
+        const user = await Auth.authenticate(req)
         const params = await Request.params(props, taskParamsSchema)
-        if (!(await TasksDAO.getTaskById(params.task_id))) throw new HttpError(Response.notFound())
+        const currentTask = await TasksDAO.getTaskById(params.task_id)
+        if (!currentTask) throw new HttpError(Response.notFound())
+        if (user.id !== currentTask.user.id) throw new HttpError(Response.forbidden())
 
         const task = await TasksDAO.deleteTask(params.task_id)
 

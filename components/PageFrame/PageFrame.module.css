@@ -1,0 +1,28 @@
+.frame{
+    position: relative;
+    z-index: 0;
+}
+
+.header{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-medium);
+    background-color: var(--layer-1-translucent);
+    backdrop-filter: blur(var(--blur));
+    border-bottom: var(--border-width) solid var(--layer-1-border);
+    position: fixed;
+    left: var(--sidebar-width);
+    top: 0;
+    right: 0;
+    z-index: 2;
+}
+
+.containerScroll{
+    padding-top: calc(var(--field-size) + var(--spacing-medium) + var(--spacing-medium));
+    z-index: 1;
+}
+
+.containerChildren{
+    padding: var(--spacing-medium);
+}

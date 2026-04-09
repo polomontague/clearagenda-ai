@@ -1,5 +1,6 @@
 "use client"
 import styles from "./Confirm.module.css"
+import { useEffect } from "react"
 
 const Confirm = (props: {
     message: string,
@@ -7,6 +8,10 @@ const Confirm = (props: {
     onRequestCancel: () => void,
     onRequestConfirm: () => void
 }) => {
+    useEffect(() => {
+        document.documentElement.style.overflow = props.open ? "hidden" : "scroll"
+    }, [props.open])
+
     return (
         <div className={`${styles.overlay} ${props.open ? styles.open : styles.closed}`}>
             <div className={styles.confirm}>

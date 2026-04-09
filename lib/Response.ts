@@ -132,6 +132,14 @@ const Response = {
             status: 409
         })
     },
+   taskHasSteps: () => {
+    return response({
+        type: "error",
+        code: "TASK_HAS_STEPS",
+        message: "Each Step Must be Completed Separately",
+        status: 409
+    })
+   },
     validationError: (fields: Record<string, string>) => {
         return response({
             type: "error",

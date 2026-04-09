@@ -3,6 +3,10 @@ import usersBaseQuery from "./usersBaseQuery"
 import assembleUser from "./assembleUser"
 import User from "@/types/User"
 
+type UserData = Pick<User, "name" | "email" | "phone"> & {
+    password: string
+}
+
 type GetUsersOptions = {
     email?: string,
     phone?: string
@@ -23,6 +27,19 @@ type AccentData = User["preferences"]["accent"]
 type PreferencesHoursData = User["preferences"]["hours"]
 
 const UsersDAO = {
+    createUser: async (data: UserData) => {
+        const result = await prisma.users.create({
+            data: {
+                first_name: data.name.first,
+                last_name: data.name.last,
+                email: data.email,
+                phone: data.phone,
+                password: data.password
+            },
+            ...usersBaseQuery
+        })
+        return assembleUser(result)
+    },
     getUsers: async (options: GetUsersOptions) => {
         const result = await prisma.users.findMany({
             where: {

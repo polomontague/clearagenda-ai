@@ -52,6 +52,9 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                     </ul>
                 </nav>
                 <button onClick={() => setSettingsModalOpen(true)}>Settings</button>
+            </aside>
+            <main className={styles.main}>
+                {props.children}
                 <SlideModal
                     label="Settings"
                     open={settingsModalOpen}
@@ -93,7 +96,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                         <SlideModalOption label="Preferences">
                             <SlideModalSlide>
                                 <FieldFrame>
-                                    <SlideModalOption label="Work Hours">
+                                    <SlideModalOption label="Daily hours">
                                         <SlideModalSlide>
                                             <UpdatePreferencesHoursForm />
                                         </SlideModalSlide>
@@ -119,9 +122,6 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                         </SlideModalOption>
                     </FieldFrame>
                 </SlideModal>
-            </aside>
-            <main className={styles.main}>
-                {props.children}
             </main>
         </div>
     )

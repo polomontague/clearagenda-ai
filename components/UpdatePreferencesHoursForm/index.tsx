@@ -112,7 +112,10 @@ export default function UpdatePreferencesHoursForm() {
                     </LabelField>
                     <RangeInput fieldset min={0} max={24} step={1} value={friday} onChange={(val) => setFriday(val)} />
                 </Fieldset>
-                <Fieldset label="Saturday">
+                <Fieldset
+                    label="Saturday"
+                    description="Number of hours per day that you want your daily agenda to fill"
+                >
                     <LabelField fieldset label="Hours">
                         <InnerValue label={`${saturday} Hrs`} />
                     </LabelField>

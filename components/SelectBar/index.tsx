@@ -1,7 +1,7 @@
 "use client"
 import styles from "./SelectBar.module.css"
 
-type SelectBarOption = {
+export type SelectBarOption = {
     value: string,
     label: string
 }

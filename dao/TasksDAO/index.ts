@@ -9,12 +9,21 @@ type ComplexTaskData = Pick<ComplexTask, "name" | "description" | "deadline" | "
     steps: Pick<ComplexTask["steps"][0], "name" | "notes" | "duration">[]
 }
 
-type TaskData = SimpleTaskData | ComplexTaskData
+type UpdateTaskData = SimpleTaskData | ComplexTaskData
+
+type CreateTaskData = UpdateTaskData & {
+    user_id: number
+}
+
+type GetTasksOptions = {
+    user_id?: number
+}
 
 const TasksDAO = {
-    createTask: async (data: TaskData) => {
+    createTask: async (data: CreateTaskData) => {
         const result = await prisma.tasks.create({
             data: {
+                user_id: data.user_id,
                 name: data.name,
                 notes: "notes" in data ? data.notes : null,
                 description: "description" in data ? data.description : null,
@@ -33,8 +42,11 @@ const TasksDAO = {
         })
         return assembleTask(result)
     },
-    getTasks: async () => {
+    getTasks: async (options: GetTasksOptions) => {
         const result = await prisma.tasks.findMany({
+            where: {
+                user_id: options.user_id
+            },
             ...taskBaseQuery
         })
         return result.map(result => assembleTask(result))
@@ -49,7 +61,7 @@ const TasksDAO = {
         if (!result) return
         return assembleTask(result)
     },
-    updateTask: async (taskId: number, data: TaskData) => {
+    updateTask: async (taskId: number, data: UpdateTaskData) => {
         const result = await prisma.tasks.update({
             where: {
                 id: taskId
@@ -84,6 +96,29 @@ const TasksDAO = {
         })
         if (!result) return
         return assembleTask(result)
+    },
+
+    updateTaskCompleted: async (taskId: number, data: Date | undefined) => {
+        await prisma.tasks.update({
+            where: {
+                id: taskId
+            },
+            data: {
+                completed: data
+            }
+        })
+        return data?.toISOString()
+    },
+    updateStepCompleted: async (stepId: number, data: Date | undefined) => {
+        await prisma.task_steps.update({
+            where: {
+                id: stepId
+            },
+            data: {
+                completed: data
+            }
+        })
+        return data?.toISOString()
     }
 }
 

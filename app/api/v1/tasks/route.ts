@@ -6,9 +6,11 @@ import Error from "@/lib/Error"
 import TasksDAO from "@/dao/TasksDAO"
 import { taskBodySchema } from "@/schemas/tasks"
 import AI from "@/lib/AI"
+import Auth from "@/lib/Auth"
 
 export const POST = async (req: NextRequest) => {
     try {
+        const user = await Auth.authenticate(req)
         const body = await Request.body(req, taskBodySchema)
 
         let task
@@ -21,6 +23,7 @@ export const POST = async (req: NextRequest) => {
             })
 
             task = await TasksDAO.createTask({
+                user_id: user.id,
                 name: body.name,
                 description: body.description,
                 steps,
@@ -35,6 +38,7 @@ export const POST = async (req: NextRequest) => {
                 notes: body.notes
             })
             task = await TasksDAO.createTask({
+                user_id: user.id,
                 name: body.name,
                 notes: body.notes,
                 duration,
@@ -53,7 +57,9 @@ export const POST = async (req: NextRequest) => {
 
 export const GET = async (req: NextRequest) => {
     try {
-        const tasks = await TasksDAO.getTasks()
+        const user = await Auth.authenticate(req)
+
+        const tasks = await TasksDAO.getTasks({ user_id: user.id })
 
         return Response.ok({ tasks })
     } catch (err) {

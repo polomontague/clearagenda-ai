@@ -49,7 +49,7 @@ export default function LoginForm() {
                 secure: true,
                 httpOnly: false,
             })
-            router.push("/")
+            router.push("/agenda")
         }).catch(err => {
             setLoading(false)
             setAlertMessage(err.response.data.error.message)

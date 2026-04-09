@@ -12,6 +12,9 @@ import axios from "axios"
 import Alert from "@/components/Alert"
 import Task from "@/types/Task"
 import DatePicker from "@/components/DatePicker"
+import InnerValue from "@/components/InnerValue"
+import Utility from "@/lib/Utility"
+
 
 type BaseProps = {
     onSuccess: (task: Task) => void
@@ -122,7 +125,9 @@ export default function TaskForm(props: TaskFormProps) {
                 ) : (
                     <>
                         <TextInput placeholder="Name..." value={name} onChange={(val) => setName(val)} />
-                        <TextArea rows={6} placeholder="Notes..." value={notes} onChange={(val) => setNotes(val)} />
+                        <Fieldset description="Notes are used to better estimate the duration of the task">
+                            <TextArea fieldset rows={6} placeholder="Notes..." value={notes} onChange={(val) => setNotes(val)} />
+                        </Fieldset>
                     </>
                 )}
                 <Fieldset>
@@ -130,7 +135,12 @@ export default function TaskForm(props: TaskFormProps) {
                         <Toggle on={hasDeadline} onChange={(val) => setHasDeadline(val)} />
                     </LabelField>
                     {hasDeadline ? (
-                        <DatePicker fieldset value={deadline} onChange={(val) => setDeadline(val)} />
+                        <>
+                            <LabelField fieldset label="Date">
+                                <InnerValue label={Utility.formatDate(deadline)} />
+                            </LabelField>
+                            <DatePicker fieldset value={deadline} onChange={(val) => setDeadline(val)} />
+                        </>
                     ) : null}
                 </Fieldset>
             </FieldFrame>
