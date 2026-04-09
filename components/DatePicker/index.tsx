@@ -15,6 +15,8 @@ export default function DatePicker(props: DatePickerProps) {
     const [date, setDate] = useState(new Date(props.value))
     const months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
     const [mode, setMode] = useState<"month" | "date">("date")
+    const startYear = new Date().getFullYear() - 100
+    const years = Array.from({ length: 201 }).map((_, i) => startYear + i)
 
     const getDays = (date: Date) => {
         const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
@@ -85,11 +87,10 @@ export default function DatePicker(props: DatePickerProps) {
                             value: i,
                             label: month
                         })),
-                        year: [
-                            { value: 2026, label: "2026" },
-                            { value: 2025, label: "2025" },
-                            { value: 2024, label: "2024" }
-                        ]
+                        year: years.map(year => ({
+                            value: year,
+                            label: year.toString()
+                        }))
                     }}
                     value={{
                         month: date.getMonth(),
