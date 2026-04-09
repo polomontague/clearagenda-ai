@@ -1,28 +1,16 @@
 :root{
-	--layer-1: rgb(17, 17, 17);
-	--layer-1-translucent: rgba(17, 17, 17, 0.85);
-	--layer-1-border: rgb(34, 34, 34);
-	--layer-1-light: #666666;
-
-	--layer-2: rgb(34, 34, 34);
-	--layer-2-translucent: rgba(34, 34, 34, 0.85);
-	--layer-2-border: rgb(51, 51, 51);
-	--layer-2-light: #777777;
-
-	--layer-3: rgb(51, 51, 51);
-	--layer-3-translucent: rgba(51, 51, 51, 0.85);
-	--layer-3-border: rgb(68, 68, 68);
-	--layer-3-light: #888888;
-
-	--layer-4: #444444;
-	--layer-4-translucent: rgba(68, 68, 68, 0.85);
-	--layer-4-border: #555555;
-	--layer-4-light: #999999;
-
-	--white: #ffffff;
+	--red: #ff0a23;
+	--orange: #ff9100;
+	--coral: #fa6f3c;
 	--yellow: #ffd60a;
-	--green: rgb(50, 215, 75);
-	--accent: var(--yellow);
+	--lime: #ccff00;
+	--green: #32d74b;
+	--mint: #46d275;
+	--turquoise: #03ffff;
+	--sky: #0099ff;
+	--lavender: #9999ff;
+	--pink: #ff3366;
+	--white: #ffffff;
 
 	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	--font-size: 13px;
@@ -32,11 +20,12 @@
 	--spacing-very-small: 4px;
 	--spacing-small: 6px;
 	--spacing-medium: 12px;
+	--spacing-large: 16px;
 	--border-radius: 6px;
 	--field-size: 32px;
 	--blur: 12px;
 	--modal-width: 360px;
-	--modal-height: 600px;
+	--modal-height: 500px;
 	--transition: 0.15s ease-in-out;
 	--icon-size: 13px;
 	--alert-width: 180px;
@@ -56,8 +45,124 @@
 	--scaled-spacing-medium: calc(calc(calc(16 / var(--font-size-number)) * var(--spacing-medium-number)) *var(--border-width));
 }
 
+:root[data-theme="light"]{
+	--layer-1: #eeeeee;
+	--layer-1-translucent: rgba(238, 238, 238, 0.85);
+	--layer-1-border: #dddddd;
+	--layer-1-light: #999999;
+
+	--layer-2: #dddddd;
+	--layer-2-translucent: rgba(221, 221, 221, 0.85);
+	--layer-2-border: #cccccc;
+	--layer-2-light: #888888;
+
+	--layer-3: #cccccc;
+	--layer-3-translucent: rgba(204, 204, 204, 0.85);
+	--layer-3-border: #bbbbbb;
+	--layer-3-light: #777777;
+
+	--layer-4: #bbbbbb;
+	--layer-4-translucent: rgba(187, 187, 187, 0.85);
+	--layer-4-border: #aaaaaa;
+	--layer-4-light: #666666;
+
+	--contrast: #111111;
+}
+
+:root[data-theme="dark"]{
+	--layer-1: #111111;
+	--layer-1-translucent: rgba(17, 17, 17, 0.85);
+	--layer-1-border: #222222;
+	--layer-1-light: #666666;
+
+	--layer-2: #222222;
+	--layer-2-translucent: rgba(34, 34, 34, 0.85);
+	--layer-2-border: #333333;
+	--layer-2-light: #777777;
+
+	--layer-3: rgb(51, 51, 51);
+	--layer-3-translucent: rgba(51, 51, 51, 0.85);
+	--layer-3-border: #444444;
+	--layer-3-light: #888888;
+
+	--layer-4: #444444;
+	--layer-4-translucent: rgba(68, 68, 68, 0.85);
+	--layer-4-border: #555555;
+	--layer-4-light: #999999;
+
+	--contrast: #ffffff;
+}
+
+:root[data-accent="red"]{
+	--accent: var(--red);
+	--accent-translucent: rgba(255, 10, 35, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="orange"]{
+	--accent: var(--orange);
+	--accent-translucent: rgba(255, 145, 0, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="coral"]{
+	--accent: var(--coral);
+	--accent-translucent: rgba(250, 111, 60, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="yellow"]{
+	--accent: var(--yellow);
+	--accent-translucent: rgba(255, 214, 10, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="lime"]{
+	--accent: var(--lime);
+	--accent-translucent: rgba(204, 255, 0, 0.5);
+	--accent-contrast: #111111;
+}
+
+:root[data-accent="green"]{
+	--accent: var(--green);
+	--accent-translucent: rgba(50, 215, 75, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="mint"]{
+	--accent: var(--mint);
+	--accent-translucent: rgba(70, 210, 117, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="turquoise"]{
+	--accent: var(--turquoise);
+	--accent-translucent: rgba(3, 255, 255, 0.5);
+	--accent-contrast: #111111;
+}
+
+:root[data-accent="sky"]{
+	--accent: var(--sky);
+	--accent-translucent: rgba(0, 153, 255, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="lavender"]{
+	--accent: var(--lavender);
+	--accent-translucent: rgba(153, 153, 255, 0.5);
+	--accent-contrast: #ffffff;
+}
+
+:root[data-accent="pink"]{
+	--accent: var(--pink);
+	--accent-translucent:rgba(255, 51, 102, 0.5);
+	--accent-contrast: #ffffff;
+}
+
 *{
 	font-size: var(--font-size);
+	color: var(--contrast);
+	text-align: start;
 	scrollbar-width: none; /* Firefox */
 	-ms-overflow-style: none;  /* IE and Edge */
 }
@@ -73,7 +178,10 @@ html{
 body{
 	background-color: var(--layer-1);
 	font-family: var(--font);
-	color: var(--white);
 	line-height: 1.5; /* TextArea scaling won't work unless line-height is set to a fixed value */
 	scroll-behavior: smooth;
+}
+
+svg{
+	fill: var(--contrast);
 }

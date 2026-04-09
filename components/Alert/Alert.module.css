@@ -35,7 +35,7 @@
     padding-bottom: var(--spacing-small);
     font-family: var(--serif);
     font-size: var(--font-size);
-    color: var(--white);
+    color: var(--contrast);
     text-align: center;
     justify-content: center;
     align-items: center;

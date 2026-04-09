@@ -57,6 +57,8 @@ input, button, textarea, select {
   outline: none;
   color: inherit;
   resize: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* Remove button styling */

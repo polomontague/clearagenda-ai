@@ -15,21 +15,31 @@ export const POST = async (req: NextRequest) => {
         if ("description" in body) {
             // Complex Task
             const steps = await AI.breakdownTask(body.description)
+            const importance = await AI.estimateTaskImportance({
+                name: body.name,
+                description: body.description
+            })
 
             task = await TasksDAO.createTask({
                 name: body.name,
                 description: body.description,
                 steps,
-                deadline: body.deadline
+                deadline: body.deadline,
+                importance
             })
         } else {
             // Simple Task
             const duration = await AI.estimateTaskDuration(body.name, body.notes)
+            const importance = await AI.estimateTaskImportance({
+                name: body.name,
+                notes: body.notes
+            })
             task = await TasksDAO.createTask({
                 name: body.name,
                 notes: body.notes,
                 duration,
-                deadline: body.deadline
+                deadline: body.deadline,
+                importance
             })
         }
 

@@ -96,5 +96,5 @@
 .btnDate.selected{
     background-color: var(--accent);
     font-weight: bolder;
-    color: var(--white);
+    color: var(--accent-contrast);
 }

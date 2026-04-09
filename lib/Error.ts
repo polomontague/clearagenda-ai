@@ -1,6 +1,6 @@
 import Email from "@/lib/Email"
 
-const Errors = {
+const Error = {
     notify: async (err: unknown) => {
         await Email.send({
             from: {
@@ -16,4 +16,4 @@ const Errors = {
     }
 }
 
-export default Errors
+export default Error

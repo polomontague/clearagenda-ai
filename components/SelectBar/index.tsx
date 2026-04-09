@@ -14,25 +14,23 @@ type SelectBarProps = {
 
 export default function SelectBar(props: SelectBarProps) {
     return (
-        <div className={styles.frame}>
-            <div className={styles.background}>
-                <ul className={styles.lstOptions}>
-                    {props.options.map((option, i) => {
-                        const selected = option.value === props.value
-                        return (
-                            <li key={i}>
-                                <button
-                                    type="button"
-                                    className={`${styles.btn} ${selected ? styles.selected : ""}`}
-                                    onClick={() => props.onChange(option.value)}
-                                >
-                                    {option.label}
-                                </button>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
+        <div className={styles.background}>
+            <ul className={styles.lstOptions}>
+                {props.options.map((option, i) => {
+                    const selected = option.value === props.value
+                    return (
+                        <li key={i}>
+                            <button
+                                type="button"
+                                className={`${styles.btn} ${selected ? styles.selected : ""}`}
+                                onClick={() => props.onChange(option.value)}
+                            >
+                                {option.label}
+                            </button>
+                        </li>
+                    )
+                })}
+            </ul>
         </div>
     )
 }

@@ -1,7 +1,7 @@
 const Utility = {
-    formatTime: (minutes: number) => {
+    formatTime: (minutes: number, hoursInDay: number = 24) => {
         const MINUTES_IN_HOUR = 60
-        const MINUTES_IN_DAY = 60 * 24
+        const MINUTES_IN_DAY = 60 * hoursInDay
         const MINUTES_IN_MONTH = MINUTES_IN_DAY * 30
         const MINUTES_IN_YEAR = MINUTES_IN_DAY * 365
 

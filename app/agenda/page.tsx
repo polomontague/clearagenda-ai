@@ -1,12 +1,13 @@
 "use client"
 import { useState } from "react"
-import Modal from "@/components/Modal"
+import FormModal from "@/components/FormModal"
 import TaskForm from "@/components/TaskForm"
 import SelectButton from "@/components/SelectButton"
 import { PlusIcon } from "@/components/Icons"
 import Task from "@/types/Task"
+import PrivateRoute from "@/components/PrivateRoute"
 
-export default function Calendar() {
+export default function AgendaPage() {
     const [addTaskOpen, setAddTaskOpen] = useState(false)
 
     const handleAddTaskSuccess = (task: Task) => {
@@ -15,7 +16,7 @@ export default function Calendar() {
     }
 
     return (
-        <div>
+        <PrivateRoute>
             <SelectButton
                 icon={<PlusIcon />}
                 options={[
@@ -31,14 +32,13 @@ export default function Calendar() {
                     }
                 ]}
             />
-            <Modal
+            <FormModal
                 open={addTaskOpen}
                 label="Add Task"
                 onRequestCancel={() => setAddTaskOpen(false)}
-                onRequestDone={() => {}}
             >
                 <TaskForm type="new" onSuccess={handleAddTaskSuccess} />
-            </Modal>
-        </div>
+            </FormModal>
+        </PrivateRoute>
     )
 }

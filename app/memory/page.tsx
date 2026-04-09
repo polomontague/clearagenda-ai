@@ -1,14 +1,14 @@
 "use client"
-import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import TaskList from "@/components/TaskList"
 import SelectBar from "@/components/SelectBar"
+import PrivateRoute from "@/components/PrivateRoute"
 
 export default function MemoryPage() {
     const [tab, setTab] = useState("tasks")
 
     return (
-        <div>
+        <PrivateRoute>
             <SelectBar
                 options={[
                     { value: "tasks", label: "Tasks" },
@@ -18,6 +18,6 @@ export default function MemoryPage() {
                 onChange={(val) => setTab(val)}
             />
             <TaskList />
-        </div>
+        </PrivateRoute>
     )
 }

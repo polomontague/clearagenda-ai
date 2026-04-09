@@ -2,6 +2,7 @@
 import styles from "./Card.module.css"
 import { ReactNode } from "react"
 import { EditIcon, TrashCanIcon } from "@/components/Icons"
+import IconButton from "@/components/IconButton"
 
 type CardProps = {
     label: string,
@@ -19,20 +20,14 @@ export default function Card(props: CardProps) {
                     <div className={styles.fade}></div>
                 </h6>
                 <div className={styles.containerBtns}>
-                    <button
-                        type="button"
-                        className={styles.btn}
+                    <IconButton
+                        icon={<EditIcon />}
                         onClick={props.onRequestEdit}
-                    >
-                        <EditIcon />
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.btn}
+                    />
+                    <IconButton
+                        icon={<TrashCanIcon />}
                         onClick={props.onRequestDelete}
-                    >
-                        <TrashCanIcon />
-                    </button>
+                    />
                 </div>
             </header>
             <div className={styles.containerChildren}>

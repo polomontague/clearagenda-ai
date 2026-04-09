@@ -30,18 +30,32 @@ export const PUT = async (req: NextRequest, props: { params: Promise<{ task_id: 
         if ("description" in body) {
             // Complex Task
             const steps = await AI.breakdownTask(body.description)
+            const importance = await AI.estimateTaskImportance({
+                name: body.name,
+                description: body.description
+            })
 
             task = await TasksDAO.updateTask(params.task_id, {
                 name: body.name,
                 description: body.description,
-                steps
+                steps,
+                deadline: body.deadline,
+                importance
             })
         } else {
+            // Simple Task
             const duration = await AI.estimateTaskDuration(body.name, body.notes)
+            const importance = await AI.estimateTaskImportance({
+                name: body.name,
+                notes: body.notes
+            })
+
             task = await TasksDAO.updateTask(params.task_id, {
                 name: body.name,
                 notes: body.notes,
-                duration
+                deadline: body.deadline,
+                duration,
+                importance
             })
         }
 

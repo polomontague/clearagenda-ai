@@ -1,0 +1,32 @@
+.btn{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 var(--spacing-large) 0 var(--spacing-large);
+    width: 100%;
+    height: var(--field-size);
+    background-color: var(--accent);
+    border-radius: var(--border-radius);
+    font-weight: bolder;
+    color: var(--accent-contrast);
+    position: relative;
+}
+
+.btn:disabled{
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    color: var(--layer-3-light);
+}
+
+.containerSpinner{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}

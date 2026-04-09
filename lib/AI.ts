@@ -1,10 +1,11 @@
 import axios from "axios"
 import breakdown from "@/prompts/breakdown"
 import { ComplexTaskStep } from "@/types/Task"
+import openai from "@/lib/openai"
 
 const AI = {
     breakdownTask: async (description: string) => {
-        const res = await axios.post("https://api.openai.com/v1/chat/completions", {
+        const data = await openai.chat.completions.create({
             model: "gpt-5.4-nano",
             messages: [
                 {
@@ -16,17 +17,13 @@ const AI = {
                     content: description
                 }
             ]
-        }, {
-            headers: {
-                Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`
-            }
         })
-        const steps = JSON.parse(res.data.choices[0].message.content) as Omit<ComplexTaskStep, "id">[]
+        const steps = JSON.parse(data.choices[0].message.content ?? "") as Omit<ComplexTaskStep, "id">[]
         return steps
     },
     estimateTaskDuration: async (name: string, notes?: string) => {
-        const res = await axios.post("https://api.openai.com/v1/chat/completions", {
-            model: "gpt-5.4-nano",
+        const data = await openai.chat.completions.create({
+model: "gpt-5.4-nano",
             messages: [
                 {
                     role: "system",
@@ -52,13 +49,30 @@ Output example:
 ${notes ? `Notes: ${notes}` : ""}`
                 }
             ]
-        }, {
-            headers: {
-                Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`
-            }
         })
-        const duration = parseInt(res.data.choices[0].message.content)
-        return duration
+        return parseInt(data.choices[0].message.content ?? "")
+    },
+    estimateTaskImportance: async (options: {
+        name: string,
+        notes?: string,
+        description?: string
+    }) => {
+        const data = await openai.chat.completions.create({
+            model: "gpt-5.4-nano",
+            messages: [
+                {
+                    role: "system",
+                    content: "You are a task prioritization expert. Your goal is to read a task and its optional notes, and estimate its importance relative to other tasks. Importance is a number between 0 and 1, where 0 = not important at all, and 1 = extremely important. Base your estimation on urgency, impact, and significance of the task. Output only a single number between 0 and 1 with up to 2 decimal places."
+                },
+                {
+                    role: "user",
+                    content: `Task: ${options.name}
+${options.notes ? `Notes: ${options.notes}` : ""}
+${options.description ? `Description: ${options.description}` : ""}`.trim()
+                }
+            ]
+        })
+        return parseFloat(data.choices[0].message.content ?? "")
     }
 }
 

@@ -1,5 +1,5 @@
 .frame{
-    
+    z-index: 1;
 }
 
 .sidebar{
@@ -16,6 +16,7 @@
     top: 0;
     bottom: 0;
     left: 0;
+    z-index: 2;
 }
 
 .nav{
@@ -69,14 +70,15 @@
 }
 
 .link.selected svg{
-    fill: var(--white);
+    fill: var(--contrast);
 }
 
 .link.selected .label{
-    color: var(--white);
+    color: var(--contrast);
 }
 
 .main{
     padding: var(--spacing-medium);
     margin-left: var(--sidebar-width);
+    z-index: 1;
 }

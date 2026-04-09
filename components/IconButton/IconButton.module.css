@@ -26,11 +26,12 @@
 .btn:hover > .containerIcon,
 .btn:active > .containerIcon,
 .btn:focus > .containerIcon{
-    background-color: var(--accent);
+    background-color: var(--accent-translucent);
+    border: var(--border-width) solid var(--accent);
 }
 
 .btn:hover > .containerIcon > svg,
 .btn:active > .containerIcon > svg,
 .btn:focus > .containerIcon > svg{
-    fill: var(--white);
+    
 }

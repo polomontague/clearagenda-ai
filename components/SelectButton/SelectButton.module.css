@@ -29,7 +29,7 @@
 }
 
 .background > .btn.selected > svg{
-    fill: var(--white);
+    fill: var(--accent-contrast);
 }
 
 .menuAnchor{
@@ -89,5 +89,5 @@
 }
 
 .lstBtns .btn > .label{
-    color: var(--accent);
+    color: var(--layer-2-light);
 }

@@ -14,6 +14,7 @@ const taskBaseQuery = {
             }
         },
         deadline: true,
+        importance: true,
         created: true,
         updated: true
     }

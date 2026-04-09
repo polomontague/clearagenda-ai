@@ -5,6 +5,9 @@ export type SimpleTask = {
     notes?: string,
     duration: number,
     deadline?: string,
+    urgency: number,
+    importance: number,
+    priority: number,
     created: string,
     updated: string
 }
@@ -23,6 +26,9 @@ export type ComplexTask = {
     description: string,
     steps: ComplexTaskStep[],
     deadline?: string,
+    urgency: number,
+    importance: number,
+    priority: number,
     created: string,
     updated: string
 }

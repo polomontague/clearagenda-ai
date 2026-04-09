@@ -12,6 +12,45 @@ datasource db {
   	provider = "mysql"
 }
 
+enum theme {
+	light
+	dark
+}
+
+enum accent {
+	red
+	orange
+	coral
+	yellow
+	lime
+	green
+	mint
+	turquoise
+	sky
+	lavender
+	pink
+}
+
+model users {
+	id Int @id @default(autoincrement())
+	first_name String @db.VarChar(30)
+	last_name String @db.VarChar(60)
+	email String @db.VarChar(100)
+	phone String @db.VarChar(11)
+	password String @db.VarChar(255)
+	theme theme @default(light)
+	accent accent @default(yellow)
+	sunday_hours Int @default(8)
+	monday_hours Int @default(8)
+	tuesday_hours Int @default(8)
+	wednesday_hours Int @default(8)
+	thursday_hours Int @default(8)
+	friday_hours Int @default(8)
+	saturday_hours Int @default(8)
+	created DateTime @default(now())
+	updated DateTime @updatedAt
+}
+
 model tasks {
 	id Int @id @default(autoincrement())
 	steps task_steps[]
@@ -20,6 +59,7 @@ model tasks {
 	description String? @db.Text
 	duration Int?
 	deadline DateTime?
+	importance Float // normalized 0-1
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 }

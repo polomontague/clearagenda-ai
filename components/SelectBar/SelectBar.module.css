@@ -1,15 +1,8 @@
-.frame{
-    display: -webkit-flex;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: var(--spacing-medium);
-}
-
 .background{
-    padding: 2px;
-    background-color: var(--layer-2);
-    border: var(--border-width) solid var(--layer-2-border);
+    height: var(--field-size);
+    padding: 3px; /* this should be dynamic, based on global css variables */
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
     border-radius: var(--border-radius);
 }
 
@@ -17,21 +10,28 @@
     display: -webkit-flex;
     display: flex;
     gap: var(--spacing-small);
+    width: 100%;
+}
+
+.lstOptions > li{
+    flex: 1;
 }
 
 .btn{
     display: -webkit-flex;
     display: flex;
+    justify-content: center;
     align-items: center;
-    height: var(--field-size);
+    width: 100%;
+    height: var(--inner-field-size);
     padding-left: var(--spacing-medium);
     padding-right: var(--spacing-medium);
-    border-radius: var(--border-radius);
-    font-weight: bolder;
-    color: var(--layer-2-light);
+    border-radius: var(--inner-border-radius);
+    color: var(--layer-3-light);
 }
 
 .btn.selected{
     background-color: var(--accent);
-    color: var(--white);
+    font-weight: bolder;
+    color: var(--accent-contrast);
 }

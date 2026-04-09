@@ -23,7 +23,7 @@
 }
 
 .toggle.on{
-    background-color: var(--green);
+    background-color: var(--accent);
     border: none;
 }
 

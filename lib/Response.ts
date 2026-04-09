@@ -72,7 +72,7 @@ const Response = {
         return response({
             type: "error",
             code: "INCORRECT_CREDENTIALS",
-            message: "Incorrect Username/Password",
+            message: "Incorrect Credentials",
             status: 401
         })
     },
@@ -116,11 +116,11 @@ const Response = {
             status: 409
         })
     },
-    alreadyExists: () => {
+    phoneTaken: () => {
         return response({
             type: "error",
-            code: "RESOURCE_ALREADY_EXISTS",
-            message: "Resource Already Exists",
+            code: "PHONE_TAKEN",
+            message: "Phone Taken",
             status: 409
         })
     },

@@ -3,9 +3,9 @@ import assembleTask from "./assembleTask"
 import taskBaseQuery from "./taskBaseQuery"
 import { SimpleTask, ComplexTask } from "@/types/Task"
 
-type SimpleTaskData = Pick<SimpleTask, "name" | "notes" | "duration" | "deadline">
+type SimpleTaskData = Pick<SimpleTask, "name" | "notes" | "duration" | "deadline" | "importance">
 
-type ComplexTaskData = Pick<ComplexTask, "name" | "description" | "deadline"> & {
+type ComplexTaskData = Pick<ComplexTask, "name" | "description" | "deadline" | "importance"> & {
     steps: Pick<ComplexTask["steps"][0], "name" | "notes" | "duration">[]
 }
 
@@ -20,6 +20,7 @@ const TasksDAO = {
                 description: "description" in data ? data.description : null,
                 duration: "duration" in data ? data.duration : null,
                 deadline: data.deadline ? new Date(data.deadline) : null,
+                importance: data.importance,
                 steps: "steps" in data ? {
                     create: data.steps.map(step => ({
                         name: step.name,
@@ -59,6 +60,7 @@ const TasksDAO = {
                 description: "description" in data ? data.description : null,
                 duration: "duration" in data ? data.duration : null,
                 deadline: data.deadline ? new Date(data.deadline) : null,
+                importance: data.importance,
                 steps: {
                     deleteMany: {},
                     create: "steps" in data ? data.steps.map(step => ({

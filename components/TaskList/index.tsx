@@ -3,10 +3,10 @@ import Task from "@/types/Task"
 import Card from "@/components/Card"
 import ValueBox from "@/components/ValueBox"
 import Confirm from "@/components/Confirm"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import axios from "axios"
 import Alert from "@/components/Alert"
-import Modal from "@/components/Modal"
+import FormModal from "@/components/FormModal"
 import TaskForm from "@/components/TaskForm"
 import LabelField from "@/components/LabelField"
 import FieldFrame from "@/components/FieldFrame"
@@ -15,6 +15,8 @@ import { DownArrowIcon } from "@/components/Icons"
 import Fieldset from "@/components/Fieldset"
 import Utility from "@/lib/Utility"
 import InnerValue from "@/components/InnerValue"
+import UserContext from "@/contexts/UserContext"
+import User from "@/types/User"
 
 export default function TaskList() {
     const [tasks, setTasks] = useState<Task[]>([])
@@ -24,6 +26,7 @@ export default function TaskList() {
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
+    const { user } = useContext(UserContext)
 
     useEffect(() => {
         axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/tasks`).then(res => {
@@ -72,6 +75,16 @@ export default function TaskList() {
         return duration
     }
 
+    const averageHours = (user: User) => {
+        let total = 0
+        Object.keys(user.preferences.hours).forEach((key) => {
+            total += user.preferences.hours[key as "sunday" | "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday"]
+        })
+        return total / 7
+    }
+
+    if (!user) return
+
     return (
         <div>
             <ul className={styles.lstTasks}>
@@ -105,14 +118,14 @@ export default function TaskList() {
                                     </>
                                 ) : <></>}
                                 <LabelField label="Duration">
-                                    <InnerValue label={Utility.formatTime(getDuration(task))} />
+                                    <InnerValue label={Utility.formatTime(getDuration(task), averageHours(user))} />
                                 </LabelField>
                             </FieldFrame>
                         </Card>
                     </li>
                 ))}
             </ul>
-            <Modal
+            <FormModal
                 label="Edit Task"
                 open={editModalOpen}
                 onRequestCancel={() => setEditModalOpen(false)}
@@ -124,7 +137,7 @@ export default function TaskList() {
                         onSuccess={handleEditSuccess}
                     />
                 ) : null}
-            </Modal>
+            </FormModal>
             <Confirm
                 message={confirmMessage}
                 open={confirmOpen}

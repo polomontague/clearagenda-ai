@@ -1,0 +1,76 @@
+.input{
+    display: -webkit-flex;
+    display: flex;
+    height: var(--field-size);
+    padding: 0 var(--spacing-medium) 0 var(--spacing-medium);
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+    align-items: center;
+}
+
+.input.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.min{
+    color: var(--layer-3-light);
+    margin-right: var(--spacing-small);
+}
+
+/* Remove default styling */
+.slider{
+    display: block;
+    width: 100%;
+    height: var(--spacing-small);
+    background-color: transparent;
+    border-radius: 0;
+    outline: none;
+}
+
+/* Track styling (Chrome, Safari, Edge) */
+.slider::-webkit-slider-runnable-track{
+    background-color: transparent;
+    height: var(--spacing-small);
+    background-color: var(--layer-4);
+    border: var(--border-width) solid var(--layer-4-border);
+    border-radius: var(--border-radius);
+    
+}
+
+/* Track (Firefox) */
+.slider::-moz-range-track{
+    background-color: var(--layer-4);
+    border: var(--border-width) solid var(--layer-4-border);
+    height: var(--spacing-small);
+    border: none;
+    border-radius: 0;
+}
+
+/* Thumb styling (Chrome, Safari, Edge) */
+.slider::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background-color: var(--white);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -9px; /* This should be dynamic based on global css variables */
+}
+
+/* Thumb (Firefox) */
+.slider::-moz-range-thumb{
+    width: var(--inner-field-size);
+    height: var(--inner-field-size);
+    background-color: var(--white);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -9px;
+}
+
+.max{
+    color: var(--layer-3-light);
+    margin-left: var(--spacing-small);
+}

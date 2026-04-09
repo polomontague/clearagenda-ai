@@ -1,0 +1,64 @@
+.background{
+    width: 100%;
+    padding: 3px; /* should be based on global css variables */
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.lst{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+}
+
+.lst > li{
+    flex: 1;
+}
+
+.lst > li > .btn{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-small);
+    width: 100%;
+    height: 100%;
+    padding-left: var(--spacing-medium);
+    padding-top: var(--spacing-small);
+    padding-right: var(--spacing-medium);
+    padding-bottom: var(--spacing-small);
+    border-radius: var(--inner-border-radius);
+    transition: var(--transition);
+}
+
+.btn > svg{
+    width: var(--inner-field-size);
+    height: var(--inner-field-size);
+    fill: var(--layer-3-light);
+    transition: var(--transition);
+}
+
+.label{
+    color: var(--layer-3-light);
+    line-height: normal;
+    transition: var(--transition);
+}
+
+.lst > li > .btn.selected{
+    background-color: var(--accent);
+}
+
+.lst > li > .btn.selected > svg{
+    fill: var(--accent-contrast);
+}
+
+.lst > li > .btn.selected > .label{
+    font-weight: bolder;
+    color: var(--accent-contrast);
+}
