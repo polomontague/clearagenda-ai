@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import AgendaType, { AgendaItem } from "@/types/Agenda"
 import Card from "@/components/Card"
 import FieldFrame from "@/components/FieldFrame"
@@ -11,16 +11,41 @@ import Utility from "@/lib/Utility"
 import ValueBox from "@/components/ValueBox"
 import Button from "@/components/Button"
 import Confirm from "@/components/Confirm"
+import { useCookies } from "react-cookie"
+import API from "@/lib/API"
+import Alert from "@/components/Alert"
+import axios from "axios"
 
 type AgendaProps = {
-    label: string,
-    agenda: AgendaType
+    day: "today" | "tomorrow"
 }
 
 export default function Agenda(props: AgendaProps) {
+    const [agenda, setAgenda] = useState<AgendaType | undefined>()
     const [confirmMessage, setConfirmMessage] = useState("")
     const [confirmOpen, setConfirmOpen ] = useState(false)
     const [currentItem, setCurrentItem] = useState<AgendaItem | undefined>()
+    const [cookies] = useCookies()
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertOpen, setAlertOpen] = useState(false)
+
+    useEffect(() => {
+        getAgenda(props.day)
+    }, [props.day])
+
+    const getAgenda = (day: "today" | "tomorrow") => {
+        const date = new Date()
+        if (day === "tomorrow") date.setDate(date.getDate() + 1)
+        const dateString = date.toISOString().slice(0, 10)
+        axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agenda?date=${dateString}`, {
+            headers: {
+                Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
+            }
+        }).then(res => {
+            const agenda = res.data.data.agenda
+            setAgenda(agenda)
+        })
+    }
 
     const getDeadlineStatus = (date: Date) => {
         const today = new Date()
@@ -39,22 +64,44 @@ export default function Agenda(props: AgendaProps) {
 
     const handleCompleteConfirm = () => {
         setConfirmOpen(false)
-        console.log(currentItem)
+        if (currentItem?.type === "task") {
+            let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/tasks/${currentItem.task.id}`
+            if (currentItem.task.type === "complex") url += `/steps/${currentItem.task.step.id}`
+            url += "/complete"
+            API.post<{ completed: string }>(url, {}, true).then(data => {
+                const newAgenda = { ...agenda! }
+                newAgenda.items.forEach(item => {
+                    if (item.type === "task") {
+                        if (item.task.type === "simple") {
+                            if (item.task.id === currentItem.task.id) {
+                                item.task.completed = data.completed
+                            }
+                        }
+                        if (item.task.type === "complex") {
+                            //if (item.task.step.id === currentItem.task.)
+                        }
+                    }
+                })
+                setAgenda(newAgenda)
+            }).catch(err => {
+                setAlertMessage(err.message)
+                setAlertOpen(true)
+            })
+        }
     }
 
-    return (
+    return agenda ? (
         <>
             <List>
-                {props.agenda.items.map((item, i) => {
-                    const locked = i >= 2
-                    const completed = i === 0
+                {agenda.items.map((item, i) => {
+                    const locked = false //i >= 2
                     return (
                         <ListItem key={i}>
                             {item.type === "task" && item.task.type === "simple" ? (
                                 <Card
                                     label={item.task.name}
                                     locked={locked}
-                                    completed={completed}
+                                    completed={!!item.task.completed}
                                 >
                                     <FieldFrame>
                                         {item.task.notes ? (
@@ -82,7 +129,7 @@ export default function Agenda(props: AgendaProps) {
                                         fieldset
                                         label={item.task.step.name}
                                         locked={locked}
-                                        completed={completed}
+                                        completed={!!item.task.step.completed}
                                     >
                                         <FieldFrame>
                                             <Fieldset label="Notes">
@@ -108,6 +155,11 @@ export default function Agenda(props: AgendaProps) {
                     )
                 })}
             </List>
+            <Alert
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
             <Confirm
                 message={confirmMessage}
                 open={confirmOpen}
@@ -115,5 +167,5 @@ export default function Agenda(props: AgendaProps) {
                 onRequestConfirm={handleCompleteConfirm}
             />
         </>
-    )
+    ) : null
 }

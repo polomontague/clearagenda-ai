@@ -11,6 +11,9 @@ import Alert from "@/components/Alert"
 import UserContext from "@/contexts/UserContext"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
+import Fieldset from "@/components/Fieldset"
+import Link from "@/components/Link"
+import SecondaryLinkButton from "@/components/SecondaryLinkButton"
 
 export default function LoginForm() {
     const [username, setUsername] = useState("")
@@ -67,6 +70,15 @@ export default function LoginForm() {
                     disabled={submitDisabled}
                     loading={loading}
                 />
+                <Fieldset
+                    description={<>By logging in, you agree to ClearAgenda AI's <Link href="/terms-of-service" label="Terms of Service" /> and <Link href="/privacy-policy" label="Privacy Policy" /></>}
+                >
+                    <SecondaryLinkButton
+                        fieldset
+                        href="/forgot-password"
+                        label="Forgot Password"
+                    />
+                </Fieldset>
             </FieldFrame>
             <Alert
                 message={alertMessage}

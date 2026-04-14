@@ -24,7 +24,7 @@ export const passwordBodySchema = z.object({
 })
 
 export const themeBodySchema = z.object({
-    theme: z.literal([ "light", "dark" ], 'theme must be "light" or "dark"')
+    theme: z.literal([ "light", "dark", "system" ], 'theme must be "light", "dark", or "system"')
 })
 
 export const accentBodySchema = z.object({

@@ -46,25 +46,25 @@
 }
 
 :root[data-theme="light"]{
-	--layer-1: #eeeeee;
-	--layer-1-translucent: rgba(238, 238, 238, 0.8);
-	--layer-1-border: #dddddd;
-	--layer-1-light: #999999;
+	--layer-1: #cccccc;
+	--layer-1-translucent: rgba(204, 204, 204, 0.8);
+	--layer-1-border: #bbbbbb;
+	--layer-1-light: #777777;
 
 	--layer-2: #dddddd;
 	--layer-2-translucent: rgba(221, 221, 221, 0.8);
-	--layer-2-border: #cccccc;
+	--layer-2-border: #bbbbbb;
 	--layer-2-light: #888888;
 
-	--layer-3: #cccccc;
+	--layer-3: #eeeeee;
 	--layer-3-translucent: rgba(204, 204, 204, 0.8);
-	--layer-3-border: #bbbbbb;
-	--layer-3-light: #777777;
+	--layer-3-border: #cccccc;
+	--layer-3-light: #999999;
 
-	--layer-4: #bbbbbb;
-	--layer-4-translucent: rgba(187, 187, 187, 0.8);
-	--layer-4-border: #aaaaaa;
-	--layer-4-light: #666666;
+	--layer-4: #ffffff;
+	--layer-4-translucent: rgba(255, 255, 255, 0.8);
+	--layer-4-border: #dddddd;
+	--layer-4-light: #aaaaaa;
 
 	--contrast: #111111;
 }
@@ -184,4 +184,25 @@ body{
 
 svg{
 	fill: var(--contrast);
+}
+
+input,
+textarea,
+select {
+	appearance: none;
+  -webkit-appearance: none;
+  font-size: 16px !important;
+  font-family: inherit !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  	-webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  	-webkit-text-fill-color: var(--contrast) !important;
+  	transition: background-color 9999s ease-out 0s;
+	font-size: 16px !important;
+  	font-family: inherit !important;
 }

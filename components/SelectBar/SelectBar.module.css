@@ -1,9 +1,12 @@
 .background{
     height: var(--field-size);
     padding: 3px; /* this should be dynamic, based on global css variables */
-    background-color: var(--layer-3);
-    border: var(--border-width) solid var(--layer-3-border);
     border-radius: var(--border-radius);
+}
+
+.background.fieldset{
+    border: none !important;
+    border-radius: 0;
 }
 
 .lstOptions{
@@ -27,12 +30,31 @@
     padding-left: var(--spacing-medium);
     padding-right: var(--spacing-medium);
     border-radius: var(--inner-border-radius);
-    color: var(--layer-3-light);
     transition: var(--transition);
 }
 
 .btn.selected{
     background-color: var(--accent);
     font-weight: bolder;
-    color: var(--accent-contrast);
+    color: var(--accent-contrast) !important;
+}
+
+/* Layer 2 */
+.background.layer2{
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+}
+
+.layer2 .btn{
+    color: var(--layer-2-light);
+}
+
+/* Layer 3 */
+.background.layer3{
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+}
+
+.layer3 .btn{
+    color: var(--layer-3-light);
 }

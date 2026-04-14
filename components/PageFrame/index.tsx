@@ -16,7 +16,7 @@ export default function PageFrame(props: PageFrameProps) {
     return (
         <div className={styles.frame}>
             <header className={styles.header}>
-                <SelectBar options={props.tabs.options} value={props.tabs.value} onChange={(val) => props.tabs.onChange(val)} />
+                <SelectBar layer={2} options={props.tabs.options} value={props.tabs.value} onChange={(val) => props.tabs.onChange(val)} />
             </header>
             <div className={styles.containerScroll}>
                 <div className={styles.containerChildren}>

@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server"
 
-type SuccessOptions = {
+type SuccessStatus = 200 | 201
+type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 422 | 500
+
+type SuccessOptions<Data extends Record<string, any>> = {
     type: "success",
-    data?: Record<string, any>,
-    status: number
+    data?: Data,
+    status: SuccessStatus
 }
 
 type ErrorOptions = {
@@ -11,22 +14,44 @@ type ErrorOptions = {
     code: string,
     message: string,
     fields?: Record<string, string>,
-    status: number
+    status: ErrorStatus
 }
 
-type ResponseOptions = SuccessOptions | ErrorOptions
+type ResponseOptions<Data extends Record<string, any>> = SuccessOptions<Data> | ErrorOptions
 
-const response = (options: ResponseOptions): NextResponse => {
-    return NextResponse.json({
-        success: options.type === "success" ? true : false,
-        data: "data" in options ? options.data : undefined,
-        error: options.type === "error" ? {
+type SuccessResponseBody<Data extends Record<string, any>> = {
+    success: true,
+    data?: Data,
+    status: SuccessStatus
+}
+
+export type ErrorResponseBody = {
+    success: false,
+    error: {
+        code: string,
+        message: string,
+        fields?: Record<string, string>
+    },
+    status: ErrorStatus
+}
+
+type ResponseBody<Data extends Record<string, any>> = SuccessResponseBody<Data> | ErrorResponseBody
+
+const response = <Data extends Record<string, any>>(options: ResponseOptions<Data>): NextResponse<ResponseBody<Data>> => {
+    const body: ResponseBody<Data> = options.type === "success" ? {
+        success: true,
+        data: options.data,
+        status: options.status
+    } : {
+        success: false,
+        error: {
             code: options.code,
             message: options.message,
             fields: options.fields
-        } : undefined,
+        },
         status: options.status
-    }, {
+    }
+    return NextResponse.json(body, {
         status: options.status,
         headers: {
             "Access-Control-Allow-Origin": process.env.BASE_URL ?? "*",
@@ -38,14 +63,14 @@ const response = (options: ResponseOptions): NextResponse => {
 }
 
 const Response = {
-    ok: (data?: Record<string, any>) => {
+    ok: <Data extends Record<string, any>>(data?: Data) => {
         return response({
             type: "success",
             data,
             status: 200
         })
     },
-    created: (data: Record<string, any>) => {
+    created: <Data extends Record<string, any>>(data: Data) => {
         return response({
             type: "success",
             data,
@@ -60,11 +85,11 @@ const Response = {
             status: 400
         })
     },
-    unauthorized: (message: string = "Unauthorized") => {
+    unauthorized: () => {
         return response({
             type: "error",
             code: "UNAUTHORIZED",
-            message,
+            message: "Unauthorized",
             status: 401
         })
     },
@@ -84,11 +109,11 @@ const Response = {
             status: 403
         })
     },
-    notFound: (message: string = "Resource Not Found") => {
+    notFound: () => {
         return response({
             type: "error",
             code: "NOT_FOUND",
-            message,
+            message: "Resource Not Found",
             status: 404
         })
     },

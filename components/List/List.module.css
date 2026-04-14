@@ -2,8 +2,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: var(--spacing-small);
+    width: 100%;
+    min-width: 0;
 }
 
 .lstItem{
-    width: 100%;
+    min-width: 0;
 }

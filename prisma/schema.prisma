@@ -15,6 +15,7 @@ datasource db {
 enum theme {
 	light
 	dark
+	system
 }
 
 enum accent {

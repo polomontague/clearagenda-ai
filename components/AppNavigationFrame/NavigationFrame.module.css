@@ -1,4 +1,5 @@
 .frame{
+    z-index: 0;
 }
 
 .sidebar{
@@ -15,6 +16,7 @@
     top: 0;
     bottom: 0;
     left: 0;
+    z-index: 2;
 }
 
 .nav{
@@ -24,57 +26,42 @@
     flex: 1;
 }
 
-.lstLinks{
+.lstMenu{
     display: -webkit-flex;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-small);
 }
 
-.link{
-    display: -webkit-inline-flex;
-    display: inline-flex;
-    gap: var(--spacing-very-small);
-    align-items: center;
-    padding-right: var(--spacing-medium);
-}
-
-.link > .containerIcon{
+.btn{
     display: -webkit-flex;
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: var(--field-size);
+    gap: var(--spacing-small);
     height: var(--field-size);
-    background-color: var(--layer-3);
-    border: var(--border-width) solid var(--layer-3-border);
+    padding-left: var(--spacing-large);
+    padding-right: var(--spacing-large);
     border-radius: var(--border-radius);
-}
-
-.link > .containerIcon > svg{
-    width: var(--icon-size);
-    height: var(--icon-size);
-    fill: var(--accent);
-}
-
-.link .label{
-    font-weight: bolder;
     color: var(--layer-2-light);
 }
 
-.link.selected > .containerIcon{
+.btn > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--layer-2-light);
+}
+
+.btn.selected{
     background-color: var(--accent);
-    border: none;
+    font-weight: bolder;
+    color: var(--accent-contrast)
 }
 
-.link.selected svg{
-    fill: var(--contrast);
-}
-
-.link.selected .label{
-    color: var(--contrast);
+.btn.selected > svg{
+    fill: var(--accent-contrast);
 }
 
 .main{
     margin-left: var(--sidebar-width);
+    z-index: 1;
 }

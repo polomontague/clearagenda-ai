@@ -1,41 +1,26 @@
 import "./reset.css"
 import "./globals.css"
+import CookiesProvider from "@/providers/CookiesProvider"
 import { ReactNode } from "react"
-import NavigationFrame from "@/components/NavigationFrame"
-import { CalendarIcon, BrainIcon } from "@/components/Icons"
 import { UserProvider } from "@/contexts/UserContext"
-import CookiesProvider from "@/components/CookiesProvider"
-import Appearance from "@/constants/Appearance"
+import AppearanceProvider from "@/providers/AppearanceProvider"
 
 type RootLayoutProps = {
-	children: ReactNode
+    children: ReactNode
 }
 
 export default function RootLayout(props: RootLayoutProps) {
-	return (
-		<html lang="en" data-theme={Appearance.DEFAULT_THEME} data-accent={Appearance.DEFAULT_ACCENT}>
+    return (
+        <html lang="en" suppressHydrationWarning>
 		<body>
-			<CookiesProvider>
-				<UserProvider>
-					<NavigationFrame
-						links={[
-							{
-								icon: <CalendarIcon />,
-								href: "/agenda",
-								label: "Agenda"
-							},
-							{
-								icon: <BrainIcon />,
-								href: "/memory",
-								label: "Memory"
-							}
-						]}
-					>
-						{props.children}
-					</NavigationFrame>
-				</UserProvider>
-			</CookiesProvider>
-		</body>
-		</html>
-	)
+            <CookiesProvider>
+                <UserProvider>
+                    <AppearanceProvider>
+                        {props.children}
+                    </AppearanceProvider>
+                </UserProvider>
+            </CookiesProvider>
+        </body>
+        </html>
+    )
 }

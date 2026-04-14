@@ -1,10 +1,10 @@
 import styles from "./Fieldset.module.css"
-import { ReactNode } from "react"
+import { ReactNode, ReactElement } from "react"
 
 type FieldsetProps = {
     layer?: 2 | 3,
     label?: string,
-    description?: string,
+    description?: string | ReactElement,
     children: ReactNode
 }
 

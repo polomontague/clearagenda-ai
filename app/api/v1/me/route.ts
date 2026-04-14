@@ -7,7 +7,7 @@ import { NextRequest } from "next/server"
 export const GET = async (req: NextRequest) => {
     try {
         const user = await Auth.authenticate(req)
-
+        
         return Response.ok({ user })
     } catch (err) {
         if (err instanceof HttpError) return err.response

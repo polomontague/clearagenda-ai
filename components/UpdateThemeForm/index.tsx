@@ -12,42 +12,43 @@ import Alert from "@/components/Alert"
 import Theme from "@/types/Theme"
 import Fieldset from "@/components/Fieldset"
 import Appearance from "@/constants/Appearance"
+import LabelField from "@/components/LabelField"
+import Toggle from "@/components/Toggle"
+import API from "@/lib/API"
 
 export default function UpdateThemeForm() {
-    const [theme, setTheme] = useState<Theme>(Appearance.DEFAULT_THEME)
+    const [theme, setTheme] = useState<Exclude<Theme, "system">>(Appearance.DEFAULT_THEME)
     const [cookies] = useCookies()
     const router = useRouter()
     const { user, setUser } = useContext(UserContext)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const [submitLoading, setSubmitLoading] = useState(false)
+    const [deviceSettings, setDeviceSettings] = useState(true)
 
     useEffect(() => {
         if (user) {
-            setTheme(user.preferences.theme)
+            setDeviceSettings(user.preferences.theme === "system")
+            if (user.preferences.theme !== "system") setTheme(user.preferences.theme)
         }
     }, [user])
 
     const handleSubmit = () => {
         if (cookies.token) {
             setSubmitLoading(true)
-            axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${user!.id}/preferences/theme`, {
-                theme
-            }, {
-                headers: {
-                    Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
-                }
-            }).then(res => {
+            API.put<{ theme: Theme }>(`/api/v1/users/${user!.id}/preferences/theme`, {
+                theme: deviceSettings ? "system" : theme
+            }, true).then(data => {
                 setSubmitLoading(false)
                 const newUser = { ...user! }
-                newUser.preferences.theme = res.data.data.theme
+                newUser.preferences.theme = data.theme
                 setUser(newUser)
 
                 setAlertMessage("Theme Saved Successfully")
                 setAlertOpen(true)
             }).catch(err => {
                 setSubmitLoading(false)
-                setAlertMessage(err.response.data.error.message)
+                setAlertMessage(err.message)
                 setAlertOpen(true)
             })
         } else {
@@ -59,7 +60,12 @@ export default function UpdateThemeForm() {
         <Form onSubmit={handleSubmit}>
             <FieldFrame>
                 <Fieldset label="Theme">
-                    <ThemePicker fieldset value={theme} onChange={(val) => setTheme(val)} />
+                    <LabelField fieldset label="Device Settings">
+                        <Toggle on={deviceSettings} onChange={(val) => setDeviceSettings(val)} />
+                    </LabelField>
+                    {!deviceSettings ? (
+                        <ThemePicker fieldset value={theme} onChange={(val) => setTheme(val)} />
+                    ) : null}
                 </Fieldset>
                 <Button
                     label="Update Theme"

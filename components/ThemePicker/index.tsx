@@ -4,15 +4,17 @@ import styles from "./ThemePicker.module.css"
 import Theme from "@/types/Theme"
 import { MoonIcon, SunIcon } from "../Icons"
 
+type ThemeValue = Exclude<Theme, "system">
+
 type ThemePickerProps = {
     fieldset?: boolean,
-    value: Theme,
-    onChange: (value: Theme) => void
+    value: ThemeValue,
+    onChange: (value: ThemeValue) => void
 }
 
 export default function ThemePicker(props: ThemePickerProps) {
     const options: {
-        value: Theme,
+        value: ThemeValue,
         icon: ReactElement<SVGElement>,
         label: string
     }[] = [

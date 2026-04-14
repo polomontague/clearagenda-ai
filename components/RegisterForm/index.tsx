@@ -13,6 +13,7 @@ import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import Fieldset from "@/components/Fieldset"
 import PhoneInput from "@/components/PhoneInput"
+import Link from "@/components/Link"
 
 export default function RegisterForm() {
     const [firstName, setFirstName] = useState("")
@@ -85,11 +86,16 @@ export default function RegisterForm() {
                     <PasswordInput fieldset create placeholder="Password..." value={password} onChange={(val) => setPassword(val)} />
                     <PasswordInput fieldset placeholder="Confirm Password..." value={confirmPassword} onChange={(val) => setConfirmPassword(val)} />
                 </Fieldset>
-                <Button
-                    label="Start Free Trial"
-                    disabled={submitDisabled}
-                    loading={loading}
-                />
+                <Fieldset
+                    description={<>By creating an account, you agree to ClearAgenda AI's <Link href="/terms-of-service" label="Terms of Service" /> and <Link href="/privacy-policy" label="Privacy Policy" /></>}
+                >
+                    <Button
+                        fieldset
+                        label="Start Free Trial"
+                        disabled={submitDisabled}
+                        loading={loading}
+                    />
+                </Fieldset>
             </FieldFrame>
             <Alert
                 message={alertMessage}

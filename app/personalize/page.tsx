@@ -1,4 +1,4 @@
-import Wizard, { Slide } from "@/components/Wizard"
+import Wizard, { Slide } from "@/components/Wizard(old)"
 import UpdateThemeForm from "@/components/UpdateThemeForm"
 import UpdateAccentForm from "@/components/UpdateAccentForm"
 import UpdatePreferencesHoursForm from "@/components/UpdatePreferencesHoursForm"

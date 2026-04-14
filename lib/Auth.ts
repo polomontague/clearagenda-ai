@@ -37,7 +37,7 @@ const Auth = {
             }
             const decode = jwt.verify(token, process.env.JWT_SECRET ?? "") as JwtPayload
             const user = await UsersDAO.getUserById(decode.id)
-            if (!user) throw new Error("User Does Not Exist")
+            if (!user) throw new HttpError(Response.unauthorized())
             return user
         } catch (err) {
             throw new HttpError(Response.unauthorized())
