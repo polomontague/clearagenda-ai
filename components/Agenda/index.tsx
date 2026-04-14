@@ -11,10 +11,9 @@ import Utility from "@/lib/Utility"
 import ValueBox from "@/components/ValueBox"
 import Button from "@/components/Button"
 import Confirm from "@/components/Confirm"
-import { useCookies } from "react-cookie"
 import API from "@/lib/API"
 import Alert from "@/components/Alert"
-import axios from "axios"
+import { Step } from "@/types/Item"
 
 type AgendaProps = {
     day: "today" | "tomorrow"
@@ -25,7 +24,6 @@ export default function Agenda(props: AgendaProps) {
     const [confirmMessage, setConfirmMessage] = useState("")
     const [confirmOpen, setConfirmOpen ] = useState(false)
     const [currentItem, setCurrentItem] = useState<AgendaItem | undefined>()
-    const [cookies] = useCookies()
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
 
@@ -37,13 +35,8 @@ export default function Agenda(props: AgendaProps) {
         const date = new Date()
         if (day === "tomorrow") date.setDate(date.getDate() + 1)
         const dateString = date.toISOString().slice(0, 10)
-        axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/agenda?date=${dateString}`, {
-            headers: {
-                Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
-            }
-        }).then(res => {
-            const agenda = res.data.data.agenda
-            setAgenda(agenda)
+        API.get<{ agenda: AgendaType }>(`/api/v1/agenda?date=${dateString}`, true).then(data => {
+            setAgenda(data.agenda)
         })
     }
 
@@ -55,10 +48,7 @@ export default function Agenda(props: AgendaProps) {
 
     const handleCompleteClick = (item: AgendaItem) => {
         setCurrentItem(item)
-        const name = item.type === "task" && item.task.type === "simple" ? item.task.name
-            : item.type === "task" && item.task.type === "complex" ? item.task.step.name
-            : ""
-        setConfirmMessage(`Mark "${name}" as Complete?`)
+        setConfirmMessage(`Mark "${item.step.name}" as Complete?`)
         setConfirmOpen(true)
     }
 
@@ -97,24 +87,23 @@ export default function Agenda(props: AgendaProps) {
                     const locked = false //i >= 2
                     return (
                         <ListItem key={i}>
-                            {item.type === "task" && item.task.type === "simple" ? (
+                            <Fieldset layer={2} label={item.name}>
                                 <Card
-                                    label={item.task.name}
+                                    fieldset
+                                    label={item.step.name}
                                     locked={locked}
-                                    completed={!!item.task.completed}
+                                    completed={!!item.step.completed}
                                 >
                                     <FieldFrame>
-                                        {item.task.notes ? (
-                                            <Fieldset label="Notes">
-                                                <ValueBox fieldset value={item.task.notes} />
-                                            </Fieldset>
-                                        ) : <></>}
+                                        <Fieldset label="Notes">
+                                            <ValueBox fieldset value={item.step.notes} />
+                                        </Fieldset>
                                         <LabelField label="Duration">
-                                            <InnerValue label={Utility.formatTime(item.task.duration)} />
+                                            <InnerValue label={Utility.formatTime(item.step.duration)} />
                                         </LabelField>
-                                        {item.task.deadline ? (
+                                        {item.deadline ? (
                                             <LabelField label="Deadline">
-                                                <InnerValue label={getDeadlineStatus(new Date(item.task.deadline))} />
+                                                <InnerValue label={getDeadlineStatus(new Date(item.deadline))} />
                                             </LabelField>
                                         ) : <></>}
                                         <Button
@@ -123,34 +112,7 @@ export default function Agenda(props: AgendaProps) {
                                         />
                                     </FieldFrame>
                                 </Card>
-                            ) : item.type === "task" && item.task.type === "complex" ? (
-                                <Fieldset layer={2} label={item.task.name}>
-                                    <Card
-                                        fieldset
-                                        label={item.task.step.name}
-                                        locked={locked}
-                                        completed={!!item.task.step.completed}
-                                    >
-                                        <FieldFrame>
-                                            <Fieldset label="Notes">
-                                                <ValueBox fieldset value={item.task.step.notes} />
-                                            </Fieldset>
-                                            <LabelField label="Duration">
-                                                <InnerValue label={Utility.formatTime(item.task.step.duration)} />
-                                            </LabelField>
-                                            {item.task.deadline ? (
-                                                <LabelField label="Deadline">
-                                                    <InnerValue label={getDeadlineStatus(new Date(item.task.deadline))} />
-                                                </LabelField>
-                                            ) : <></>}
-                                            <Button
-                                                label="Mark Complete"
-                                                onClick={() => handleCompleteClick(item)}
-                                            />
-                                        </FieldFrame>
-                                    </Card>
-                                </Fieldset>
-                            ) : null}
+                            </Fieldset>
                         </ListItem>
                     )
                 })}

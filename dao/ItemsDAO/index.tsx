@@ -84,6 +84,18 @@ const ItemsDAO = {
             ...itemsBaseQuery
         })
         return assembleItem(result)
+    },
+    updateCompleted: async (stepId: number) => {
+        const completed = new Date()
+        await prisma.item_steps.update({
+            where: {
+                id: stepId
+            },
+            data: {
+                completed
+            }
+        })
+        return completed.toISOString()
     }
 }
 

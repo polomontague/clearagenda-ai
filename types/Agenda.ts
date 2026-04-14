@@ -1,6 +1,6 @@
 import Item, { Step } from "@/types/Item"
 
-type AgendaItem = Omit<Item, "steps"> & {
+export type AgendaItem = Omit<Item, "steps"> & {
     step: Step
 }
 
