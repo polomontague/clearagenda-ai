@@ -85,17 +85,16 @@ const ItemsDAO = {
         })
         return assembleItem(result)
     },
-    updateCompleted: async (stepId: number) => {
-        const completed = new Date()
+    updateCompleted: async (stepId: number, data?: Date) => {
         await prisma.item_steps.update({
             where: {
                 id: stepId
             },
             data: {
-                completed
+                completed: data ? data : null
             }
         })
-        return completed.toISOString()
+        return data?.toISOString()
     }
 }
 

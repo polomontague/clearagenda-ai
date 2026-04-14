@@ -55,7 +55,7 @@ export default function Agenda(props: AgendaProps) {
     const handleCompleteConfirm = () => {
         if (currentItem) {
             setConfirmOpen(false)
-            const url = `/api/v1/items/${currentItem.id}/steps/${currentItem.step.id}`
+            const url = `/api/v1/items/${currentItem.id}/steps/${currentItem.step.id}/complete`
             API.post<{ completed: string }>(url, {}, true).then(data => {
                 const newAgenda = { ...agenda! }
                 const foundItem = newAgenda.items.find(item => item.id === currentItem.id && item.step.id === currentItem.step.id)

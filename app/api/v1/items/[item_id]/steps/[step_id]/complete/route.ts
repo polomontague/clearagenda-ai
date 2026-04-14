@@ -18,7 +18,7 @@ export const POST = async (req: NextRequest, props: { params: Promise<{ task_id:
         if (user.id !== item.user.id) throw new HttpError(Response.forbidden())
 
         let completed = step.completed
-        if (!completed) completed = await ItemsDAO.updateCompleted(params.step_id)
+        if (!completed) completed = await ItemsDAO.updateCompleted(params.step_id, new Date())
         
         return Response.ok({ completed })
     } catch (err) {
