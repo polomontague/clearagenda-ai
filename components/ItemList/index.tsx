@@ -1,7 +1,7 @@
 "use client"
 import List, { ListItem } from "@/components/List"
 import API from "@/lib/API"
-import Item from "@/types/Item"
+import Item, { Step } from "@/types/Item"
 import { useState, useEffect, useContext } from "react"
 import ControlCard from "@/components/ControlCard"
 import Fieldset from "@/components/Fieldset"
@@ -91,6 +91,26 @@ export default function ItemList() {
         setStepsModalOpen(true)
     }
 
+    const handleCompletedChange = (item: Item, step: Step) => {
+        const prevCompleted = step.completed
+        const newCompleted = step.completed ? undefined : new Date().toISOString()
+        console.log(step.completed)
+        updateCompleted(item, step, newCompleted)
+        let url = `/api/v1/items/${item.id}/steps/${step.id}`
+        url += prevCompleted ? "/uncomplete" : "/complete"
+        API.post<{ completed?: string }>(url, {}, true).catch(err => {
+            updateCompleted(item, step, prevCompleted)
+        })
+    }
+
+    const updateCompleted = (item: Item, step: Step, completed?: string) => {
+        const newItems = [ ...items ]
+        const foundItem = newItems.find(item2 => item2.id === item.id)
+        const foundStep = foundItem?.steps.find(step2 => step2.id === step.id)
+        if (foundStep) foundStep.completed = completed
+        setItems(newItems)
+    }
+
     if (!user) return
 
     return (
@@ -136,7 +156,10 @@ export default function ItemList() {
                                     <InnerValue label={Utility.formatTime(step.duration, averageHours(user))} />
                                 </LabelField>
                                 <LabelField fieldset label="Completed">
-                                    <Toggle on={!!step.completed} />
+                                    <Toggle
+                                        on={!!step.completed}
+                                        onChange={() => handleCompletedChange(currentItem, step)}
+                                    />
                                 </LabelField>
                             </Fieldset>
                         ))}
