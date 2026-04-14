@@ -24,9 +24,9 @@
 
 .toggle.on{
     background-color: var(--accent);
-    border: none;
+    border: var(--border-width) solid var(--accent);
 }
 
 .toggle.on > .dot{
-    margin-left: 20px;
+    margin-left: 18px;
 }
