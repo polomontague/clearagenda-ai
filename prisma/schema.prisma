@@ -34,7 +34,7 @@ enum accent {
 
 model users {
 	id Int @id @default(autoincrement())
-	tasks tasks[]
+	items items[]
 	first_name String @db.VarChar(30)
 	last_name String @db.VarChar(60)
 	email String @db.VarChar(100) @unique
@@ -56,14 +56,13 @@ model users {
 model tasks {
 	id Int @id @default(autoincrement())
 	user_id Int
-	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 	steps task_steps[]
 	name String @db.VarChar(100)
 	notes String? @db.VarChar(300)
 	description String? @db.Text
 	duration Int?
 	deadline DateTime?
-	importance Float // normalized 0-1
+	importance Float
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 	completed DateTime?
@@ -73,6 +72,29 @@ model task_steps {
 	id Int @id @default(autoincrement())
 	task_id Int
 	task tasks @relation(fields: [task_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	notes String @db.VarChar(300)
+	duration Int
+	completed DateTime?
+}
+
+model items {
+	id Int @id @default(autoincrement())
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	description String @db.Text
+	steps item_steps[]
+	deadline DateTime?
+	importance Float
+	created DateTime @default(now())
+	updated DateTime @updatedAt
+}
+
+model item_steps {
+	id Int @id @default(autoincrement())
+	item_id Int
+	item items @relation(fields: [item_id], references: [id], onDelete: Cascade)
 	name String @db.VarChar(100)
 	notes String @db.VarChar(300)
 	duration Int
