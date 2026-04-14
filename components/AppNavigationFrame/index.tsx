@@ -3,8 +3,10 @@ import styles from "./NavigationFrame.module.css"
 import { ReactElement, ReactNode, useState } from "react"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
-import { CalendarIcon, BrainIcon, GearIcon } from "@/components/Icons"
+import { CalendarIcon, BrainIcon, GearIcon, PlusIcon } from "@/components/Icons"
 import SettingsModal from "@/components/SettingsModal"
+import FormModal from "@/components/FormModal"
+import ItemForm from "@/components/ItemForm"
 
 type Link = {
     type: "link",
@@ -28,8 +30,15 @@ type NavigationFrameProps = {
 
 export default function NavigationFrame(props: NavigationFrameProps) {
     const pathname = usePathname()
+    const [addItemModalOpen, setAddItemModalOpen] = useState(false)
     const [settingsModalOpen, setSettingsModalOpen] = useState(false)
     const items: Item[] = [
+        {
+            type: "button",
+            icon: <PlusIcon />,
+            label: "Add Agenda Item",
+            onClick: () => setAddItemModalOpen(true)
+        },
         {
             type: "link",
             icon: <CalendarIcon />,
@@ -49,6 +58,11 @@ export default function NavigationFrame(props: NavigationFrameProps) {
             onClick: () => setSettingsModalOpen(true)
         }
     ]
+
+    const handleAddItemSuccess = (item: Item) => {
+        setAddItemModalOpen(false)
+        console.log(item)
+    }
 
     return (
         <div className={styles.frame}>
@@ -82,6 +96,16 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                         })}
                     </ul>
                 </nav>
+                <FormModal
+                    open={addItemModalOpen}
+                    label="Add Agenda Item"
+                    onRequestCancel={() => setAddItemModalOpen(false)}
+                >
+                    <ItemForm
+                        type="new"
+                        onSuccess={handleAddItemSuccess}
+                    />
+                </FormModal>
                 <SettingsModal open={settingsModalOpen} onRequestClose={() => setSettingsModalOpen(false)} />
             </aside>
             <main className={styles.main}>
