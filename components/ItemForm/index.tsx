@@ -76,7 +76,11 @@ export default function ItemForm(props: ItemFormProps) {
     return (
         <Form onSubmit={handleSubmit}>
             <FieldFrame>
-                <TextArea rows={8} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
+                <Fieldset
+                    description="Our AI breaks down tasks into actionable steps, and estimates importance and duration."
+                >
+                    <TextArea fieldset rows={8} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
+                </Fieldset>
                 <Fieldset>
                     <LabelField fieldset label="Deadline">
                         <Toggle on={hasDeadline} onChange={(val) => setHasDeadline(val)} />

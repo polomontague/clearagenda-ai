@@ -97,6 +97,9 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                         })}
                     </ul>
                 </nav>
+            </aside>
+            <main className={styles.main}>
+                {props.children}
                 <FormModal
                     open={addItemModalOpen}
                     label="Add Agenda Item"
@@ -108,9 +111,6 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                     />
                 </FormModal>
                 <SettingsModal open={settingsModalOpen} onRequestClose={() => setSettingsModalOpen(false)} />
-            </aside>
-            <main className={styles.main}>
-                {props.children}
             </main>
         </div>
     )

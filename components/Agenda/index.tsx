@@ -53,25 +53,13 @@ export default function Agenda(props: AgendaProps) {
     }
 
     const handleCompleteConfirm = () => {
-        setConfirmOpen(false)
-        if (currentItem?.type === "task") {
-            let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/tasks/${currentItem.task.id}`
-            if (currentItem.task.type === "complex") url += `/steps/${currentItem.task.step.id}`
-            url += "/complete"
+        if (currentItem) {
+            setConfirmOpen(false)
+            const url = `/api/v1/items/${currentItem.id}/steps/${currentItem.step.id}`
             API.post<{ completed: string }>(url, {}, true).then(data => {
                 const newAgenda = { ...agenda! }
-                newAgenda.items.forEach(item => {
-                    if (item.type === "task") {
-                        if (item.task.type === "simple") {
-                            if (item.task.id === currentItem.task.id) {
-                                item.task.completed = data.completed
-                            }
-                        }
-                        if (item.task.type === "complex") {
-                            //if (item.task.step.id === currentItem.task.)
-                        }
-                    }
-                })
+                const foundItem = newAgenda.items.find(item => item.id === currentItem.id && item.step.id === currentItem.step.id)
+                if (foundItem) foundItem.step.completed = data.completed
                 setAgenda(newAgenda)
             }).catch(err => {
                 setAlertMessage(err.message)

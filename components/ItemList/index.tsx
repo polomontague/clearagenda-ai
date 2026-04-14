@@ -18,6 +18,8 @@ import Alert from "@/components/Alert"
 import Confirm from "@/components/Confirm"
 import FormModal from "@/components/FormModal"
 import ItemForm from "@/components/ItemForm"
+import Modal from "@/components/Modal"
+import Toggle from "@/components/Toggle"
 
 export default function ItemList() {
     const [items, setItems] = useState<Item[]>([])
@@ -28,6 +30,7 @@ export default function ItemList() {
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
+    const [stepsModalOpen, setStepsModalOpen] = useState(false)
 
     useEffect(() => {
         API.get<{ items: Item[] }>("/api/v1/items", true).then(data => {
@@ -83,6 +86,11 @@ export default function ItemList() {
         })
     }
 
+    const handleStepsClick = (item: Item) => {
+        setCurrentItem(item)
+        setStepsModalOpen(true)
+    }
+
     if (!user) return
 
     return (
@@ -103,6 +111,7 @@ export default function ItemList() {
                                     <InnerButton
                                         icon={<DownArrowIcon />}
                                         label={`${item.steps.length} ${item.steps.length === 1 ? "Step" : "Steps"}`}
+                                        onClick={() => handleStepsClick(item)}
                                     />
                                 </LabelField>
                                 <LabelField label="Duration">
@@ -113,6 +122,27 @@ export default function ItemList() {
                     </ListItem>
                 ))}
             </List>
+            <Modal
+                label="Steps"
+                open={stepsModalOpen}
+                onRequestClose={() => setStepsModalOpen(false)}
+            >
+                {currentItem ? (
+                    <FieldFrame>
+                        {currentItem.steps.map((step, i) => (
+                            <Fieldset key={i} label={step.name}>
+                                <ValueBox fieldset value={step.notes} />
+                                <LabelField fieldset label="Duration">
+                                    <InnerValue label={Utility.formatTime(step.duration, averageHours(user))} />
+                                </LabelField>
+                                <LabelField fieldset label="Completed">
+                                    <Toggle on={!!step.completed} />
+                                </LabelField>
+                            </Fieldset>
+                        ))}
+                    </FieldFrame>
+                ) : null}
+            </Modal>
             <FormModal
                 label="Edit Agenda Item"
                 open={editModalOpen}

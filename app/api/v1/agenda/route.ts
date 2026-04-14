@@ -32,7 +32,7 @@ export const GET = async (req: NextRequest) => {
             return new Date(a.created).getTime() - new Date(b.created).getTime()
         })
         const agendas = groupItemsIntoAgendas(items, dayMinutes)
-        const agenda = agendas[dayIndex] ?? { tasks: [] }
+        const agenda = agendas[dayIndex] ?? { items: [] }
 
         return Response.ok({ agenda })
     } catch (err) {

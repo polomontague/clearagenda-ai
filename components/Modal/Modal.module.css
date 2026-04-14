@@ -9,6 +9,7 @@
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 1000;
 }
 
 .overlay.open{
@@ -22,8 +23,8 @@
 
 .window{
     width: 100%;
-    max-width: 600px;
-    height: 500px;
+    max-width: var(--modal-width);
+    height: var(--modal-height);
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
     border-radius: var(--border-radius);

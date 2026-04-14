@@ -1,5 +1,5 @@
 .frame{
-    z-index: 0;
+    
 }
 
 .sidebar{
@@ -16,7 +16,6 @@
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 2;
 }
 
 .nav{
@@ -63,5 +62,4 @@
 
 .main{
     margin-left: var(--sidebar-width);
-    z-index: 1;
 }
