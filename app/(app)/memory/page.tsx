@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import TaskList from "@/components/TaskList"
+import ItemList from "@/components/ItemList"
 import PageFrame from "@/components/PageFrame"
 
 export default function MemoryPage() {
@@ -17,7 +17,7 @@ export default function MemoryPage() {
                 onChange: setTab
             }}
         >
-            <TaskList />
+            <ItemList />
         </PageFrame>
     )
 }
