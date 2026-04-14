@@ -1,19 +1,8 @@
-import { SimpleTask, ComplexTask, ComplexTaskStep } from "@/types/Task"
+import Item, { Step } from "@/types/Item"
 
-type StepTask = Omit<ComplexTask, "steps"> & {
-    step: ComplexTaskStep
+type AgendaItem = Omit<Item, "steps"> & {
+    step: Step
 }
-
-type TaskAgendaItem = {
-    type: "task",
-    task: SimpleTask | StepTask
-}
-
-type EventAgendaItem = {
-    type: "event"
-}
-
-export type AgendaItem = TaskAgendaItem | EventAgendaItem
 
 type Agenda = {
     items: AgendaItem[]

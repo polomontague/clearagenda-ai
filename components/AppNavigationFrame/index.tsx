@@ -7,6 +7,7 @@ import { CalendarIcon, BrainIcon, GearIcon, PlusIcon } from "@/components/Icons"
 import SettingsModal from "@/components/SettingsModal"
 import FormModal from "@/components/FormModal"
 import ItemForm from "@/components/ItemForm"
+import Item from "@/types/Item"
 
 type Link = {
     type: "link",
@@ -22,7 +23,7 @@ type Button = {
     onClick: () => void
 }
 
-type Item = Link | Button
+type MenuItem = Link | Button
 
 type NavigationFrameProps = {
     children: ReactNode
@@ -32,7 +33,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     const pathname = usePathname()
     const [addItemModalOpen, setAddItemModalOpen] = useState(false)
     const [settingsModalOpen, setSettingsModalOpen] = useState(false)
-    const items: Item[] = [
+    const items: MenuItem[] = [
         {
             type: "button",
             icon: <PlusIcon />,
