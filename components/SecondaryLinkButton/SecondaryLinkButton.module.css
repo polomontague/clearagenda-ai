@@ -5,11 +5,11 @@
     align-items: center;
     width: 100%;
     height: var(--field-size);
-    border: var(--border-width) solid var(--accent);
-    border-radius: var(--border-radius);
-    color: var(--accent);
-
     background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+    font-weight: bolder;
+    color: var(--accent);
 }
 
 .btn.fieldset{

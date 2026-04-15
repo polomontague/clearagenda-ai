@@ -18,6 +18,11 @@
     z-index: 2;
 }
 
+.header .containerCenter{
+    width: 100%;
+    max-width: 280px;
+}
+
 .containerScroll{
     padding-top: calc(var(--field-size) + var(--spacing-medium) + var(--spacing-medium));
     z-index: 1;

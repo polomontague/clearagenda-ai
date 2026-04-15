@@ -40,6 +40,7 @@ export default function ItemForm(props: ItemFormProps) {
     useEffect(() => {
         if (props.type === "edit") {
             setDescription(props.item.description)
+            setHasDeadline(!!props.item.deadline)
             setDeadline(props.item.deadline ? new Date(props.item.deadline) : new Date())
         }
     }, [ props.type === "edit" ? props.item : null ])

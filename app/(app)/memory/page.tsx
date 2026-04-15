@@ -2,19 +2,21 @@
 import { useState } from "react"
 import ItemList from "@/components/ItemList"
 import PageFrame from "@/components/PageFrame"
+import SearchInput from "@/components/SearchInput"
 
 export default function MemoryPage() {
-    const [tab, setTab] = useState("tasks")
+    const [search, setSearch] = useState("")
 
     return (
         <PageFrame
-            tabs={{
-                options: [
-                    { value: "tasks", label: "Tasks" },
-                    { value: "events", label: "Events" }
-                ],
-                value: tab,
-                onChange: setTab
+            header={{
+                center: (
+                    <SearchInput
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(val) => setSearch(val)}
+                    />
+                )
             }}
         >
             <ItemList />

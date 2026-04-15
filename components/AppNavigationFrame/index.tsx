@@ -3,11 +3,13 @@ import styles from "./NavigationFrame.module.css"
 import { ReactElement, ReactNode, useState } from "react"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
-import { CalendarIcon, BrainIcon, GearIcon, PlusIcon } from "@/components/Icons"
+import { CalendarIcon, BrainIcon, GearIcon, PlusIcon, LogoutIcon } from "@/components/Icons"
 import SettingsModal from "@/components/SettingsModal"
 import FormModal from "@/components/FormModal"
 import ItemForm from "@/components/ItemForm"
 import Item from "@/types/Item"
+import { useCookies } from "react-cookie"
+import { useRouter } from "next/navigation"
 
 type Link = {
     type: "link",
@@ -33,6 +35,8 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     const pathname = usePathname()
     const [addItemModalOpen, setAddItemModalOpen] = useState(false)
     const [settingsModalOpen, setSettingsModalOpen] = useState(false)
+    const [cookies, setCookie, removeCookie] = useCookies()
+    const router = useRouter()
     const items: MenuItem[] = [
         {
             type: "button",
@@ -57,12 +61,24 @@ export default function NavigationFrame(props: NavigationFrameProps) {
             icon: <GearIcon />,
             label: "Settings",
             onClick: () => setSettingsModalOpen(true)
+        },
+        {
+            type: "button",
+            icon: <LogoutIcon />,
+            label: "Logout",
+            onClick: handleLogoutClick
         }
     ]
 
     const handleAddItemSuccess = (item: Item) => {
         setAddItemModalOpen(false)
         console.log(item)
+    }
+
+    function handleLogoutClick() {
+        removeCookie("token")
+        router.push("/login")
+        // TODO: Blacklist the token on the server
     }
 
     return (

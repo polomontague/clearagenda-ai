@@ -74,7 +74,7 @@ export default function UpdateAccentForm() {
         <Form onSubmit={handleSubmit}>
             <FieldFrame>
                 <Fieldset>
-                    <LabelField fieldset label="Accent Color">
+                    <LabelField fieldset label="Color">
                         <InnerValue label={labelMap[accent]} />
                     </LabelField>
                     <AccentPicker fieldset value={accent} onChange={(val) => setAccent(val)} />

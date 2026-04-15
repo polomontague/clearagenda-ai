@@ -65,20 +65,19 @@ export default function LoginForm() {
             <FieldFrame>
                 <TextInput placeholder="Email or Phone..." value={username} onChange={(val) => setUsername(val)} />
                 <PasswordInput placeholder="Password..." value={password} onChange={(val) => setPassword(val)} />
-                <Button
-                    label="Login"
-                    disabled={submitDisabled}
-                    loading={loading}
-                />
                 <Fieldset
                     description={<>By logging in, you agree to ClearAgenda AI's <Link href="/terms-of-service" label="Terms of Service" /> and <Link href="/privacy-policy" label="Privacy Policy" /></>}
                 >
-                    <SecondaryLinkButton
-                        fieldset
-                        href="/forgot-password"
-                        label="Forgot Password"
+                    <Button
+                        label="Login"
+                        disabled={submitDisabled}
+                        loading={loading}
                     />
                 </Fieldset>
+                <SecondaryLinkButton
+                    href="/forgot-password"
+                    label="Forgot Password"
+                />
             </FieldFrame>
             <Alert
                 message={alertMessage}

@@ -2,6 +2,7 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react"
 import User from "@/types/User"
 import API from "@/lib/API"
+import { useCookies } from "react-cookie"
 
 type UserProviderProps = {
     children: ReactNode
@@ -17,12 +18,17 @@ const UserContext = createContext<{
 
 export const UserProvider = (props: UserProviderProps) => {
     const [user, setUser] = useState<User | undefined>()
+    const [cookies] = useCookies()
 
     useEffect(() => {
-        API.get<{ user: User }>("/api/v1/me", true).then(data => {
-            setUser(data.user)
-        })
-    }, [])
+        if (cookies.token) {
+            API.get<{ user: User }>("/api/v1/me", true).then(data => {
+                setUser(data.user)
+            })
+        } else {
+            setUser(undefined)
+        }
+    }, [cookies.token])
 
     return (
         <UserContext.Provider value={{ user, setUser }}>
