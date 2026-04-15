@@ -9,3 +9,15 @@
 .lstItem{
     min-width: 0;
 }
+
+@media screen and (max-width: 800px){
+    .lst{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .lst{
+        grid-template-columns: 1fr;
+    }
+}

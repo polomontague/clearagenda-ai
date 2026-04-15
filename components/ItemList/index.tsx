@@ -94,7 +94,6 @@ export default function ItemList() {
     const handleCompletedChange = (item: Item, step: Step) => {
         const prevCompleted = step.completed
         const newCompleted = step.completed ? undefined : new Date().toISOString()
-        console.log(step.completed)
         updateCompleted(item, step, newCompleted)
         let url = `/api/v1/items/${item.id}/steps/${step.id}`
         url += prevCompleted ? "/uncomplete" : "/complete"

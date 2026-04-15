@@ -53,31 +53,6 @@ model users {
 	updated DateTime @updatedAt
 }
 
-model tasks {
-	id Int @id @default(autoincrement())
-	user_id Int
-	steps task_steps[]
-	name String @db.VarChar(100)
-	notes String? @db.VarChar(300)
-	description String? @db.Text
-	duration Int?
-	deadline DateTime?
-	importance Float
-	created DateTime @default(now())
-	updated DateTime @updatedAt
-	completed DateTime?
-}
-
-model task_steps {
-	id Int @id @default(autoincrement())
-	task_id Int
-	task tasks @relation(fields: [task_id], references: [id], onDelete: Cascade)
-	name String @db.VarChar(100)
-	notes String @db.VarChar(300)
-	duration Int
-	completed DateTime?
-}
-
 model items {
 	id Int @id @default(autoincrement())
 	user_id Int

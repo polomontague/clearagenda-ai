@@ -41,7 +41,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
         {
             type: "button",
             icon: <PlusIcon />,
-            label: "Add Agenda Item",
+            label: "Add Item",
             onClick: () => setAddItemModalOpen(true)
         },
         {
@@ -96,7 +96,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                                             href={item.href}
                                         >
                                             {item.icon}
-                                            {item.label}
+                                            <span className={styles.label}>{item.label}</span>
                                         </NextLink>
                                     ) : item.type === "button" ? (
                                         <button
@@ -105,7 +105,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                                             onClick={() => item.onClick()}
                                         >
                                             {item.icon}
-                                            {item.label}
+                                            <span className={styles.label}>{item.label}</span>
                                         </button>
                                     ) : null}
                                 </li>

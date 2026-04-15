@@ -31,3 +31,9 @@
 .containerChildren{
     padding: var(--spacing-medium);
 }
+
+@media screen and (max-width: 1000px){
+    .header{
+        left: 0;
+    }
+}
