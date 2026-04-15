@@ -4,7 +4,6 @@ import RangeInput from "@/components/RangeInput"
 import FieldFrame from "@/components/FieldFrame"
 import { useState, useEffect, useContext } from "react"
 import Button from "@/components/Button"
-import axios from "axios"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import UserContext from "@/contexts/UserContext"
@@ -12,6 +11,9 @@ import Alert from "@/components/Alert"
 import Fieldset from "@/components/Fieldset"
 import LabelField from "@/components/LabelField"
 import InnerValue from "@/components/InnerValue"
+import Loading from "@/components/Loading"
+import API from "@/lib/API"
+import User from "@/types/User"
 
 export default function UpdatePreferencesHoursForm() {
     const [sunday, setSunday] = useState(0)
@@ -26,7 +28,7 @@ export default function UpdatePreferencesHoursForm() {
     const { user, setUser } = useContext(UserContext)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
-    const [submitLoading, setSubmitLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (user) {
@@ -42,8 +44,8 @@ export default function UpdatePreferencesHoursForm() {
 
     const handleSubmit = () => {
         if (cookies.token) {
-            setSubmitLoading(true)
-            axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${user!.id}/preferences/hours`, {
+            setLoading(true)
+            API.put<{ hours: User["preferences"]["hours"] }>(`/api/v1/users/${user!.id}/preferences/hours`, {
                 sunday,
                 monday,
                 tuesday,
@@ -51,21 +53,17 @@ export default function UpdatePreferencesHoursForm() {
                 thursday,
                 friday,
                 saturday
-            }, {
-                headers: {
-                    Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
-                }
-            }).then(res => {
-                setSubmitLoading(false)
+            }, true).then(data => {
+                setLoading(false)
                 const newUser = { ...user! }
-                newUser.preferences.hours = res.data.data.hours
+                newUser.preferences.hours = data.hours
                 setUser(newUser)
 
                 setAlertMessage("Hours Updated Successfully")
                 setAlertOpen(true)
             }).catch(err => {
-                setSubmitLoading(false)
-                setAlertMessage(err.response.data.error.message)
+                setLoading(false)
+                setAlertMessage(err.message)
                 setAlertOpen(true)
             })
         } else {
@@ -121,11 +119,9 @@ export default function UpdatePreferencesHoursForm() {
                     </LabelField>
                     <RangeInput fieldset min={0} max={24} step={1} value={saturday} onChange={(val) => setSaturday(val)} />
                 </Fieldset>
-                <Button
-                    label="Update Hours"
-                    loading={submitLoading}
-                />
+                <Button label="Update Hours" />
             </FieldFrame>
+            <Loading loading={loading} />
             <Alert
                 message={alertMessage}
                 open={alertOpen}

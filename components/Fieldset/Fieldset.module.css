@@ -9,7 +9,6 @@
 
 .label{
     font-size: var(--font-size-small);
-    color: var(--layer-2-light);
     line-height: normal;
     margin-bottom: var(--spacing-very-small);
     margin-left: var(--spacing-small);
@@ -17,7 +16,6 @@
 
 .description{
     font-size: var(--font-size-small);
-    color: var(--layer-2-light);
     margin-top: var(--spacing-very-small);
     margin-left: var(--spacing-small);
 }
@@ -28,8 +26,18 @@
     border: var(--border-width) solid var(--layer-2-border);
 }
 
+.layer2 .label,
+.layer2 .description{
+    color: var(--layer-1-light);
+}
+
 /* Layer 3 */
 .layer3 .frame{
     background-color: var(--layer-3-border);
     border: var(--border-width) solid var(--layer-3-border);
+}
+
+.layer3 .label,
+.layer3 .description{
+    color: var(--layer-2-light);
 }

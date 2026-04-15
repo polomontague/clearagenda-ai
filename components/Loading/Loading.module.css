@@ -1,0 +1,24 @@
+.overlay{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--layer-2-translucent);
+    backdrop-filter: blur(var(--blur));
+    position: absolute;
+    left: 0;
+    top: var(--field-size);
+    right: 0;
+    bottom: 0;
+}
+
+.overlay.loading{
+    display: -webkit-flex;
+    display: flex;
+}
+
+.containerSpinner{
+    padding: var(--spacing-large);
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--border-radius);
+}

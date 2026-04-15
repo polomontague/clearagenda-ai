@@ -4,12 +4,14 @@ import TextInput from "@/components/TextInput"
 import FieldFrame from "@/components/FieldFrame"
 import { useState, useEffect, useContext } from "react"
 import Button from "@/components/Button"
-import axios from "axios"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import UserContext from "@/contexts/UserContext"
 import Alert from "@/components/Alert"
 import Fieldset from "@/components/Fieldset"
+import Loading from "@/components/Loading"
+import API from "@/lib/API"
+import User from "@/types/User"
 
 export default function UpdateNameForm() {
     const [firstName, setFirstName] = useState("")
@@ -20,7 +22,7 @@ export default function UpdateNameForm() {
     const { user, setUser } = useContext(UserContext)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
-    const [submitLoading, setSubmitLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (user) {
@@ -42,25 +44,21 @@ export default function UpdateNameForm() {
 
     const handleSubmit = () => {
         if (cookies.token) {
-            setSubmitLoading(true)
-            axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${user!.id}/name`, {
+            setLoading(true)
+            API.put<{ name: User["name"] }>(`/api/v1/users/${user!.id}/name`, {
                 first: firstName,
                 last: lastName
-            }, {
-                headers: {
-                    Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
-                }
-            }).then(res => {
-                setSubmitLoading(false)
+            }, true).then(data => {
+                setLoading(false)
                 const newUser = { ...user! }
-                newUser.name = res.data.data.name
+                newUser.name = data.name
                 setUser(newUser)
 
                 setAlertMessage("Name Updated Successfully")
                 setAlertOpen(true)
             }).catch(err => {
-                setSubmitLoading(false)
-                setAlertMessage(err.response.data.error.message)
+                setLoading(false)
+                setAlertMessage(err.message)
                 setAlertOpen(true)
             })
         } else {
@@ -78,7 +76,6 @@ export default function UpdateNameForm() {
                 <Button
                     label="Update Name"
                     disabled={submitDisabled}
-                    loading={submitLoading}
                 />
             </FieldFrame>
             <Alert
@@ -86,6 +83,7 @@ export default function UpdateNameForm() {
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}
             />
+            <Loading loading={loading} />
         </Form>
     )
 }

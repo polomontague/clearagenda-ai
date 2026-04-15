@@ -13,6 +13,7 @@ import LabelField from "@/components/LabelField"
 import Utility from "@/lib/Utility"
 import InnerValue from "@/components/InnerValue"
 import API from "@/lib/API"
+import Loading from "@/components/Loading"
 
 type BaseProps = {
     onSuccess: (item: Item) => void
@@ -36,6 +37,7 @@ export default function ItemForm(props: ItemFormProps) {
     const [alertOpen, setAlertOpen] = useState(false)
     const [hasDeadline, setHasDeadline] = useState(false)
     const [deadline, setDeadline] = useState(new Date())
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (props.type === "edit") {
@@ -56,6 +58,7 @@ export default function ItemForm(props: ItemFormProps) {
     }
 
     const handleSubmit = () => {
+        setLoading(true)
         const method = props.type === "new" ? "post" : "put"
         const endpoint = `/api/v1/items${props.type === "edit" ? `/${props.item.id}` : ""}`
         const body = {
@@ -63,12 +66,14 @@ export default function ItemForm(props: ItemFormProps) {
             deadline: hasDeadline ? deadline.toISOString() : undefined
         }
         API[method]<{ item: Item }>(endpoint, body, true).then(data => {
+            setLoading(false)
             if (props.type === "new") {
                 setDescription("")
                 setDeadline(new Date())
             }
             props.onSuccess(data.item)
         }).catch(err => {
+            setLoading(false)
             setAlertMessage(err.message)
             setAlertOpen(true)
         })
@@ -82,7 +87,9 @@ export default function ItemForm(props: ItemFormProps) {
                 >
                     <TextArea fieldset rows={8} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
                 </Fieldset>
-                <Fieldset>
+                <Fieldset
+                    description="Deadlines are used to prioritize Agenda Items."
+                >
                     <LabelField fieldset label="Deadline">
                         <Toggle on={hasDeadline} onChange={(val) => setHasDeadline(val)} />
                     </LabelField>
@@ -97,7 +104,8 @@ export default function ItemForm(props: ItemFormProps) {
                 </Fieldset>
             </FieldFrame>
             <Alert open={alertOpen} message={alertMessage} onRequestClose={() => setAlertOpen(false)} />
-            <DoneButton disabled={doneDisabled} />
+            <DoneButton disabled={doneDisabled || loading} />
+            <Loading loading={loading} />
         </Form>
     )
 }

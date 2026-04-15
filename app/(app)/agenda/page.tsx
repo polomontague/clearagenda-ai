@@ -12,10 +12,11 @@ export default function AgendaPage() {
             header={{
                 center: (
                     <SelectBar
+                        layer={2}
                         options={[
                             { value: "today", label: "Today" },
                             { value: "tomorrow", label: "Tomorrow" }
-                        ]}
+                        ] as const}
                         value={tab}
                         onChange={(val) => setTab(val)}
                     />

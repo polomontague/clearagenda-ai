@@ -4,12 +4,14 @@ import TextInput from "@/components/TextInput"
 import FieldFrame from "@/components/FieldFrame"
 import { useState, useEffect, useContext } from "react"
 import Button from "@/components/Button"
-import axios from "axios"
+import User from "@/types/User"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import UserContext from "@/contexts/UserContext"
 import Alert from "@/components/Alert"
 import Validation from "@/lib/Validation"
+import Loading from "@/components/Loading"
+import API from "@/lib/API"
 
 export default function UpdateEmailForm() {
     const [email, setEmail] = useState("")
@@ -19,7 +21,7 @@ export default function UpdateEmailForm() {
     const { user, setUser } = useContext(UserContext)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
-    const [submitLoading, setSubmitLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (user) {
@@ -39,24 +41,20 @@ export default function UpdateEmailForm() {
 
     const handleSubmit = () => {
         if (cookies.token) {
-            setSubmitLoading(true)
-            axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${user!.id}/email`, {
+            setLoading(true)
+            API.put<{ email: User["email"]}>(`/api/v1/users/${user!.id}/email`, {
                 email
-            }, {
-                headers: {
-                    Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
-                }
-            }).then(res => {
-                setSubmitLoading(false)
+            }, true).then(data => {
+                setLoading(false)
                 const newUser = { ...user! }
-                newUser.email = res.data.data.email
+                newUser.email = data.email
                 setUser(newUser)
 
                 setAlertMessage("Email Updated Successfully")
                 setAlertOpen(true)
             }).catch(err => {
-                setSubmitLoading(false)
-                setAlertMessage(err.response.data.error.message)
+                setLoading(false)
+                setAlertMessage(err.message)
                 setAlertOpen(true)
             })
         } else {
@@ -71,7 +69,6 @@ export default function UpdateEmailForm() {
                 <Button
                     label="Update Email"
                     disabled={submitDisabled}
-                    loading={submitLoading}
                 />
             </FieldFrame>
             <Alert
@@ -79,6 +76,7 @@ export default function UpdateEmailForm() {
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}
             />
+            <Loading loading={loading} />
         </Form>
     )
 }

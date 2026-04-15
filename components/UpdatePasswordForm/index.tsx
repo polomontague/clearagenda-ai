@@ -3,7 +3,6 @@ import Form from "@/components/Form"
 import FieldFrame from "@/components/FieldFrame"
 import { useState, useEffect, useContext } from "react"
 import Button from "@/components/Button"
-import axios from "axios"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import Alert from "@/components/Alert"
@@ -11,6 +10,9 @@ import Validation from "@/lib/Validation"
 import PasswordInput from "@/components/PasswordInput"
 import UserContext from "@/contexts/UserContext"
 import Fieldset from "@/components/Fieldset"
+import User from "@/types/User"
+import API from "@/lib/API"
+import Loading from "@/components/Loading"
 
 export default function UpdatePasswordForm() {
     const [currentPassword, setCurrentPassword] = useState("")
@@ -21,7 +23,7 @@ export default function UpdatePasswordForm() {
     const router = useRouter()
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
-    const [submitLoading, setSubmitLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const { user } = useContext(UserContext)
 
     useEffect(() => {
@@ -38,22 +40,21 @@ export default function UpdatePasswordForm() {
 
     const handleSubmit = () => {
         if (cookies.token) {
-            setSubmitLoading(true)
-            axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${user!.id}/password`, {
+            setLoading(true)
+            API.put(`/api/v1/users/${user?.id}/password`, {
                 current_password: currentPassword,
                 new_password: newPassword
-            }, {
-                headers: {
-                    Authorization: cookies.token ? `Bearer ${cookies.token}` : undefined
-                }
-            }).then(res => {
-                setSubmitLoading(false)
+            }, true).then(() => {
+                setLoading(false)
+                setCurrentPassword("")
+                setNewPassword("")
+                setConfirmNewPassword("")
 
                 setAlertMessage("Password Changed Successfully")
                 setAlertOpen(true)
             }).catch(err => {
-                setSubmitLoading(false)
-                setAlertMessage(err.response.data.error.message)
+                setLoading(false)
+                setAlertMessage(err.message)
                 setAlertOpen(true)
             })
         } else {
@@ -72,7 +73,6 @@ export default function UpdatePasswordForm() {
                 <Button
                     label="Change Password"
                     disabled={submitDisabled}
-                    loading={submitLoading}
                 />
             </FieldFrame>
             <Alert
@@ -80,6 +80,7 @@ export default function UpdatePasswordForm() {
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}
             />
+            <Loading loading={loading} />
         </Form>
     )
 }

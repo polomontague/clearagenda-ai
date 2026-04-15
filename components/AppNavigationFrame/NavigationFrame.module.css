@@ -56,6 +56,12 @@
     .btn:focus,
     .btn.selected{
         background-color: var(--accent);
+    }
+
+    .btn:hover > .label,
+    .btn:active > .label,
+    .btn:focus > .label,
+    .btn.selected > .label{
         font-weight: bolder;
         color: var(--accent-contrast)
     }

@@ -56,11 +56,6 @@ export default function SettingsModal(props: SettingsModalProps) {
                 <SlideModalOption label="Preferences">
                     <SlideModalSlide>
                         <FieldFrame>
-                            <SlideModalOption label="Daily hours">
-                                <SlideModalSlide>
-                                    <UpdatePreferencesHoursForm />
-                                </SlideModalSlide>
-                            </SlideModalOption>
                             <SlideModalOption label="Appearance">
                                 <SlideModalSlide>
                                     <FieldFrame>
@@ -75,6 +70,11 @@ export default function SettingsModal(props: SettingsModalProps) {
                                             </SlideModalSlide>
                                         </SlideModalOption>
                                     </FieldFrame>
+                                </SlideModalSlide>
+                            </SlideModalOption>
+                            <SlideModalOption label="Daily hours">
+                                <SlideModalSlide>
+                                    <UpdatePreferencesHoursForm />
                                 </SlideModalSlide>
                             </SlideModalOption>
                         </FieldFrame>

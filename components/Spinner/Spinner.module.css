@@ -1,8 +1,7 @@
 .spinner{
-	display: inline-block;
 	width: 1em;
 	height: 1em;
-	font-size: 16px;
+	font-size: var(--spinner-size);
     position: relative;
 }
 

@@ -6,7 +6,7 @@ const Appearance: {
     DEFAULT_ACCENT: Accent
 } = {
     DEFAULT_THEME: "light",
-    DEFAULT_ACCENT: "pink"
+    DEFAULT_ACCENT: "sky"
 }
 
 export default Appearance

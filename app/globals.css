@@ -1,5 +1,5 @@
 :root{
-	--red: #ff0a23;
+	--red: #ff142b;
 	--orange: #ff9100;
 	--coral: #fa6f3c;
 	--yellow: #ffd60a;
@@ -10,7 +10,8 @@
 	--sky: #0099ff;
 	--lavender: #9999ff;
 	--pink: #ff3366;
-	--white: #ffffff;
+	--white: rgb(248, 250, 252);
+	--very-dark-grey: rgb(13, 15, 17);
 
 	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	--font-size: 13px;
@@ -34,6 +35,7 @@
 	--inner-font-size: 11px;
 	--inner-border-radius: 4px;
 	--footer-height: 80px;
+	--spinner-size: 20px;
 
 	/* Variables used for scaling inputs so they don't zoom on mobile */
 	--font-size-number: 13; /* needs to match --font-size */
@@ -47,117 +49,117 @@
 }
 
 :root[data-theme="light"]{
-	--layer-1: #cccccc;
-	--layer-1-translucent: rgba(204, 204, 204, 0.8);
-	--layer-1-border: #bbbbbb;
-	--layer-1-light: #777777;
+	--layer-1: rgb(197, 199, 201);
+	--layer-1-translucent: rgba(197, 199, 201, 0.8);
+	--layer-1-border: rgb(180, 182, 184);
+	--layer-1-light: rgb(112, 114, 116);
 
-	--layer-2: #dddddd;
-	--layer-2-translucent: rgba(221, 221, 221, 0.8);
-	--layer-2-border: #bbbbbb;
-	--layer-2-light: #888888;
+	--layer-2: rgb(214, 216, 218);
+	--layer-2-translucent: rgba(214, 216, 218, 0.8);
+	--layer-2-border: rgb(180, 182, 184);
+	--layer-2-light: rgb(129, 131, 133);
 
-	--layer-3: #eeeeee;
-	--layer-3-translucent: rgba(204, 204, 204, 0.8);
-	--layer-3-border: #cccccc;
-	--layer-3-light: #999999;
+	--layer-3: rgb(231, 233, 235);
+	--layer-3-translucent: rgba(231, 233, 235, 0.8);
+	--layer-3-border: rgb(197, 199, 201);
+	--layer-3-light: rgb(146, 148, 150);
 
-	--layer-4: #ffffff;
-	--layer-4-translucent: rgba(255, 255, 255, 0.8);
-	--layer-4-border: #dddddd;
-	--layer-4-light: #aaaaaa;
+	--layer-4: rgb(248, 250, 252);
+	--layer-4-translucent: rgba(248, 250, 252, 0.8);
+	--layer-4-border: rgb(214, 216, 218);
+	--layer-4-light: rgb(163, 165, 167);
 
-	--contrast: #111111;
+	--contrast: var(--very-dark-grey);
 }
 
 :root[data-theme="dark"]{
-	--layer-1: #111111;
-	--layer-1-translucent: rgba(17, 17, 17, 0.8);
-	--layer-1-border: #222222;
-	--layer-1-light: #666666;
+	--layer-1: rgb(13, 15, 17);
+	--layer-1-translucent: rgba(13, 15, 17, 0.8);
+	--layer-1-border: rgb(30, 32, 34);
+	--layer-1-light: rgb(98, 100, 102);
 
-	--layer-2: #222222;
-	--layer-2-translucent: rgba(34, 34, 34, 0.8);
-	--layer-2-border: #333333;
-	--layer-2-light: #777777;
+	--layer-2: rgb(30, 32, 34);
+	--layer-2-translucent: rgba(30, 32, 34, 0.8);
+	--layer-2-border: rgb(47, 49, 51);
+	--layer-2-light: rgb(115, 117, 119);
 
-	--layer-3: rgb(51, 51, 51);
-	--layer-3-translucent: rgba(51, 51, 51, 0.8);
-	--layer-3-border: #444444;
-	--layer-3-light: #888888;
+	--layer-3: rgb(47, 49, 51);
+	--layer-3-translucent: rgba(47, 49, 51, 0.8);
+	--layer-3-border: rgb(64, 66, 68);
+	--layer-3-light: rgb(132, 134, 136);
 
-	--layer-4: #444444;
-	--layer-4-translucent: rgba(68, 68, 68, 0.8);
-	--layer-4-border: #555555;
-	--layer-4-light: #999999;
+	--layer-4: rgb(64, 66, 68);
+	--layer-4-translucent: rgba(64, 66, 68, 0.8);
+	--layer-4-border: rgb(81, 83, 85);
+	--layer-4-light: rgb(149, 151, 153);
 
-	--contrast: #ffffff;
+	--contrast: var(--white);
 }
 
 :root[data-accent="red"]{
 	--accent: var(--red);
-	--accent-translucent: rgba(255, 10, 35, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-translucent: rgba(255, 20, 43, 0.5);
+	--accent-contrast:var(--white);
 }
 
 :root[data-accent="orange"]{
 	--accent: var(--orange);
 	--accent-translucent: rgba(255, 145, 0, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 :root[data-accent="coral"]{
 	--accent: var(--coral);
 	--accent-translucent: rgba(250, 111, 60, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 :root[data-accent="yellow"]{
 	--accent: var(--yellow);
 	--accent-translucent: rgba(255, 214, 10, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 :root[data-accent="lime"]{
 	--accent: var(--lime);
 	--accent-translucent: rgba(204, 255, 0, 0.5);
-	--accent-contrast: #111111;
+	--accent-contrast: var(--very-dark-grey);
 }
 
 :root[data-accent="green"]{
 	--accent: var(--green);
 	--accent-translucent: rgba(50, 215, 75, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 :root[data-accent="mint"]{
 	--accent: var(--mint);
 	--accent-translucent: rgba(70, 210, 117, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 :root[data-accent="turquoise"]{
 	--accent: var(--turquoise);
 	--accent-translucent: rgba(3, 255, 255, 0.5);
-	--accent-contrast: #111111;
+	--accent-contrast: var(--very-dark-grey);
 }
 
 :root[data-accent="sky"]{
 	--accent: var(--sky);
 	--accent-translucent: rgba(0, 153, 255, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 :root[data-accent="lavender"]{
 	--accent: var(--lavender);
 	--accent-translucent: rgba(153, 153, 255, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 :root[data-accent="pink"]{
 	--accent: var(--pink);
 	--accent-translucent:rgba(255, 51, 102, 0.5);
-	--accent-contrast: #ffffff;
+	--accent-contrast: var(--white);
 }
 
 *{
@@ -191,9 +193,10 @@ input,
 textarea,
 select {
 	appearance: none;
-  -webkit-appearance: none;
-  font-size: 16px !important;
-  font-family: inherit !important;
+  	-webkit-appearance: none;
+  	font-size: 16px !important;
+  	font-family: inherit !important;
+	caret-color: var(--accent);
 }
 
 input:-webkit-autofill,

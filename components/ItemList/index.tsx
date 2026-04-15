@@ -75,7 +75,7 @@ export default function ItemList() {
 
     const handleDeleteConfirm = () => {
         setConfirmOpen(false)
-        API.delete(`/api/v1/tasks/${currentItem?.id}`, true).then(data => {
+        API.delete(`/api/v1/items/${currentItem?.id}`, true).then(data => {
             const newItems = items.filter(item => item.id !== currentItem?.id)
             setItems(newItems)
             setAlertMessage(`"${currentItem?.name}" Deleted Successfully`)

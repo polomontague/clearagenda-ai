@@ -4,7 +4,6 @@ import ThemePicker from "@/components/ThemePicker"
 import FieldFrame from "@/components/FieldFrame"
 import { useState, useEffect, useContext } from "react"
 import Button from "@/components/Button"
-import axios from "axios"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import UserContext from "@/contexts/UserContext"
@@ -15,6 +14,7 @@ import Appearance from "@/constants/Appearance"
 import LabelField from "@/components/LabelField"
 import Toggle from "@/components/Toggle"
 import API from "@/lib/API"
+import Loading from "@/components/Loading"
 
 export default function UpdateThemeForm() {
     const [theme, setTheme] = useState<Exclude<Theme, "system">>(Appearance.DEFAULT_THEME)
@@ -23,7 +23,7 @@ export default function UpdateThemeForm() {
     const { user, setUser } = useContext(UserContext)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
-    const [submitLoading, setSubmitLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [deviceSettings, setDeviceSettings] = useState(true)
 
     useEffect(() => {
@@ -35,11 +35,11 @@ export default function UpdateThemeForm() {
 
     const handleSubmit = () => {
         if (cookies.token) {
-            setSubmitLoading(true)
+            setLoading(true)
             API.put<{ theme: Theme }>(`/api/v1/users/${user!.id}/preferences/theme`, {
                 theme: deviceSettings ? "system" : theme
             }, true).then(data => {
-                setSubmitLoading(false)
+                setLoading(false)
                 const newUser = { ...user! }
                 newUser.preferences.theme = data.theme
                 setUser(newUser)
@@ -47,7 +47,7 @@ export default function UpdateThemeForm() {
                 setAlertMessage("Theme Saved Successfully")
                 setAlertOpen(true)
             }).catch(err => {
-                setSubmitLoading(false)
+                setLoading(false)
                 setAlertMessage(err.message)
                 setAlertOpen(true)
             })
@@ -67,11 +67,9 @@ export default function UpdateThemeForm() {
                         <ThemePicker fieldset value={theme} onChange={(val) => setTheme(val)} />
                     ) : null}
                 </Fieldset>
-                <Button
-                    label="Update Theme"
-                    loading={submitLoading}
-                />
+                <Button label="Update Theme" />
             </FieldFrame>
+            <Loading loading={loading} />
             <Alert
                 message={alertMessage}
                 open={alertOpen}
