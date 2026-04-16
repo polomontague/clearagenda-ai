@@ -10,6 +10,8 @@ import ItemForm from "@/components/ItemForm"
 import Item from "@/types/Item"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
+import Logo from "@/components/Logo"
+import Link from "next/link"
 
 type Link = {
     type: "link",
@@ -84,6 +86,11 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     return (
         <div className={styles.frame}>
             <aside className={styles.sidebar}>
+                <header className={styles.header}>
+                    <Link href="/agenda">
+                        <Logo />
+                    </Link>
+                </header>
                 <nav className={styles.nav}>
                     <ul className={styles.lstMenu}>
                         {items.map((item, i) => {

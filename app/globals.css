@@ -2,7 +2,7 @@
 	--red: #ff142b;
 	--orange: #ff9100;
 	--coral: #fa6f3c;
-	--yellow: #ffd60a;
+	--yellow: #ffd60a;;
 	--lime: #ccff00;
 	--green: #32d74b;
 	--mint: #46d275;
@@ -36,6 +36,7 @@
 	--inner-border-radius: 4px;
 	--footer-height: 80px;
 	--spinner-size: 20px;
+	--header-height: 68px;
 
 	/* Variables used for scaling inputs so they don't zoom on mobile */
 	--font-size-number: 13; /* needs to match --font-size */

@@ -1,0 +1,17 @@
+.frame{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+}
+
+.frame > svg{
+    width: var(--inner-field-size);
+    height: var(--inner-field-size);
+}
+
+.name{
+    font-weight: bolder;
+    font-size: 20px;
+    white-space: nowrap;
+}

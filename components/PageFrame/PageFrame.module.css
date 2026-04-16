@@ -7,6 +7,8 @@
     display: -webkit-flex;
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: var(--header-height);
     padding: var(--spacing-medium);
     background-color: var(--layer-1-translucent);
     backdrop-filter: blur(var(--blur));
@@ -24,7 +26,7 @@
 }
 
 .containerScroll{
-    padding-top: calc(var(--field-size) + var(--spacing-medium) + var(--spacing-medium));
+    padding-top: var(--header-height);
     z-index: 1;
 }
 
@@ -35,5 +37,6 @@
 @media screen and (max-width: 1000px){
     .header{
         left: 0;
+        top: var(--header-height);
     }
 }
