@@ -15,3 +15,7 @@ export const loginBodySchema = z.object({
     username: z.string("username must be a string").trim().refine(value => Validation.email(value) || Validation.phone(value), "username must be a valid email or phone number"),
     password: z.string("password must be a string").trim().refine(value => Validation.password(value), "password must be a valid password")
 })
+
+export const forgotPasswordSchema = z.object({
+    email: z.string("email must be a string").trim().refine(value => Validation.email(value), "email must be a valid email address")
+})

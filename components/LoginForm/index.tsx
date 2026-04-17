@@ -6,14 +6,15 @@ import PasswordInput from "@/components/PasswordInput"
 import FieldFrame from "@/components/FieldFrame"
 import Button from "@/components/Button"
 import Validation from "@/lib/Validation"
-import axios from "axios"
 import Alert from "@/components/Alert"
 import UserContext from "@/contexts/UserContext"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import Fieldset from "@/components/Fieldset"
 import Link from "@/components/Link"
-import SecondaryLinkButton from "@/components/SecondaryLinkButton"
+import Loading from "@/components/Loading"
+import API from "@/lib/API"
+import User from "@/types/User"
 
 export default function LoginForm() {
     const [username, setUsername] = useState("")
@@ -23,8 +24,8 @@ export default function LoginForm() {
     const [alertOpen, setAlertOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const { setUser } = useContext(UserContext)
-    const [ cookies, setCookie ] = useCookies()
     const router = useRouter()
+    const [cookies, setCookie] = useCookies()
 
     useEffect(() => {
         setSubmitDisabled(!validate())
@@ -39,15 +40,15 @@ export default function LoginForm() {
 
     const handleSubmit = () => {
         setLoading(true)
-        axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/login`, {
+        API.post<{ user: User, token: string, type: string, expires: number }>("/api/v1/login", {
             username,
             password
-        }).then(res => {
+        }).then(data => {
             setLoading(false)
-            setUser(res.data.data.user)
-            setCookie("token", res.data.data.token, {
+            setUser(data.user)
+            setCookie("token", data.token, {
                 path: "/",
-                expires: new Date(new Date().getTime() + (res.data.data.expires * 1000)),
+                expires: new Date(new Date().getTime() + (data.expires * 1000)),
                 sameSite: "strict",
                 secure: true,
                 httpOnly: false,
@@ -55,7 +56,7 @@ export default function LoginForm() {
             router.push("/agenda")
         }).catch(err => {
             setLoading(false)
-            setAlertMessage(err.response.data.error.message)
+            setAlertMessage(err.message)
             setAlertOpen(true)
         })
     }
@@ -71,14 +72,10 @@ export default function LoginForm() {
                     <Button
                         label="Login"
                         disabled={submitDisabled}
-                        loading={loading}
                     />
                 </Fieldset>
-                <SecondaryLinkButton
-                    href="/forgot-password"
-                    label="Forgot Password"
-                />
             </FieldFrame>
+            <Loading loading={loading} />
             <Alert
                 message={alertMessage}
                 open={alertOpen}

@@ -1,3 +1,4 @@
+"use client"
 import styles from "./LinkBar.module.css"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"

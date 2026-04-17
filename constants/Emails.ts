@@ -1,7 +1,7 @@
 const Emails = {
-    CONTACT: "contact@clearagenda.ai",
-    NO_REPLY: "noreply@clearagenda.ai",
-    ERRORS: "errors@clearagenda.ai"
+    CONTACT: "contact@worldofmontague.com",
+    NO_REPLY: "no-reply@worldofmontague.com",
+    ERRORS: "errors@worldofmontague.com"
 }
 
 export default Emails

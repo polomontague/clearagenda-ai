@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import Fieldset from "@/components/Fieldset"
 import PhoneInput from "@/components/PhoneInput"
 import Link from "@/components/Link"
+import Loading from "@/components/Loading"
 
 export default function RegisterForm() {
     const [firstName, setFirstName] = useState("")
@@ -93,10 +94,10 @@ export default function RegisterForm() {
                         fieldset
                         label="Start Free Trial"
                         disabled={submitDisabled}
-                        loading={loading}
                     />
                 </Fieldset>
             </FieldFrame>
+            <Loading loading={loading} />
             <Alert
                 message={alertMessage}
                 open={alertOpen}

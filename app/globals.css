@@ -211,3 +211,7 @@ select:-webkit-autofill {
 	font-size: 16px !important;
   	font-family: inherit !important;
 }
+
+::selection{
+	background-color: var(--accent-translucent);
+}

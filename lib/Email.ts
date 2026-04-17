@@ -1,11 +1,12 @@
 import nodemailer from "nodemailer"
-import Emails from "@/constants/Emails"
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.SMTP_HOST ?? "",
+    port: parseInt(process.env.SMTP_PORT ?? ""),
+    secure: true,
     auth: {
-        user: Emails.CONTACT,
-        pass: process.env.GOOGLE_APP_PASSWORD
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD
     }
 })
 
