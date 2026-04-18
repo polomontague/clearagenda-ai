@@ -14,7 +14,7 @@ export default function Fieldset({ layer = 3, label, description, children }: Fi
             {label ? (
                 <p className={styles.label}>{label.toUpperCase()}</p>
             ) : null}
-            <div className={styles.frame}>
+            <div className={styles.containerChildren}>
                 {children}
             </div>
             {description ? (

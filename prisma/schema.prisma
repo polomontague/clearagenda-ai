@@ -35,6 +35,7 @@ enum accent {
 model users {
 	id Int @id @default(autoincrement())
 	items items[]
+	generations generations[]
 	first_name String @db.VarChar(30)
 	last_name String @db.VarChar(60)
 	email String @db.VarChar(100) @unique
@@ -74,4 +75,14 @@ model item_steps {
 	notes String @db.VarChar(500)
 	duration Int
 	completed DateTime?
+}
+
+model generations {
+	id Int @id @default(autoincrement())
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	model String @db.VarChar(30)
+	input_tokens Int
+	output_tokens Int
+	created DateTime @default(now())
 }

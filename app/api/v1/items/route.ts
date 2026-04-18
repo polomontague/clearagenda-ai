@@ -12,7 +12,7 @@ export const POST = async (req: NextRequest) => {
     try {
         const user = await Auth.authenticate(req)
         const body = await Request.body(req, itemBodySchema)
-        const data = await AI.plan(body.description)
+        const data = await AI.plan(user.id, body.description)
         
         const item = await ItemsDAO.createItem({
             user_id: user.id,

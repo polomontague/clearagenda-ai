@@ -20,11 +20,14 @@ const sendRequest = async <Data>({ method, endpoint, body, authorize }: SendRequ
             // TODO: implement token refresh
         }
         const url = `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`
+        const query = new URLSearchParams(window.location.search)
         const config = {
             headers: {
-                Authorization: authorize && cookies.get("token") ? `Bearer ${cookies.get("token")}` : undefined
+                Authorization: authorize && cookies.get("token") ? `Bearer ${cookies.get("token")}`
+                    : authorize && query.get("token") ? `Bearer ${query.get("token")}` : undefined
             }
         }
+        console.log(config)
         const res = method === "post" || method === "put" ? await axios[method](url, body, config)
             : await axios[method](url, config)
         return res.data.data

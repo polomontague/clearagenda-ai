@@ -51,9 +51,9 @@
 /* Thumb styling (Chrome, Safari, Edge) */
 .slider::-webkit-slider-thumb{
     -webkit-appearance: none;
-    width: 24px;
-    height: 24px;
-    background-color: var(--white);
+    width: var(--inner-field-size);
+    height: var(--inner-field-size);
+    background-color: var(--accent);
     border-radius: 50%;
     cursor: pointer;
     margin-top: -9px; /* This should be dynamic based on global css variables */
@@ -63,7 +63,7 @@
 .slider::-moz-range-thumb{
     width: var(--inner-field-size);
     height: var(--inner-field-size);
-    background-color: var(--white);
+    background-color: var(--layer-3-light);
     border: none;
     border-radius: 50%;
     cursor: pointer;

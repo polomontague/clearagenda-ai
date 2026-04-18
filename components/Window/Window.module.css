@@ -34,10 +34,9 @@
     max-height: var(--modal-height);
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
-    border-radius: var(--border-radius);
+    border-radius: var(--outer-border-radius);
     overflow: hidden;
     position: relative;
-    z-index: 1;
 }
 
 .window > .header{
@@ -55,7 +54,7 @@
     left: 0;
     top: 0;
     right: 0;
-    z-index: 3;
+    
 }
 
 .window > .header > .label{
@@ -67,7 +66,6 @@
     min-height: 0;
     padding-top: var(--field-size);
     overflow: scroll;
-    z-index: 2;
 }
 
 .containerChildren{

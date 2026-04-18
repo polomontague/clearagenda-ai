@@ -19,3 +19,7 @@ export const loginBodySchema = z.object({
 export const forgotPasswordSchema = z.object({
     email: z.string("email must be a string").trim().refine(value => Validation.email(value), "email must be a valid email address")
 })
+
+export const resetPasswordBodySchema = z.object({
+    password: z.string("password must be a string").trim().refine(value => Validation.password(value), "password must be a valid password")
+})

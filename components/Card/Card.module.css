@@ -1,7 +1,7 @@
 .background{
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
-    border-radius: var(--border-radius);
+    border-radius: var(--outer-border-radius);
     overflow: hidden;
     position: relative;
 }
@@ -14,10 +14,18 @@
 .header{
     display: -webkit-flex;
     display: flex;
-    align-items: center;
     width: 100%;
     height: var(--field-size);
     border-bottom: var(--border-width) solid var(--layer-2-border);
+}
+
+.containerLabel{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
     position: relative;
 }
 
@@ -35,6 +43,11 @@
     top: 0;
     right: 0;
     bottom: 0;
+}
+
+.containerBtns{
+    display: -webkit-flex;
+    display: flex;
 }
 
 .containerChildren{

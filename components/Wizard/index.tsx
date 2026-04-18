@@ -4,6 +4,8 @@ import { Children, ReactElement, ReactNode, useContext, createContext, useState,
 import Fieldset from "@/components/Fieldset"
 import IconButton from "../IconButton"
 import { LeftArrowIcon, RightArrowIcon } from "@/components/Icons"
+import Link from "next/link"
+import Logo from "@/components/Logo"
 
 type SlideElement = ReactElement<SlideProps, typeof Slide>
 
@@ -38,6 +40,11 @@ export default function Wizard(props: WizardProps) {
             }}
         >
             <div className={styles.background}>
+                <header className={styles.header}>
+                    <Link href="/">
+                        <Logo />
+                    </Link>
+                </header>
                 <Fieldset layer={2} label={props.label}>
                     <div className={styles.window}>
                         <ul

@@ -34,6 +34,7 @@
 	--inner-icon-size: 11px;
 	--inner-font-size: 11px;
 	--inner-border-radius: 4px;
+	--outer-border-radius: 12px;
 	--footer-height: 80px;
 	--spinner-size: 20px;
 	--header-height: 68px;
@@ -51,22 +52,22 @@
 
 :root[data-theme="light"]{
 	--layer-1: rgb(197, 199, 201);
-	--layer-1-translucent: rgba(197, 199, 201, 0.8);
+	--layer-1-translucent: rgba(197, 199, 201, 0.9);
 	--layer-1-border: rgb(180, 182, 184);
 	--layer-1-light: rgb(112, 114, 116);
 
 	--layer-2: rgb(214, 216, 218);
-	--layer-2-translucent: rgba(214, 216, 218, 0.8);
+	--layer-2-translucent: rgba(214, 216, 218, 0.9);
 	--layer-2-border: rgb(180, 182, 184);
 	--layer-2-light: rgb(129, 131, 133);
 
 	--layer-3: rgb(231, 233, 235);
-	--layer-3-translucent: rgba(231, 233, 235, 0.8);
+	--layer-3-translucent: rgba(231, 233, 235, 0.9);
 	--layer-3-border: rgb(197, 199, 201);
 	--layer-3-light: rgb(146, 148, 150);
 
 	--layer-4: rgb(248, 250, 252);
-	--layer-4-translucent: rgba(248, 250, 252, 0.8);
+	--layer-4-translucent: rgba(248, 250, 252, 0.9);
 	--layer-4-border: rgb(214, 216, 218);
 	--layer-4-light: rgb(163, 165, 167);
 
@@ -75,22 +76,22 @@
 
 :root[data-theme="dark"]{
 	--layer-1: rgb(13, 15, 17);
-	--layer-1-translucent: rgba(13, 15, 17, 0.8);
+	--layer-1-translucent: rgba(13, 15, 17, 0.9);
 	--layer-1-border: rgb(30, 32, 34);
 	--layer-1-light: rgb(98, 100, 102);
 
 	--layer-2: rgb(30, 32, 34);
-	--layer-2-translucent: rgba(30, 32, 34, 0.8);
+	--layer-2-translucent: rgba(30, 32, 34, 0.9);
 	--layer-2-border: rgb(47, 49, 51);
 	--layer-2-light: rgb(115, 117, 119);
 
 	--layer-3: rgb(47, 49, 51);
-	--layer-3-translucent: rgba(47, 49, 51, 0.8);
+	--layer-3-translucent: rgba(47, 49, 51, 0.9);
 	--layer-3-border: rgb(64, 66, 68);
 	--layer-3-light: rgb(132, 134, 136);
 
 	--layer-4: rgb(64, 66, 68);
-	--layer-4-translucent: rgba(64, 66, 68, 0.8);
+	--layer-4-translucent: rgba(64, 66, 68, 0.9);
 	--layer-4-border: rgb(81, 83, 85);
 	--layer-4-light: rgb(149, 151, 153);
 

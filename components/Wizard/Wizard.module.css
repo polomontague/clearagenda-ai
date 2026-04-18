@@ -5,6 +5,24 @@
     align-items: center;
     width: 100%;
     height: 100vh;
+    z-index: 0;
+}
+
+.background > .header{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--header-height);
+    padding-left: var(--spacing-large);
+    padding-right: var(--spacing-large);
+    background-color: var(--layer-2);
+    border-bottom: var(--border-width) solid var(--layer-2-border);
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    z-index: 2;
 }
 
 .window{
@@ -14,6 +32,8 @@
     width: var(--modal-width);
     height: var(--modal-height);
     background-color: var(--layer-2);
+    overflow: hidden;
+    z-index: 1;
 }
 
 .lstSlides{
@@ -37,7 +57,7 @@
     position: relative;
 }
 
-.header{
+.slide .header{
     display: -webkit-flex;
     display: flex;
     align-items: center;
@@ -53,7 +73,7 @@
     right: 0;
 }
 
-.label{
+.slide .label{
     flex: 1;
     padding-left: var(--spacing-medium);
     font-weight: bolder;

@@ -29,7 +29,7 @@
     max-height: var(--modal-height);
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
-    border-radius: var(--border-radius);
+    border-radius: var(--outer-border-radius);
     overflow: hidden;
     position: relative;
     z-index: 0;

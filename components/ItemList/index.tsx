@@ -2,14 +2,13 @@
 import List, { ListItem } from "@/components/List"
 import API from "@/lib/API"
 import Item, { Step } from "@/types/Item"
-import { useState, useEffect, useContext } from "react"
-import ControlCard from "@/components/ControlCard"
+import { useState, useContext } from "react"
 import Fieldset from "@/components/Fieldset"
 import FieldFrame from "@/components/FieldFrame"
 import ValueBox from "@/components/ValueBox"
 import LabelField from "@/components/LabelField"
 import InnerButton from "@/components/InnerButton"
-import { DownArrowIcon } from "@/components/Icons"
+import { DownArrowIcon, EditIcon, TrashCanIcon } from "@/components/Icons"
 import InnerValue from "@/components/InnerValue"
 import Utility from "@/lib/Utility"
 import UserContext from "@/contexts/UserContext"
@@ -20,9 +19,11 @@ import FormModal from "@/components/FormModal"
 import ItemForm from "@/components/ItemForm"
 import Modal from "@/components/Modal"
 import Toggle from "@/components/Toggle"
+import ItemsContext from "@/contexts/ItemsContext"
+import Card from "@/components/Card"
 
 export default function ItemList() {
-    const [items, setItems] = useState<Item[]>([])
+    const { items, setItems } = useContext(ItemsContext)
     const { user } = useContext(UserContext)
     const [confirmMessage, setConfirmMessage] = useState("")
     const [confirmOpen, setConfirmOpen] = useState(false)
@@ -31,12 +32,6 @@ export default function ItemList() {
     const [alertOpen, setAlertOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [stepsModalOpen, setStepsModalOpen] = useState(false)
-
-    useEffect(() => {
-        API.get<{ items: Item[] }>("/api/v1/items", true).then(data => {
-            setItems(data.items)
-        })
-    }, [])
 
     const getDuration = (item: Item) => {
         let duration = 0
@@ -117,10 +112,12 @@ export default function ItemList() {
             <List>
                 {items.map((item, i) => (
                     <ListItem key={i}>
-                        <ControlCard
+                        <Card
                             label={item.name}
-                            onRequestEdit={() => handleRequestEdit(item)}
-                            onRequestDelete={() => handleRequestDelete(item)}
+                            buttons={[
+                                { icon: <EditIcon />, onClick: () => handleRequestEdit(item) },
+                                { icon: <TrashCanIcon />, onClick: () => handleRequestDelete(item) }
+                            ]}
                         >
                             <FieldFrame>
                                 <Fieldset label="Description">
@@ -133,11 +130,11 @@ export default function ItemList() {
                                         onClick={() => handleStepsClick(item)}
                                     />
                                 </LabelField>
-                                <LabelField label="Duration">
+                                <LabelField label="Time">
                                         <InnerValue label={Utility.formatTime(getDuration(item), averageHours(user))} />
                                     </LabelField>
                             </FieldFrame>
-                        </ControlCard>
+                        </Card>
                     </ListItem>
                 ))}
             </List>

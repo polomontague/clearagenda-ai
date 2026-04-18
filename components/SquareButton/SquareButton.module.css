@@ -1,0 +1,16 @@
+.btn{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--field-size);
+    height: var(--field-size);
+    background-color: var(--accent);
+    border-radius: var(--border-radius);
+}
+
+.btn > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--accent-contrast);
+}

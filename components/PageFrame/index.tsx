@@ -4,7 +4,8 @@ import { ReactElement, ReactNode } from "react"
 
 type PageFrameProps = {
     header: {
-        center: ReactElement
+        center: ReactElement,
+        right?: ReactElement
     },
     children: ReactNode
 }
@@ -16,6 +17,11 @@ export default function PageFrame(props: PageFrameProps) {
                 <div className={styles.containerCenter}>
                     {props.header.center}
                 </div>
+                {props.header.right ? (
+                    <div className={styles.containerRight}>
+                        {props.header.right}
+                    </div>
+                ) : null}
             </header>
             <div className={styles.containerScroll}>
                 <div className={styles.containerChildren}>

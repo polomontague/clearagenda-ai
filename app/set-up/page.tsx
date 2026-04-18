@@ -17,7 +17,7 @@ export default function SetUpPage() {
                 <Slide label="Accent">
                     <UpdateAccentForm />
                 </Slide>
-                <Slide label="Work Hours">
+                <Slide label="Daily Hours">
                     <UpdatePreferencesHoursForm />
                 </Slide>
                 <Slide label="All Set!">

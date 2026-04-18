@@ -7,34 +7,38 @@ import Auth from "@/lib/Auth"
 import Request from "@/lib/Request"
 import { agendaQuerySchema } from "@/schemas/agenda"
 import User from "@/types/User"
-import Agenda from "@/types/Agenda"
+import Agenda, { AgendaItem } from "@/types/Agenda"
 import Item from "@/types/Item"
 
 export const GET = async (req: NextRequest) => {
     try {
         const user = await Auth.authenticate(req)
         const query = Request.query(req, agendaQuerySchema)
-        const date = query.date ? new Date(query.date) : new Date()
-        const today = new Date()
-        const differenceDays = Math.floor((today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)) // 1 day in milliseconds
-        // differenceDays is negative → closer to 0 = closer to today
-        const dayIndex = differenceDays <= 0 ? Math.abs(differenceDays) : 0
+        const start = new Date(query.start)
         const weekdays: (keyof User["preferences"]["hours"])[] = [ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
-        const dayHours = user.preferences.hours[weekdays[date.getDay()]]
+        const dayHours = user.preferences.hours[weekdays[start.getDay()]]
         const dayMinutes = dayHours * 60
         
         const items = await ItemsDAO.getItems({ user_id: user.id })
-        items.sort((a, b) => {
+        const flattened = flattenSteps(items)
+        const completed = flattened.filter(item => item.step.completed)
+        // Sort completed by completion time
+        completed.sort((a, b) => {
+            return new Date(a.step.completed!).getTime() - new Date(b.step.completed!).getTime()
+        })
+        const incomplete = flattened.filter(item => !item.step.completed)
+        // Sort incomplete by priority
+        incomplete.sort((a, b) => {
             const priorityA = a.urgency + (a.importance * (1 - a.urgency))
             const priorityB = b.urgency + (b.importance * (1 - b.urgency))
             if (priorityA !== priorityB) return priorityB - priorityA // higher priority first
             // tie-breaker: older tasks first
             return new Date(a.created).getTime() - new Date(b.created).getTime()
         })
-        const agendas = groupItemsIntoAgendas(items, dayMinutes)
-        const agenda = agendas[dayIndex] ?? { items: [] }
+        console.log(completed)
+        const days = groupIntoDays(flattened, dayMinutes)
 
-        return Response.ok({ agenda })
+        return Response.ok({ agenda: days[0] })
     } catch (err) {
         if (err instanceof HttpError) return err.response
         Error.notify(err)
@@ -42,20 +46,11 @@ export const GET = async (req: NextRequest) => {
     }
 }
 
-const groupItemsIntoAgendas = (items: Item[], maxMinutesPerDay: number = 480): Agenda[] => {
-    const days: Agenda[] = []
-    let currentDay: Agenda = { items: [] }
-    let currentDayMinutes = 0
-
+const flattenSteps = (items: Item[]): AgendaItem[] => {
+    const flattened: AgendaItem[] = []
     for (const item of items) {
         for (const step of item.steps) {
-            if (currentDayMinutes + step.duration > maxMinutesPerDay) {
-                // Start new day
-                days.push(currentDay)
-                currentDay = { items: [] }
-                currentDayMinutes = 0
-            }
-            currentDay.items.push({
+            flattened.push({
                 id: item.id,
                 user: item.user,
                 name: item.name,
@@ -68,14 +63,28 @@ const groupItemsIntoAgendas = (items: Item[], maxMinutesPerDay: number = 480): A
                 created: item.created,
                 updated: item.updated
             })
-            currentDayMinutes += step.duration
         }
     }
+    return flattened
+}
 
+const groupIntoDays = (items: AgendaItem[], minutesPerDay: number): Agenda[] => {
+    const days: Agenda[] = []
+    let currentDay: Agenda = { items: [] }
+    let currentDayMinutes = 0
+    for (const item of items) {
+        if (currentDayMinutes + item.step.duration > minutesPerDay) {
+            // Start new day
+            days.push(currentDay)
+            currentDay = { items: [] }
+            currentDayMinutes = 0
+        }
+        currentDay.items.push(item)
+        currentDayMinutes += item.step.duration
+    }
     // Add last day if not empty
     if (currentDay.items.length > 0) {
         days.push(currentDay)
     }
-
     return days
 }

@@ -17,7 +17,7 @@ export const PUT = async (req: NextRequest, props: { params: Promise<{ item_id: 
         if (!foundItem) throw new HttpError(Response.notFound())
         if (user.id !== foundItem.user.id) throw new HttpError(Response.forbidden())
         // Only use AI again if description has changed
-        const data = body.description !== foundItem.description ? await AI.plan(body.description) : {
+        const data = body.description !== foundItem.description ? await AI.plan(user.id, body.description) : {
             name: foundItem.name,
             steps: foundItem.steps,
             importance: foundItem.importance

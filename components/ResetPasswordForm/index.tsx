@@ -16,9 +16,9 @@ import Loading from "@/components/Loading"
 import API from "@/lib/API"
 import User from "@/types/User"
 
-export default function LoginForm() {
-    const [username, setUsername] = useState("")
+export default function ResetPasswordForm() {
     const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [submitDisabled, setSubmitDisabled] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
@@ -29,21 +29,20 @@ export default function LoginForm() {
 
     useEffect(() => {
         setSubmitDisabled(!validate())
-    }, [username, password])
+    }, [password, confirmPassword])
 
     const validate = () => {
         let valid = true
-        if (!Validation.email(username) && !Validation.phone(username)) valid = false
         if (!Validation.password(password)) valid = false
+        if (password !== confirmPassword) valid = false
         return valid
     }
 
     const handleSubmit = () => {
         setLoading(true)
-        API.post<{ user: User, token: string, type: string, expires: number }>("/api/v1/login", {
-            username,
+        API.post<{ user: User, token: string, type: string, expires: number }>("/api/v1/reset-password", {
             password
-        }).then(data => {
+        }, true).then(data => {
             setLoading(false)
             setUser(data.user)
             setCookie("token", data.token, {
@@ -64,17 +63,14 @@ export default function LoginForm() {
     return (
         <Form onSubmit={handleSubmit}>
             <FieldFrame>
-                <TextInput placeholder="Email or Phone..." value={username} onChange={(val) => setUsername(val)} />
-                <PasswordInput placeholder="Password..." value={password} onChange={(val) => setPassword(val)} />
-                <Fieldset
-                    description={<>By logging in, you agree to ClearAgenda AI's <Link href="/terms-of-service" label="Terms of Service" /> and <Link href="/privacy-policy" label="Privacy Policy" /></>}
-                >
-                    <Button
-                        fieldset
-                        label="Login"
-                        disabled={submitDisabled}
-                    />
+                <Fieldset label="Password">
+                    <PasswordInput fieldset create placeholder="Password..." value={password} onChange={(val) => setPassword(val)} />
+                    <PasswordInput fieldset placeholder="Confirm Password..." value={confirmPassword} onChange={(val) => setConfirmPassword(val)} />
                 </Fieldset>
+                <Button
+                    label="Reset Password"
+                    disabled={submitDisabled}
+                />
             </FieldFrame>
             <Loading loading={loading} />
             <Alert

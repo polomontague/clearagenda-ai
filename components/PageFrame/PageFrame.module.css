@@ -25,6 +25,17 @@
     max-width: 280px;
 }
 
+.header > .containerRight{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    padding-right: var(--spacing-medium);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .containerScroll{
     padding-top: var(--header-height);
     z-index: 1;

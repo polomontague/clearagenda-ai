@@ -16,7 +16,7 @@
     --dot-size: calc(var(--inner-field-size) - 2px - 2px); /* 2px margin around */
     width: var(--dot-size);
     height: var(--dot-size);
-    background-color: var(--white);
+    background-color: var(--layer-4-light);
     border-radius: 50%;
     margin-left: 2px;
     transition: var(--transition);
@@ -28,5 +28,6 @@
 }
 
 .toggle.on > .dot{
+    background-color: var(--accent-contrast);
     margin-left: 18px;
 }

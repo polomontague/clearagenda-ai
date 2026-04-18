@@ -1,27 +1,25 @@
-.frame{
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: column;
-    gap: var(--border-width);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-}
-
 .label{
     font-size: var(--font-size-small);
     line-height: normal;
     margin-bottom: var(--spacing-very-small);
-    margin-left: var(--spacing-small);
+}
+
+.containerChildren{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--border-width);
+    border-radius: var(--outer-border-radius);
+    overflow: hidden;
 }
 
 .description{
     font-size: var(--font-size-small);
     margin-top: var(--spacing-very-small);
-    margin-left: var(--spacing-small);
 }
 
 /* Layer 2 */
-.layer2 .frame{
+.layer2 .containerChildren{
     background-color: var(--layer-2-border);
     border: var(--border-width) solid var(--layer-2-border);
 }
@@ -29,15 +27,18 @@
 .layer2 .label,
 .layer2 .description{
     color: var(--layer-1-light);
+    margin-left: var(--spacing-medium);
 }
 
 /* Layer 3 */
-.layer3 .frame{
+.layer3 .containerChildren{
     background-color: var(--layer-3-border);
+    border-radius: var(--border-radius);
     border: var(--border-width) solid var(--layer-3-border);
 }
 
 .layer3 .label,
 .layer3 .description{
     color: var(--layer-2-light);
+    margin-left: var(--spacing-small);
 }
