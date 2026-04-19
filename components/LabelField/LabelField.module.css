@@ -16,13 +16,35 @@
     border-radius: 0;
 }
 
-.label{
+.containerLabel{
     display: -webkit-flex;
     display: flex;
     align-items: center;
     flex: 1;
     height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.label{
+    width: 100%;
     font-weight: bolder;
+    white-space: nowrap;
+}
+
+.strike .label{
+    color: var(--layer-3-light);
+    text-decoration: line-through;
+}
+
+.containerLabel > .fade{
+    width: var(--field-size);
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--layer-3));
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .containerChildren{

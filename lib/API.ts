@@ -27,7 +27,6 @@ const sendRequest = async <Data>({ method, endpoint, body, authorize }: SendRequ
                     : authorize && query.get("token") ? `Bearer ${query.get("token")}` : undefined
             }
         }
-        console.log(config)
         const res = method === "post" || method === "put" ? await axios[method](url, body, config)
             : await axios[method](url, config)
         return res.data.data
