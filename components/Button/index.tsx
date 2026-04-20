@@ -1,10 +1,10 @@
 import styles from "./Button.module.css"
 import Spinner from "@/components/Spinner"
-import { MouseEvent } from "react"
+import { MouseEvent, ReactElement } from "react"
 
 type ButtonProps = {
-    fieldset?: boolean,
     label: string,
+    description?: string | ReactElement,
     disabled?: boolean
     loading?: boolean,
     onClick?: (event: MouseEvent) => void
@@ -12,19 +12,24 @@ type ButtonProps = {
 
 const Button = (props: ButtonProps) => {
     return (
-        <button
-            type="submit"
-            className={`${styles.btn} ${props.fieldset ? styles.fieldset : ""}`}
-            disabled={(props.disabled || props.loading) ? true : false}
-            onClick={props.onClick}
-        >
-            {props.label}
-            {props.loading ? (
-                <div className={styles.containerSpinner}>
-                    <Spinner />
-                </div>
+        <div>
+            <button
+                type="submit"
+                className={styles.btn}
+                disabled={(props.disabled || props.loading) ? true : false}
+                onClick={props.onClick}
+            >
+                {props.label}
+                {props.loading ? (
+                    <div className={styles.containerSpinner}>
+                        <Spinner />
+                    </div>
+                ) : null}
+            </button>
+            {props.description ? (
+                <p className={styles.description}>{props.description}</p>
             ) : null}
-        </button>
+        </div>
     )
 }
 

@@ -13,11 +13,6 @@
     position: relative;
 }
 
-.btn.fieldset{
-    border: none !important;
-    border-radius: 0;
-}
-
 .btn:disabled{
     background-color: var(--layer-3);
     border: var(--border-width) solid var(--layer-3-border);
@@ -34,4 +29,11 @@
     right: 0;
     bottom: 0;
     left: 0;
+}
+
+.description{
+    font-size: var(--font-size-small);
+    color: var(--layer-2-light);
+    margin-left: var(--spacing-small);
+    margin-top: var(--spacing-very-small);
 }

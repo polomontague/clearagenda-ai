@@ -87,15 +87,11 @@ export default function RegisterForm() {
                     <PasswordInput fieldset create placeholder="Password..." value={password} onChange={(val) => setPassword(val)} />
                     <PasswordInput fieldset placeholder="Confirm Password..." value={confirmPassword} onChange={(val) => setConfirmPassword(val)} />
                 </Fieldset>
-                <Fieldset
+                <Button
+                    label="Start Free Trial"
                     description={<>By creating an account, you agree to ClearAgenda AI's <Link href="/terms-of-service" label="Terms of Service" /> and <Link href="/privacy-policy" label="Privacy Policy" /></>}
-                >
-                    <Button
-                        fieldset
-                        label="Start Free Trial"
-                        disabled={submitDisabled}
-                    />
-                </Fieldset>
+                    disabled={submitDisabled}
+                />
             </FieldFrame>
             <Loading loading={loading} />
             <Alert

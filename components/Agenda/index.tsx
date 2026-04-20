@@ -74,25 +74,34 @@ const getDayMinutes = (day: Day) => {
     return minutes
 }
 
+const getCurrent = (items: Item[]) => {
+    for (let i = 0; i < items.length; i++) {
+        for (let i2 = 0; i2 < items[i].steps.length; i2++) {
+            if (!items[i].steps[i2].completed) {
+                return {
+                    item: items[i],
+                    step: items[i].steps[i2]
+                }
+            }
+        }
+    }
+}
+
 export default function Agenda(props: AgendaProps) {
     const { items } = useContext(ItemsContext)
     const [agendaItems, setAgendaItems] = useState<Item[]>([])
     const [confirmMessage, setConfirmMessage] = useState("")
     const [confirmOpen, setConfirmOpen ] = useState(false)
-    const [currentIndexes, setCurrentIndexes] = useState<{ item: number, step: number }>()
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const { user } = useContext(UserContext)
-    const current = currentIndexes ? {
-        item: agendaItems[currentIndexes.item],
-        step: agendaItems[currentIndexes.item].steps[currentIndexes.step]
-    } : undefined
+    const current = getCurrent(agendaItems)
+    const today = props.date.toLocaleDateString("en-CA") === new Date().toLocaleDateString("en-CA")
 
     useEffect(() => {
         if (items.length && user) {
             const newAgendaItems = getDateItems(items, props.date, user.preferences.hours)
             setAgendaItems(newAgendaItems)
-            setCurrentIndexes({ item: 0, step: 0 })
         }
     }, [items, user, props.date])
 
@@ -149,32 +158,34 @@ export default function Agenda(props: AgendaProps) {
                         })}
                     </FieldFrame>
                 )}
-                right={current ? (
-                    <Fieldset layer={2} label={current.item.name}>
-                        <Card fieldset label={current.step.name}>
-                            <FieldFrame>
-                                <Fieldset label="Notes">
-                                    <ValueBox fieldset value={current.step.notes} />
-                                </Fieldset>
-                                <LabelField label="Time">
-                                    <InnerValue label={Utility.formatTime(current.step.duration)} />
-                                </LabelField>
-                                {current.item.deadline ? (
-                                    <LabelField label="Deadline">
-                                        <InnerValue
-                                            label={getDeadlineStatus(new Date(current.item.deadline)) === "on_time" ? "On Time" : "Past Due"}
-                                            color={current.step.completed ? undefined : getDeadlineStatus(new Date(current.item.deadline)) === "on_time" ? "var(--green)" : "var(--red)"}
-                                        />
+                right={today ? <>
+                    {current ? (
+                        <Fieldset layer={2} label={current.item.name}>
+                            <Card fieldset label={current.step.name}>
+                                <FieldFrame>
+                                    <Fieldset label="Notes">
+                                        <ValueBox fieldset value={current.step.notes} />
+                                    </Fieldset>
+                                    <LabelField label="Time">
+                                        <InnerValue label={Utility.formatTime(current.step.duration)} />
                                     </LabelField>
-                                ) : <></>}
-                                <Button
-                                    label="Mark Complete"
-                                    onClick={() => handleCompleteClick()}
-                                />
-                            </FieldFrame>
-                        </Card>
-                    </Fieldset>
-                ) : <></>}
+                                    {current.item.deadline ? (
+                                        <LabelField label="Deadline">
+                                            <InnerValue
+                                                label={getDeadlineStatus(new Date(current.item.deadline)) === "on_time" ? "On Time" : "Past Due"}
+                                                color={getDeadlineStatus(new Date(current.item.deadline)) === "on_time" ? "var(--green)" : "var(--red)"}
+                                            />
+                                        </LabelField>
+                                    ) : <></>}
+                                    <Button
+                                        label="Mark Complete"
+                                        onClick={() => handleCompleteClick()}
+                                    />
+                                </FieldFrame>
+                            </Card>
+                        </Fieldset>
+                    ) : <></>}
+                </> : <></>}
             />
             <Alert
                 message={alertMessage}

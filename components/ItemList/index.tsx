@@ -125,7 +125,6 @@ export default function ItemList() {
                                 </Fieldset>
                                 <LabelField label="Steps">
                                     <InnerButton
-                                        icon={<DownArrowIcon />}
                                         label={`${item.steps.length} ${item.steps.length === 1 ? "Step" : "Steps"}`}
                                         onClick={() => handleStepsClick(item)}
                                     />
