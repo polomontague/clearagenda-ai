@@ -7,7 +7,8 @@ type ItemResult = Prisma.itemsGetPayload<typeof itemsBaseQuery>
 
 const assembleItem = (result: ItemResult): Item => {
     const urgency = calculateUrgency(result.deadline)
-    return {
+    return result.description ? {
+        type: "task",
         id: result.id,
         user: assembleSimpleUser(result.user),
         name: result.name,
@@ -21,8 +22,18 @@ const assembleItem = (result: ItemResult): Item => {
         })),
         deadline: result.deadline ? result.deadline.toISOString() : undefined,
         urgency,
-        importance: result.importance,
-        priority: calculatePriority(urgency, result.importance),
+        importance: result.importance!,
+        priority: calculatePriority(urgency, result.importance!),
+        created: result.created.toISOString(),
+        updated: result.updated.toISOString()
+    } : {
+        type: "event",
+        id: result.id,
+        user: assembleSimpleUser(result.user),
+        name: result.name,
+        notes: result.notes ? result.notes : undefined,
+        starts: result.starts!.toISOString(),
+        ends: result.ends!.toISOString(),
         created: result.created.toISOString(),
         updated: result.updated.toISOString()
     }

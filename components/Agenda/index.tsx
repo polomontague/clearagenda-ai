@@ -1,6 +1,5 @@
 "use client"
-import { useState, useContext, useEffect } from "react"
-import { AgendaItem } from "@/types/Agenda"
+import { useState, useContext, useEffect, useMemo } from "react"
 import Card from "@/components/Card"
 import FieldFrame from "@/components/FieldFrame"
 import LabelField from "@/components/LabelField"
@@ -15,87 +14,23 @@ import Alert from "@/components/Alert"
 import ItemsContext from "@/contexts/ItemsContext"
 import UserContext from "@/contexts/UserContext"
 import Columns from "@/components/Columns"
-import Item from "@/types/Item"
-import User from "@/types/User"
+import getCurrent from "./getCurrent"
+import Range from "@/components/Range"
+import getDateItems, { CompletionItem } from "./getDateItems"
 
 type AgendaProps = {
     date: Date
 }
 
-type Day = Record<number, Item>
-
-type Days = Record<string, Day>
-
-const getDateItems = (items: Item[], date: Date, hours: User["preferences"]["hours"]) => {
-    items.sort((a, b) => b.priority - a.priority)
-    const days: Days = {}
-    const currentDate = new Date()
-    const weekdays: (keyof User["preferences"]["hours"])[] = [ "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" ]
-    for (const item of items) {
-        for (const step of item.steps) {
-            if (step.completed) {
-                const key = new Date(step.completed).toLocaleDateString("en-CA")
-                if (!days[key]) days[key] = {} // Add date to days if it doesn't already exist
-                if (!days[key][item.id]) days[key][item.id] = { // Add item to date if it doesn't already exist
-                    ...item,
-                    steps: []
-                }
-                days[key][item.id].steps.push(step)
-            } else {
-                let key = currentDate.toLocaleDateString("en-CA")
-                if (!days[key]) days[key] = {} // Add date to days if it doesn't already exist
-                const minutes = getDayMinutes(days[key])
-                const minutesLimit = hours[weekdays[currentDate.getDay()]] * 60
-                if (minutes + step.duration >= minutesLimit) { // Start new day if current day is full
-                    currentDate.setDate(currentDate.getDate() + 1)
-                }
-                key = currentDate.toLocaleDateString("en-CA")
-                if (!days[key]) days[key] = {} // Add date to days if it doesn't already exist
-                if (!days[key][item.id]) days[key][item.id] = { // Add item to date if it doesn't already exist
-                    ...item,
-                    steps: []
-                }
-                days[key][item.id].steps.push(step)
-            }
-        }
-    }
-    const key = date.toLocaleDateString("en-CA")
-    const day = days[key] ? days[key] : []
-    return Object.entries(day).map(([_, item]) => item)
-}
-
-const getDayMinutes = (day: Day) => {
-    let minutes = 0
-    Object.entries(day).forEach(([_, item]) => {
-        for (const step of item.steps) {
-            minutes += step.duration
-        }
-    })
-    return minutes
-}
-
-const getCurrent = (items: Item[]) => {
-    for (let i = 0; i < items.length; i++) {
-        for (let i2 = 0; i2 < items[i].steps.length; i2++) {
-            if (!items[i].steps[i2].completed) {
-                return {
-                    item: items[i],
-                    step: items[i].steps[i2]
-                }
-            }
-        }
-    }
-}
-
 export default function Agenda(props: AgendaProps) {
     const { items } = useContext(ItemsContext)
-    const [agendaItems, setAgendaItems] = useState<Item[]>([])
+    const [agendaItems, setAgendaItems] = useState<CompletionItem[]>([])
     const [confirmMessage, setConfirmMessage] = useState("")
     const [confirmOpen, setConfirmOpen ] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const { user } = useContext(UserContext)
-    const current = getCurrent(agendaItems)
+    const current = useMemo(() => getCurrent(agendaItems), [agendaItems])
     const today = props.date.toLocaleDateString("en-CA") === new Date().toLocaleDateString("en-CA")
 
     useEffect(() => {
@@ -123,7 +58,7 @@ export default function Agenda(props: AgendaProps) {
         API.post<{ completed: string }>(url, {}, true).then(data => {
             const newAgendaItems = [ ...agendaItems ]
             const foundItem = newAgendaItems.find(item => item.id === current.item.id)
-            const foundStep = foundItem?.steps.find(step => step.id === current.step.id)
+            const foundStep = foundItem && foundItem.type === "task" ? foundItem.steps.find(step => step.id === current.step.id) : undefined
             if (foundStep) foundStep.completed = data.completed
             setAgendaItems(newAgendaItems)
         }).catch(err => {
@@ -138,21 +73,50 @@ export default function Agenda(props: AgendaProps) {
                 left={(
                     <FieldFrame>
                         {agendaItems.map((item, i) => {
-                            
+                            const isCurrent = item.id === current?.item.id
                             return (
                                 <Card key={i} label={item.name}>
-                                    <Fieldset label="Steps">
-                                        {item.steps.map((step, i) => {
-                                            return (
-                                                <LabelField
-                                                    key={i}
-                                                    fieldset
-                                                    strike={!!step.completed}
-                                                    label={step.name}
-                                                />
-                                            )
-                                        })}
-                                    </Fieldset>
+                                    {item.type === "task" ? (
+                                        <FieldFrame>
+                                            <Fieldset label="Steps">
+                                                {item.steps.map((step, i) => {
+                                                    return (
+                                                        <LabelField
+                                                            key={i}
+                                                            fieldset
+                                                            strike={!!step.completed}
+                                                            label={step.name}
+                                                        />
+                                                    )
+                                                })}
+                                            </Fieldset>
+                                            {today && isCurrent ? (
+                                                <Fieldset>
+                                                    <LabelField fieldset label="Completion">
+                                                        <InnerValue label={`${Math.round(item.completion * 100)}%`} />
+                                                    </LabelField>
+                                                    <Range
+                                                        fieldset
+                                                        value={item.completion}
+                                                    />
+                                                </Fieldset>
+                                            ) : <></>}
+                                        </FieldFrame>
+                                    ) : item.type === "event" ? (
+                                        <FieldFrame>
+                                            <Fieldset label="Time">
+                                                <LabelField fieldset label="Starts">
+                                                    <InnerValue label={Utility.formatTime(new Date(item.starts))} />
+                                                </LabelField>
+                                                <LabelField fieldset label="Ends">
+                                                    <InnerValue label={Utility.formatTime(new Date(item.ends))} />
+                                                </LabelField>
+                                            </Fieldset>
+                                            <LabelField label="Duration">
+                                                <InnerValue label={Utility.formatDuration(((new Date(item.ends).getTime() - new Date(item.starts).getTime()) / 1000) / 60)} />
+                                            </LabelField>
+                                        </FieldFrame>
+                                    ) : <></>}
                                 </Card>
                             )
                         })}
@@ -167,7 +131,7 @@ export default function Agenda(props: AgendaProps) {
                                         <ValueBox fieldset value={current.step.notes} />
                                     </Fieldset>
                                     <LabelField label="Time">
-                                        <InnerValue label={Utility.formatTime(current.step.duration)} />
+                                        <InnerValue label={Utility.formatDuration(current.step.duration)} />
                                     </LabelField>
                                     {current.item.deadline ? (
                                         <LabelField label="Deadline">

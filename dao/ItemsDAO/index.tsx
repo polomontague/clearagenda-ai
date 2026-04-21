@@ -1,18 +1,24 @@
 import prisma from "@/lib/prisma"
-import Item, { Step } from "@/types/Item"
+import Item, { Task, Step, Event } from "@/types/Item"
 import assembleItem from "./assembleItem"
 import itemsBaseQuery from "./itemsBaseQuery"
 
-type CreateItemData = Pick<Item, "name" | "description" | "deadline" | "importance"> & {
+type TaskData = Pick<Task, "name" | "description" | "deadline" | "importance"> & {
     user_id: number,
     steps: Pick<Step, "name" | "notes" | "duration">[]
 }
+
+type EventData = Pick<Event, "name" | "notes" | "starts" | "ends"> & {
+    user_id: number
+}
+
+type CreateItemData = TaskData | EventData
 
 type GetItemsOptions = {
     user_id?: number
 }
 
-type UpdateItemData = Omit<CreateItemData, "user_id">
+type UpdateItemData = Omit<TaskData, "user_id"> | Omit<EventData, "user_id">
 
 const ItemsDAO = {
     createItem: async (data: CreateItemData) => {
@@ -20,16 +26,19 @@ const ItemsDAO = {
             data: {
                 user_id: data.user_id,
                 name: data.name,
-                description: data.description,
-                steps: {
+                description: "description" in data ? data.description : undefined,
+                steps: "steps" in data ? {
                     create: data.steps.map(step => ({
                         name: step.name,
                         notes: step.notes,
                         duration: step.duration
                     }))
-                },
-                deadline: data.deadline,
-                importance: data.importance
+                } : undefined,
+                deadline: "deadline" in data ? data.deadline : undefined,
+                importance: "importance" in data ? data.importance : undefined,
+                notes: "notes" in data ? data.notes : undefined,
+                starts: "starts" in data ? data.starts : undefined,
+                ends: "ends" in data ? data.ends : undefined
             },
             ...itemsBaseQuery
         })
@@ -60,17 +69,20 @@ const ItemsDAO = {
             },
             data: {
                 name: data.name,
-                description: data.description,
+                description: "description" in data ? data.description : undefined,
                 steps: {
                     deleteMany: {},
-                    create: data.steps.map(step => ({
+                    create: "steps" in data ? data.steps.map(step => ({
                         name: step.name,
                         notes: step.notes,
                         duration: step.duration
-                    }))
+                    })) : undefined
                 },
-                deadline: data.deadline,
-                importance: data.importance
+                deadline: "deadline" in data ? data.deadline : undefined,
+                importance: "importance" in data ? data.importance : undefined,
+                notes: "notes" in data ? data.notes : undefined,
+                starts: "starts" in data ? new Date(data.starts) : undefined,
+                ends: "ends" in data ? new Date(data.ends) : undefined
             },
             ...itemsBaseQuery
         })

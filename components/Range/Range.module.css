@@ -1,7 +1,6 @@
 .background{
     display: -webkit-flex;
     display: flex;
-    gap: var(--spacing-small);
     align-items: center;
     width: 100%;
     height: var(--field-size);
@@ -45,8 +44,8 @@
 }
 
 .indicator{
-    width: 50%;
     height: 100%;
     background-color: var(--accent);
     border-radius: calc(var(--spacing-small) / 2);
+    transition: var(--transition);
 }

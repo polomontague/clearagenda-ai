@@ -17,6 +17,9 @@ const itemsBaseQuery = {
         },
         deadline: true,
         importance: true,
+        notes: true,
+        starts: true,
+        ends: true,
         created: true,
         updated: true
     }

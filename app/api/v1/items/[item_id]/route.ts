@@ -16,24 +16,35 @@ export const PUT = async (req: NextRequest, props: { params: Promise<{ item_id: 
         const foundItem = await ItemsDAO.getItemById(params.item_id)
         if (!foundItem) throw new HttpError(Response.notFound())
         if (user.id !== foundItem.user.id) throw new HttpError(Response.forbidden())
-        // Only use AI again if description has changed
-        const data = body.description !== foundItem.description ? await AI.plan(user.id, body.description) : {
-            name: foundItem.name,
-            steps: foundItem.steps,
-            importance: foundItem.importance
-        }
+        
+        let item
+        if (body.type === "task" && foundItem.type === "task") {
+            // Only use AI again if description has changed
+            const data = body.description !== foundItem.description ? await AI.plan(user.id, body.description) : {
+                name: foundItem.name,
+                steps: foundItem.steps,
+                importance: foundItem.importance
+            }
 
-        const item = await ItemsDAO.updateItem(params.item_id, {
-            name: data.name,
-            description: body.description,
-            steps: data.steps.map(step => ({
-                name: step.name,
-                notes: step.notes,
-                duration: step.duration
-            })),
-            deadline: body.deadline,
-            importance: data.importance
-        })
+            item = await ItemsDAO.updateItem(params.item_id, {
+                name: data.name,
+                description: body.description,
+                steps: data.steps.map(step => ({
+                    name: step.name,
+                    notes: step.notes,
+                    duration: step.duration
+                })),
+                deadline: body.deadline,
+                importance: data.importance
+            })
+        } else if (body.type === "event") {
+            item = await ItemsDAO.updateItem(params.item_id, {
+                name: body.name,
+                notes: body.notes,
+                starts: body.starts,
+                ends: body.ends
+            })
+        }
 
         return Response.ok({ item })
     } catch (err) {

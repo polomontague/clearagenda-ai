@@ -3,7 +3,7 @@ const Utility = {
         const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
         return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
     },
-    formatTime: (minutes: number, hoursInDay: number = 24) => {
+    formatDuration: (minutes: number, hoursInDay: number = 24) => {
         const MINUTES_IN_HOUR = 60
         const MINUTES_IN_DAY = 60 * hoursInDay
         const MINUTES_IN_MONTH = MINUTES_IN_DAY * 30
@@ -37,6 +37,12 @@ const Utility = {
             time = `${minutes2} ${minutes2 === 1 ? "Min" : "Mins"}`
         }
         return time
+    },
+    formatTime: (date: Date) => {
+        const hours = date.getHours()
+        const minutes = date.getMinutes()
+        const amOrPm = hours < 12 ? "AM" : "PM"
+        return `${hours.toString().padEnd(2, "0")}:${minutes.toString().padEnd(2, "0")} ${amOrPm}`
     }
 }
 

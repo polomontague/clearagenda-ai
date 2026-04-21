@@ -12,20 +12,32 @@ export const POST = async (req: NextRequest) => {
     try {
         const user = await Auth.authenticate(req)
         const body = await Request.body(req, itemBodySchema)
-        const data = await AI.plan(user.id, body.description)
+
+        let item
+        if (body.type === "task") {
+            const data = await AI.plan(user.id, body.description)
         
-        const item = await ItemsDAO.createItem({
-            user_id: user.id,
-            name: data.name,
-            description: body.description,
-            steps: data.steps.map(step => ({
-                name: step.name,
-                notes: step.notes,
-                duration: step.duration
-            })),
-            deadline: body.deadline,
-            importance: data.importance
-        })
+            item = await ItemsDAO.createItem({
+                user_id: user.id,
+                name: data.name,
+                description: body.description,
+                steps: data.steps.map(step => ({
+                    name: step.name,
+                    notes: step.notes,
+                    duration: step.duration
+                })),
+                deadline: body.deadline,
+                importance: data.importance
+            })
+        } else if (body.type === "event") {
+            item = await ItemsDAO.createItem({
+                user_id: user.id,
+                name: body.name,
+                notes: body.notes,
+                starts: body.starts,
+                ends: body.ends
+            })
+        }
 
         return Response.created({ item })
     } catch (err) {

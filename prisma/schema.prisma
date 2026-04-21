@@ -59,10 +59,13 @@ model items {
 	user_id Int
 	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 	name String @db.VarChar(100)
-	description String @db.Text
+	description String? @db.Text
 	steps item_steps[]
 	deadline DateTime?
-	importance Float
+	importance Float?
+	notes String? @db.VarChar(300)
+	starts DateTime?
+	ends DateTime?
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 }

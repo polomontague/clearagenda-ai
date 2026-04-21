@@ -1,7 +1,7 @@
 "use client"
 import List, { ListItem } from "@/components/List"
 import API from "@/lib/API"
-import Item, { Step } from "@/types/Item"
+import Item, { Task, Step } from "@/types/Item"
 import { useState, useContext, useMemo } from "react"
 import Fieldset from "@/components/Fieldset"
 import FieldFrame from "@/components/FieldFrame"
@@ -40,32 +40,59 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
     const [alertOpen, setAlertOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [stepsModalOpen, setStepsModalOpen] = useState(false)
+    const today = new Date()
     const filteredItems = useMemo(() => {
         const completionItems = items.map(item => {
-            let totalMinutes = 0
-            let completedMinutes = 0
-            for (const step of item.steps) {
-                totalMinutes += step.duration
-                if (step.completed) completedMinutes += step.duration
+            let completed = true
+            if (item.type === "task") {
+                for (let i = 0; i < item.steps.length; i++) {
+                    if (!item.steps[i].completed) {
+                        completed = false
+                        break
+                    }
+                }
+            } else if (item.type === "event") {
+                if (new Date(item.ends).getTime() > today.getTime()) completed = false
             }
-            const completion = Math.round((completedMinutes / totalMinutes) * 100) / 100
             return {
                 ...item,
-                completion
+                completed
             }
         })
         return completionItems.filter(item => {
-            let include = true
-            if (!item.name.toLowerCase().includes(search.toLowerCase())) include = false
-            if (!completed && item.completion === 1) include = false
-            return include
+            if (!completed && item.completed) return false
+            if (item.name.toLowerCase().includes(search.toLowerCase())) return true
+            if (item.type === "task") {
+                if (item.description.toLowerCase().includes(search.toLowerCase())) return true
+                for (const step of item.steps) {
+                    if (step.name.toLowerCase().includes(search.toLowerCase())) return true
+                    if (step.notes.toLowerCase().includes(search.toLowerCase())) return true
+                }
+            } else if (item.type === "event") {
+                if (item.notes && item.notes.toLowerCase().includes(search.toLowerCase())) return true
+            }
+            return false
         })
     }, [items, search, completed])
 
     const getDuration = (item: Item) => {
         let duration = 0
-        item.steps.forEach(step => duration += step.duration)
+        if (item.type === "task") {
+            item.steps.forEach(step => duration += step.duration)
+        } else if (item.type === "event") {
+            // add duration for events
+        }
         return duration
+    }
+
+    const getCompletion = (item: Task) => {
+        let totalMinutes = 0
+        let completedMinutes = 0
+        for (const step of item.steps) {
+            totalMinutes += step.duration
+            if (step.completed) completedMinutes += step.duration
+        }
+        return Math.round((completedMinutes / totalMinutes) * 100) / 100
     }
 
     const averageHours = (user: User) => {
@@ -99,7 +126,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
 
     const handleDeleteConfirm = () => {
         setConfirmOpen(false)
-        API.delete(`/api/v1/items/${currentItem?.id}`, true).then(data => {
+        API.delete(`/api/v1/items/${currentItem?.id}`, true).then(() => {
             const newItems = items.filter(item => item.id !== currentItem?.id)
             setItems(newItems)
             setAlertMessage(`"${currentItem?.name}" Deleted Successfully`)
@@ -115,7 +142,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
         setStepsModalOpen(true)
     }
 
-    const handleCompletedChange = (item: Item, step: Step) => {
+    const handleCompletedChange = (item: Task, step: Step) => {
         const prevCompleted = step.completed
         const newCompleted = step.completed ? undefined : new Date().toISOString()
         updateCompleted(item, step, newCompleted)
@@ -126,11 +153,13 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
         })
     }
 
-    const updateCompleted = (item: Item, step: Step, completed?: string) => {
+    const updateCompleted = (item: Task, step: Step, completed?: string) => {
         const newItems = [ ...items ]
         const foundItem = newItems.find(item2 => item2.id === item.id)
-        const foundStep = foundItem?.steps.find(step2 => step2.id === step.id)
-        if (foundStep) foundStep.completed = completed
+        if (foundItem?.type === "task") {
+            const foundStep = foundItem.steps.find(step2 => step2.id === step.id)
+            if (foundStep) foundStep.completed = completed
+        }
         setItems(newItems)
     }
 
@@ -139,56 +168,83 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
     return (
         <>
             <List>
-                {filteredItems.map((item, i) => (
-                    <ListItem key={i}>
-                        <Card
-                            label={item.name}
-                            buttons={[
-                                { icon: <EditIcon />, onClick: () => handleRequestEdit(item) },
-                                { icon: <TrashCanIcon />, onClick: () => handleRequestDelete(item) }
-                            ]}
-                        >
-                            <FieldFrame>
-                                <Fieldset label="Description">
-                                    <ValueBox fieldset value={item.description} />
-                                </Fieldset>
-                                <LabelField label="Steps">
-                                    <InnerButton
-                                        label={`${item.steps.length} ${item.steps.length === 1 ? "Step" : "Steps"}`}
-                                        onClick={() => handleStepsClick(item)}
-                                    />
-                                </LabelField>
-                                <LabelField label="Time">
-                                    <InnerValue label={Utility.formatTime(getDuration(item), averageHours(user))} />
-                                </LabelField>
-                                <Fieldset>
-                                    <LabelField fieldset label="Completion">
-                                        <InnerValue label={item.completion === 0 ? "Scheduled" : item.completion === 1 ? "Complete" : `${item.completion * 100}%`} />
-                                    </LabelField>
-                                    <Range
-                                        fieldset
-                                        min="0%"
-                                        max="100%"
-                                        value={item.completion}
-                                    />
-                                </Fieldset>
-                            </FieldFrame>
-                        </Card>
-                    </ListItem>
-                ))}
+                {filteredItems.map((item, i) => {
+                    const completion = item.type === "task" ? getCompletion(item) : 0
+                    return (
+                        <ListItem key={i}>
+                            <Card
+                                label={item.name}
+                                buttons={[
+                                    { icon: <EditIcon />, onClick: () => handleRequestEdit(item) },
+                                    { icon: <TrashCanIcon />, onClick: () => handleRequestDelete(item) }
+                                ]}
+                            >
+                                {item.type === "task" ? (
+                                    <FieldFrame>
+                                        <Fieldset label="Description">
+                                            <ValueBox fieldset value={item.description} />
+                                        </Fieldset>
+                                        <LabelField label="Steps">
+                                            <InnerButton
+                                                label={`${item.steps.length} ${item.steps.length === 1 ? "Step" : "Steps"}`}
+                                                onClick={() => handleStepsClick(item)}
+                                            />
+                                        </LabelField>
+                                        {item.deadline ? (
+                                            <LabelField label="Deadline">
+                                                <InnerValue
+                                                    color="var(--red)"
+                                                    label={Utility.formatDate(new Date(item.deadline))}
+                                                />
+                                            </LabelField>
+                                        ) : <></>}
+                                        <LabelField label="Time">
+                                            <InnerValue label={Utility.formatDuration(getDuration(item), averageHours(user))} />
+                                        </LabelField>
+                                        <Fieldset>
+                                            <LabelField fieldset label="Completion">
+                                                <InnerValue label={completion === 0 ? "Scheduled" : completion === 1 ? "Complete" : `${completion * 100}%`} />
+                                            </LabelField>
+                                            <Range
+                                                fieldset
+                                                value={completion}
+                                            />
+                                        </Fieldset>
+                                    </FieldFrame>
+                                ) : (
+                                    <FieldFrame>
+                                        {item.notes ? (
+                                            <Fieldset label="Notes">
+                                                <ValueBox fieldset value={item.notes} />
+                                            </Fieldset>
+                                        ) : <></>}
+                                        <Fieldset label="Date">
+                                            <LabelField fieldset label="Starts">
+                                                <InnerValue label={Utility.formatDate(new Date(item.starts))} />
+                                            </LabelField>
+                                            <LabelField fieldset label="Ends">
+                                                <InnerValue label={Utility.formatDate(new Date(item.ends))} />
+                                            </LabelField>
+                                        </Fieldset>
+                                    </FieldFrame>
+                                )}
+                            </Card>
+                        </ListItem>
+                    )
+                })}
             </List>
             <Modal
                 label="Steps"
                 open={stepsModalOpen}
                 onRequestClose={() => setStepsModalOpen(false)}
             >
-                {currentItem ? (
+                {currentItem && currentItem.type === "task" ? (
                     <FieldFrame>
                         {currentItem.steps.map((step, i) => (
                             <Fieldset key={i} label={step.name}>
                                 <ValueBox fieldset value={step.notes} />
                                 <LabelField fieldset label="Duration">
-                                    <InnerValue label={Utility.formatTime(step.duration, averageHours(user))} />
+                                    <InnerValue label={Utility.formatDuration(step.duration, averageHours(user))} />
                                 </LabelField>
                                 <LabelField fieldset label="Completed">
                                     <Toggle
