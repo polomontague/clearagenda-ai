@@ -1,0 +1,52 @@
+.background{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    width: 100%;
+    height: var(--field-size);
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.label{
+    color: var(--layer-3-light);
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.containerTrack{
+    width: 100%;
+    height: var(--spacing-small);
+    position: relative;
+}
+
+.track{
+    width: 100%;
+    height: 100%;
+    background-color: var(--layer-4);
+    border: var(--border-width) solid var(--layer-4-border);
+    border-radius: calc(var(--spacing-small) / 2);
+    overflow: hidden;
+}
+
+.containerIndicator{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.indicator{
+    width: 50%;
+    height: 100%;
+    background-color: var(--accent);
+    border-radius: calc(var(--spacing-small) / 2);
+}

@@ -33,7 +33,7 @@ export default function MemoryPage() {
                 )
             }}
         >
-            <ItemList />
+            <ItemList filters={{ search, completed }} />
             <Modal
                 label="Filter Agenda Items"
                 open={filterModalOpen}

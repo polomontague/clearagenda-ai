@@ -14,7 +14,7 @@
     align-items: center;
     width: 100%;
     height: var(--header-height);
-    padding-left: var(--spacing-large);
+    padding-left: var(--field-size);
     padding-right: var(--spacing-large);
     background-color: var(--layer-2);
     border-bottom: var(--border-width) solid var(--layer-2-border);
@@ -55,6 +55,7 @@
     height: 100%;
     background-color: var(--layer-2);
     position: relative;
+    z-index: 0;
 }
 
 .slide .header{
@@ -71,6 +72,7 @@
     left: 0;
     top: 0;
     right: 0;
+    z-index: 2;
 }
 
 .slide .label{
@@ -93,4 +95,6 @@
 
 .containerChildren{
     padding: var(--spacing-medium);
+    position: relative;
+    z-index: 1;
 }

@@ -38,6 +38,7 @@ ol, ul {
 
 /* Remove link styles */
 a {
+  outline: none;
   text-decoration: none;
   color: inherit;
 }

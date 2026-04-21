@@ -2,13 +2,13 @@
 import List, { ListItem } from "@/components/List"
 import API from "@/lib/API"
 import Item, { Step } from "@/types/Item"
-import { useState, useContext } from "react"
+import { useState, useContext, useMemo } from "react"
 import Fieldset from "@/components/Fieldset"
 import FieldFrame from "@/components/FieldFrame"
 import ValueBox from "@/components/ValueBox"
 import LabelField from "@/components/LabelField"
 import InnerButton from "@/components/InnerButton"
-import { DownArrowIcon, EditIcon, TrashCanIcon } from "@/components/Icons"
+import { EditIcon, TrashCanIcon } from "@/components/Icons"
 import InnerValue from "@/components/InnerValue"
 import Utility from "@/lib/Utility"
 import UserContext from "@/contexts/UserContext"
@@ -21,8 +21,16 @@ import Modal from "@/components/Modal"
 import Toggle from "@/components/Toggle"
 import ItemsContext from "@/contexts/ItemsContext"
 import Card from "@/components/Card"
+import Range from "@/components/Range"
 
-export default function ItemList() {
+type ItemListProps = {
+    filters: {
+        search: string,
+        completed: boolean
+    }
+}
+
+export default function ItemList({ filters: { search, completed } }: ItemListProps) {
     const { items, setItems } = useContext(ItemsContext)
     const { user } = useContext(UserContext)
     const [confirmMessage, setConfirmMessage] = useState("")
@@ -32,6 +40,27 @@ export default function ItemList() {
     const [alertOpen, setAlertOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [stepsModalOpen, setStepsModalOpen] = useState(false)
+    const filteredItems = useMemo(() => {
+        const completionItems = items.map(item => {
+            let totalMinutes = 0
+            let completedMinutes = 0
+            for (const step of item.steps) {
+                totalMinutes += step.duration
+                if (step.completed) completedMinutes += step.duration
+            }
+            const completion = Math.round((completedMinutes / totalMinutes) * 100) / 100
+            return {
+                ...item,
+                completion
+            }
+        })
+        return completionItems.filter(item => {
+            let include = true
+            if (!item.name.toLowerCase().includes(search.toLowerCase())) include = false
+            if (!completed && item.completion === 1) include = false
+            return include
+        })
+    }, [items, search, completed])
 
     const getDuration = (item: Item) => {
         let duration = 0
@@ -110,7 +139,7 @@ export default function ItemList() {
     return (
         <>
             <List>
-                {items.map((item, i) => (
+                {filteredItems.map((item, i) => (
                     <ListItem key={i}>
                         <Card
                             label={item.name}
@@ -130,8 +159,19 @@ export default function ItemList() {
                                     />
                                 </LabelField>
                                 <LabelField label="Time">
-                                        <InnerValue label={Utility.formatTime(getDuration(item), averageHours(user))} />
+                                    <InnerValue label={Utility.formatTime(getDuration(item), averageHours(user))} />
+                                </LabelField>
+                                <Fieldset>
+                                    <LabelField fieldset label="Completion">
+                                        <InnerValue label={item.completion === 0 ? "Scheduled" : item.completion === 1 ? "Complete" : `${item.completion * 100}%`} />
                                     </LabelField>
+                                    <Range
+                                        fieldset
+                                        min="0%"
+                                        max="100%"
+                                        value={item.completion}
+                                    />
+                                </Fieldset>
                             </FieldFrame>
                         </Card>
                     </ListItem>

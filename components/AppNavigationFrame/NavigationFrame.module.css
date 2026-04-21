@@ -16,10 +16,9 @@
     .header{
         display: -webkit-flex;
         display: flex;
+        justify-content: center;
         align-items: center;
         height: var(--header-height);
-        padding-left: var(--spacing-large);
-        padding-right: var(--spacing-large);
         background-color: var(--layer-2);
         border-bottom: var(--border-width) solid var(--layer-2-border);
         position: absolute;

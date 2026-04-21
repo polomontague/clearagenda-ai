@@ -13,6 +13,7 @@
 .background > .header{
     display: -webkit-flex;
     display: flex;
+    justify-content: center;
     align-items: center;
     height: var(--header-height);
     padding-left: var(--spacing-large);
