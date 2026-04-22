@@ -11,7 +11,6 @@ const RangeInput = (props: {
 }) => {
     return (
         <div className={`${styles.input} ${props.fieldset ? styles.fieldset : ""}`}>
-            <span className={styles.min}>{props.min}</span>
             <input
                 className={styles.slider}
                 type="range"
@@ -21,7 +20,6 @@ const RangeInput = (props: {
                 value={props.value}
                 onChange={(evt) => props.onChange(parseInt(evt.target.value))}
             />
-            <span className={styles.max}>{props.max}</span>
         </div>
     )
 }

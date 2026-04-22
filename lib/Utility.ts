@@ -42,7 +42,7 @@ const Utility = {
         const hours = date.getHours()
         const minutes = date.getMinutes()
         const amOrPm = hours < 12 ? "AM" : "PM"
-        return `${hours.toString().padEnd(2, "0")}:${minutes.toString().padEnd(2, "0")} ${amOrPm}`
+        return `${hours % 12}:${minutes.toString().padEnd(2, "0")} ${amOrPm}`
     }
 }
 

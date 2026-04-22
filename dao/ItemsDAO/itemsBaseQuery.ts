@@ -20,6 +20,7 @@ const itemsBaseQuery = {
         notes: true,
         starts: true,
         ends: true,
+        repeat: true,
         created: true,
         updated: true
     }

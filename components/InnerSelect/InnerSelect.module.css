@@ -1,0 +1,85 @@
+
+.btn{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-very-small);
+    align-items: center;
+    height: var(--inner-field-size);
+    padding-left: var(--spacing-small);
+    padding-right: var(--spacing-small);
+    background-color: var(--layer-4);
+    border: var(--border-width) solid var(--layer-4-border);
+    border-radius: var(--inner-border-radius);
+    font-size: var(--inner-font-size);
+    color: var(--accent);
+    position: relative;
+    z-index: 2;
+}
+
+.btn > svg{
+    width: var(--inner-icon-size);
+    height: var(--inner-icon-size);
+    fill: var(--accent);
+}
+
+.overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.open .overlay{
+    display: block;
+}
+
+.closed .overlay{
+    display: none;
+}
+
+.menu{
+    min-width: 150px;
+    background-color: var(--layer-4);
+    border: var(--border-width) solid var(--layer-4-border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: absolute;
+}
+
+.lstOptions{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--border-width);
+    background-color: var(--layer-4-border);
+}
+
+.btnOption{
+    width: 100%;
+    padding: 4px;
+    height: var(--field-size);
+    background-color: var(--layer-4);
+}
+
+.btnOption > .highlight{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--inner-field-size);
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+    border-radius: var(--inner-border-radius);
+    color: var(--layer-4-light);
+}
+
+.highlight:hover,
+.highlight:active,
+.highlight:focus,
+.selected > .highlight{
+    background-color: var(--accent);
+    font-weight: bolder;
+    color: var(--accent-contrast);
+}

@@ -1,0 +1,13 @@
+.containerChildren{
+    margin-top: calc(var(--border-width) * -1);
+}
+
+.containerChildren.collapsed{
+    height: 0;
+    overflow: hidden;
+}
+
+.containerChildren.open{
+    height: auto;
+    margin-top: 0;
+}

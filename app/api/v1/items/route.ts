@@ -35,7 +35,8 @@ export const POST = async (req: NextRequest) => {
                 name: body.name,
                 notes: body.notes,
                 starts: body.starts,
-                ends: body.ends
+                ends: body.ends,
+                repeat: body.repeat
             })
         }
 

@@ -27,8 +27,6 @@
     align-items: center;
     width: 100%;
     height: var(--inner-field-size);
-    padding-left: var(--spacing-medium);
-    padding-right: var(--spacing-medium);
     border-radius: var(--inner-border-radius);
     transition: var(--transition);
 }

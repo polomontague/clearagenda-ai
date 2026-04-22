@@ -14,11 +14,6 @@
     border-radius: 0;
 }
 
-.min{
-    color: var(--layer-3-light);
-    margin-right: var(--spacing-small);
-}
-
 /* Remove default styling */
 .slider{
     display: block;
@@ -56,7 +51,7 @@
     background-color: var(--accent);
     border-radius: 50%;
     cursor: pointer;
-    margin-top: -9px; /* This should be dynamic based on global css variables */
+    margin-top: -10px; /* This should be dynamic based on global css variables */
 }
 
 /* Thumb (Firefox) */
@@ -68,9 +63,4 @@
     border-radius: 50%;
     cursor: pointer;
     margin-top: -9px;
-}
-
-.max{
-    color: var(--layer-3-light);
-    margin-left: var(--spacing-small);
 }

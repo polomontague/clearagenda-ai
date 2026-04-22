@@ -66,6 +66,7 @@ model items {
 	notes String? @db.VarChar(300)
 	starts DateTime?
 	ends DateTime?
+	repeat Json?
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 }

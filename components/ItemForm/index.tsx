@@ -15,6 +15,13 @@ import InnerValue from "@/components/InnerValue"
 import API from "@/lib/API"
 import Loading from "@/components/Loading"
 import SelectBar from "@/components/SelectBar"
+import TimePicker from "@/components/TimePicker"
+import RangeInput from "../RangeInput"
+import NthWeekdaySelect from "@/components/NthWeekdaySelect"
+import Collapses, { Collapse } from "@/components/Collapses"
+import InnerButton from "@/components/InnerButton"
+import SelectList from "@/components/SelectList"
+import TextInput from "@/components/TextInput"
 
 type BaseProps = {
     onSuccess: (item: Item) => void
@@ -43,6 +50,17 @@ export default function ItemForm(props: ItemFormProps) {
     const [notes, setNotes] = useState("")
     const [starts, setStarts] = useState(new Date())
     const [ends, setEnds] = useState(new Date())
+    const [duration, setDuration] = useState(0)
+    const durations = [ 5, 10, 15, 30, 45, 60, 90, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720 ]
+    const [frequency, setFrequency] = useState("daily")
+    const [interval, setInterval] = useState(1)
+    const [weekday, setWeekday] = useState({ ordinal: 0, weekday: 0 })
+    const [monthlyType, setMonthlyType] = useState("dates")
+    const [open, setOpen] = useState<string>()
+    const [weekdays, setWeekdays] = useState([0])
+    const [months, setMonths] = useState([0])
+    const [name, setName] = useState("")
+    const [repeat, setRepeat] = useState(false)
 
     useEffect(() => {
         if (props.type === "edit") {
@@ -68,6 +86,16 @@ export default function ItemForm(props: ItemFormProps) {
     useEffect(() => {
         setDoneDisabled(!validate())
     }, [description])
+
+    const getIntervalLabel = (frequency: string, interval: number) => {
+        const labelMap: Record<string, string> = {
+            daily: "Day",
+            weekly: "Week",
+            monthly: "Month",
+            yearly: "Year"
+        }
+        return `${interval > 1 ? `${interval} ` : ""}${labelMap[frequency]}${interval > 1 ? "s" : ""}`
+    }
 
     const validate = () => {
         let valid = true
@@ -109,54 +137,168 @@ export default function ItemForm(props: ItemFormProps) {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <FieldFrame>
-                <SelectBar
-                    options={[
-                        { value: "task", label: "Task" },
-                        { value: "event", label: "Event" }
-                    ]}
-                    value={type}
-                    onChange={(val) => setType(val)}
-                />
-                {type === "task" ? (
-                    <>
-                        <Fieldset
-                            description="Our AI breaks down tasks into actionable steps, and estimates importance and duration."
-                        >
-                            <TextArea fieldset rows={8} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
-                        </Fieldset>
-                        <Fieldset
-                            description="Deadlines are used to prioritize Agenda Items."
-                        >
-                            <LabelField fieldset label="Deadline">
-                                <Toggle on={hasDeadline} onChange={(val) => setHasDeadline(val)} />
+            <Collapses value={open}>
+                <FieldFrame>
+                    <SelectBar
+                        options={[
+                            { value: "task", label: "Task" },
+                            { value: "event", label: "Event" }
+                        ]}
+                        value={type}
+                        onChange={(val) => setType(val)}
+                    />
+                    {type === "task" ? (
+                        <>
+                            <Fieldset
+                                description="Our AI breaks down tasks into actionable steps, and estimates importance and duration."
+                            >
+                                <TextArea fieldset rows={8} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
+                            </Fieldset>
+                            <Fieldset
+                                description="Deadlines are used to prioritize Agenda Items."
+                            >
+                                <LabelField fieldset label="Deadline">
+                                    <Toggle on={hasDeadline} onChange={(val) => setHasDeadline(val)} />
+                                </LabelField>
+                                {hasDeadline ? (
+                                    <>
+                                        <LabelField fieldset label="Date">
+                                            <InnerButton
+                                                label={Utility.formatDate(deadline)}
+                                                onClick={() => setOpen(open === "deadline" ? undefined : "deadline")}
+                                            />
+                                        </LabelField>
+                                        <Collapse value="deadline">
+                                            <DatePicker fieldset value={deadline} onChange={setDeadline} />
+                                        </Collapse>
+                                    </>
+                                ) : null}
+                            </Fieldset>
+                        </>
+                    ) : type === "event" ? (
+                        <>
+                            <TextInput placeholder="Name..." value={name} onChange={setName} />
+                            <LabelField label="Repeat">
+                                <Toggle on={repeat} onChange={setRepeat} />
                             </LabelField>
-                            {hasDeadline ? (
+                            {repeat ? (
                                 <>
-                                    <LabelField fieldset label="Date">
-                                        <InnerValue label={Utility.formatDate(deadline)} />
-                                    </LabelField>
-                                    <DatePicker fieldset value={deadline} onChange={(val) => setDeadline(val)} />
+                                    <Fieldset>
+                                        <LabelField fieldset label="Starts">
+                                            <InnerButton
+                                                label={Utility.formatTime(starts)}
+                                                onClick={() => setOpen(open === "repeat_start" ? undefined : "repeat_start")}
+                                            />
+                                        </LabelField>
+                                        <Collapse value="repeat_start">
+                                            <TimePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
+                                        </Collapse>
+                                        <LabelField fieldset label="Length">
+                                            <InnerValue label={Utility.formatDuration(durations[duration])} />
+                                        </LabelField>
+                                        <RangeInput fieldset step={1} min={0} max={durations.length - 1} value={duration} onChange={setDuration} />
+                                    </Fieldset>
+                                    <Fieldset label="Repeats">
+                                        <SelectBar
+                                            fieldset
+                                            options={[
+                                                { value: "daily", label: "Daily" },
+                                                { value: "weekly", label: "Weekly" },
+                                                { value: "monthly", label: "Monthly" },
+                                                { value: "yearly", label: "Yearly" }
+                                            ]}
+                                            value={frequency}
+                                            onChange={setFrequency}
+                                        />
+                                        <LabelField fieldset label="Every">
+                                            <InnerValue label={getIntervalLabel(frequency, interval)} />
+                                        </LabelField>
+                                        <RangeInput fieldset min={1} max={30} step={1} value={interval} onChange={setInterval} />
+                                        {frequency === "weekly" ? (
+                                            <SelectList
+                                                fieldset
+                                                options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
+                                                    value: i,
+                                                    label: weekday
+                                                }))}
+                                                value={weekdays}
+                                                onChange={setWeekdays}
+                                            />
+                                        ) : frequency === "monthly" ? (
+                                            <>
+                                                <SelectBar
+                                                    fieldset
+                                                    options={[
+                                                        { value: "dates", label: "Each" },
+                                                        { value: "weekday", label: "On The" }
+                                                    ]}
+                                                    value={monthlyType}
+                                                    onChange={setMonthlyType}
+                                                />
+                                                {monthlyType === "dates" ? (
+                                                    <DatePicker fieldset value={starts} onChange={setStarts} />
+                                                ) : monthlyType === "weekday" ? (
+                                                    <NthWeekdaySelect fieldset value={weekday} onChange={setWeekday} />
+                                                ) : null}
+                                            </>
+                                        ) : frequency === "yearly" ? (
+                                            <>
+                                                <SelectList
+                                                    fieldset
+                                                    options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, i) => ({
+                                                        value: i,
+                                                        label: month
+                                                    }))}
+                                                    value={months}
+                                                    onChange={setMonths}
+                                                />
+                                                <SelectBar
+                                                    fieldset
+                                                    options={[
+                                                        { value: "dates", label: "Each" },
+                                                        { value: "weekday", label: "On The" }
+                                                    ]}
+                                                    value={monthlyType}
+                                                    onChange={setMonthlyType}
+                                                />
+                                                {monthlyType === "dates" ? (
+                                                    <DatePicker fieldset value={starts} onChange={setStarts} />
+                                                ) : monthlyType === "weekday" ? (
+                                                    <NthWeekdaySelect fieldset value={weekday} onChange={setWeekday} />
+                                                ) : null}
+                                            </>
+                                        ) : null}
+                                    </Fieldset>
                                 </>
-                            ) : null}
-                        </Fieldset>
-                    </>
-                ) : type === "event" ? (
-                    <>
-                        <TextArea rows={6} placeholder="Notes..." value={notes} onChange={(val) => setNotes(val)} />
-                        <Fieldset label="Date">
-                            <LabelField fieldset label="Starts">
-                                <InnerValue label={Utility.formatDate(starts)} />
-                            </LabelField>
-                            <DatePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
-                            <LabelField fieldset label="Ends">
-                                <InnerValue label={Utility.formatDate(ends)} />
-                            </LabelField>
-                            <DatePicker fieldset value={ends} onChange={(val) => setEnds(val)} />
-                        </Fieldset>
-                    </>
-                ) : <></>}
-            </FieldFrame>
+                            ) : (
+                                <Fieldset>
+                                    <LabelField fieldset label="Starts">
+                                        <InnerButton
+                                            label={Utility.formatDate(starts)}
+                                            onClick={() => setOpen(open === "starts_date" ? undefined : "starts_date")}
+                                        />
+                                        <InnerButton
+                                            label={Utility.formatTime(starts)}
+                                            onClick={() => setOpen(open === "starts_time" ? undefined : "starts_time")}
+                                        />
+                                    </LabelField>
+                                    <Collapse value="starts_date">
+                                        <DatePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
+                                    </Collapse>
+                                    <Collapse value="starts_time">
+                                        <TimePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
+                                    </Collapse>
+                                    <LabelField fieldset label="Length">
+                                        <InnerValue label={Utility.formatDuration(durations[duration])} />
+                                    </LabelField>
+                                    <RangeInput fieldset step={1} min={0} max={durations.length - 1} value={duration} onChange={setDuration} />
+                                </Fieldset>
+                            )}
+                            <TextArea rows={6} placeholder="Notes..." value={notes} onChange={(val) => setNotes(val)} />
+                        </>
+                    ) : <></>}
+                </FieldFrame>
+            </Collapses>
             <Alert open={alertOpen} message={alertMessage} onRequestClose={() => setAlertOpen(false)} />
             <DoneButton disabled={doneDisabled || loading} />
             <Loading loading={loading} />

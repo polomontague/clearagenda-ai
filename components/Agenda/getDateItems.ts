@@ -2,6 +2,7 @@ import Item, { Task, Event } from "@/types/Item"
 import User from "@/types/User"
 import getCompletion from "./getCompletion"
 import getDayMinutes from "./getDayMinutes"
+import occursOnDate from "./occursOnDate"
 
 type CompletionTask = Task & {
     completion: number
@@ -52,9 +53,11 @@ export default function getDateItems(items: Item[], date: Date, hours: User["pre
                 }
             }
         } else if (item.type === "event") {
-            const key = new Date(item.starts).toLocaleDateString("en-CA")
-            if (!days[key]) days[key] = {} // Add date to days if it doesn't already exist
-            days[key][item.id] = item
+            if (occursOnDate(item, date)) {
+                const key = date.toLocaleDateString("en-CA")
+                if (!days[key]) days[key] = {} // Add date to days if it doesn't already exist
+                days[key][item.id] = item
+            }
         }
     }
     const key = date.toLocaleDateString("en-CA")

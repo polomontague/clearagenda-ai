@@ -2,6 +2,7 @@ import { Prisma } from "@/lib/prisma"
 import itemsBaseQuery from "./itemsBaseQuery"
 import Item from "@/types/Item"
 import assembleSimpleUser from "../UsersDAO/assembleSimpleUser"
+import { Repeat } from "@/types/Item"
 
 type ItemResult = Prisma.itemsGetPayload<typeof itemsBaseQuery>
 
@@ -34,6 +35,7 @@ const assembleItem = (result: ItemResult): Item => {
         notes: result.notes ? result.notes : undefined,
         starts: result.starts!.toISOString(),
         ends: result.ends!.toISOString(),
+        repeat: result.repeat ? result.repeat as Repeat : undefined,
         created: result.created.toISOString(),
         updated: result.updated.toISOString()
     }
