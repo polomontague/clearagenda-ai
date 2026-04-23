@@ -19,7 +19,7 @@ const itemsBaseQuery = {
         importance: true,
         notes: true,
         starts: true,
-        ends: true,
+        duration: true,
         repeat: true,
         created: true,
         updated: true

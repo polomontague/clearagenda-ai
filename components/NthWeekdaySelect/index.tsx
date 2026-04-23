@@ -18,11 +18,11 @@ export default function NthWeekdaySelect(props: NthWeekdaySelectProps) {
             fieldset
             options={{
                 ordinal: [
-                    { value: 0, label: "First" },
-                    { value: 1, label: "Second" },
-                    { value: 2, label: "Third" },
-                    { value: 3, label: "Fourth" },
-                    { value: 4, label: "Fifth" },
+                    { value: 1, label: "First" },
+                    { value: 2, label: "Second" },
+                    { value: 3, label: "Third" },
+                    { value: 4, label: "Fourth" },
+                    { value: 5, label: "Fifth" },
                     { value: -2, label: "Second Last" },
                     { value: -1, label: "Last" }
                 ],

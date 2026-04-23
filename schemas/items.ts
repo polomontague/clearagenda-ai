@@ -44,22 +44,31 @@ const weekdayMonthly = z.object({
     weekday
 })
 const monthly = z.discriminatedUnion("type", [daysMonthly, weekdayMonthly])
-const yearly = z.object({
+const dayYearly = z.object({
+    type: z.literal("day", 'repeat.type must be "day" or "weekday"'),
+    frequency: z.literal("yearly", 'frequency must be "daily", "weekly", "monthly", or "yearly"'),
+    interval: z.number("repeat.interval must be a number").min(1, "repeat.interval must be 1 or greater"),
+    months: z.array(z.number(), "repeat.months must be an array of numbers").refine(value => value.every(value => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(value)), "elements of repeat.months must be 0-11"),
+    day: z.number("repeat.day must be a number").min(1, "repeat.day must be 1 or greater")
+})
+const weekdayYearly = z.object({
+    type: z.literal("weekday", 'repeat.type must be "day" or "weekday"'),
     frequency: z.literal("yearly", 'frequency must be "daily", "weekly", "monthly", or "yearly"'),
     interval: z.number("repeat.interval must be a number").min(1, "repeat.interval must be 1 or greater"),
     months: z.array(z.number(), "repeat.months must be an array of numbers").refine(value => value.every(value => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(value)), "elements of repeat.months must be 0-11"),
     ordinal,
     weekday
 })
+const yearly = z.discriminatedUnion("type", [ dayYearly, weekdayYearly ])
 const repeat = z.discriminatedUnion("frequency", [daily, weekly, monthly, yearly], 'repeat.type must be "daily", "weekly", "monthly", or "yearly"')
 const eventBodySchema = z.object({
     type: z.literal("event", 'type must be "task" or "event"'),
     name: z.string("name must be a string").trim().min(1, "name must be 1 or more characters"),
     notes: z.string("notes must be a string").trim().min(1, "notes must be 1 or more characters").optional(),
     starts: z.string("starts must be a string").trim().refine(value => Validation.dateTime(value), "starts must be a valid ISO 8601 datetime"),
-    ends: z.string("ends must be a string").trim().refine(value => Validation.dateTime(value), "ends must be a valid ISO 8601 datetime"),
+    duration: z.number("duration must be a number").min(1, "duration must be 1 or greater"),
     repeat: repeat.optional()
-}).refine(value => new Date(value.ends).getTime() > new Date(value.starts).getTime(), "starts must be before ends")
+})
 export const itemBodySchema = z.discriminatedUnion("type", [ taskBodySchema, eventBodySchema ], 'type must be "task" or "event"')
 
 export const itemStepParamsSchema = z.object({

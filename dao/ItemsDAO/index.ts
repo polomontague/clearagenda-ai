@@ -8,7 +8,7 @@ type TaskData = Pick<Task, "name" | "description" | "deadline" | "importance"> &
     steps: Pick<Step, "name" | "notes" | "duration">[]
 }
 
-type EventData = Pick<Event, "name" | "notes" | "starts" | "ends" | "repeat"> & {
+type EventData = Pick<Event, "name" | "notes" | "starts" | "duration" | "repeat"> & {
     user_id: number
 }
 
@@ -38,7 +38,7 @@ const ItemsDAO = {
                 importance: "importance" in data ? data.importance : undefined,
                 notes: "notes" in data ? data.notes : undefined,
                 starts: "starts" in data ? data.starts : undefined,
-                ends: "ends" in data ? data.ends : undefined,
+                duration: "duration" in data ? data.duration : undefined,
                 repeat: "repeat" in data ? data.repeat : undefined
             },
             ...itemsBaseQuery
@@ -83,7 +83,7 @@ const ItemsDAO = {
                 importance: "importance" in data ? data.importance : undefined,
                 notes: "notes" in data ? data.notes : undefined,
                 starts: "starts" in data ? new Date(data.starts) : undefined,
-                ends: "ends" in data ? new Date(data.ends) : undefined,
+                duration: "duration" in data ? data.duration : undefined,
                 repeat: "repeat" in data ? data.repeat : undefined
             },
             ...itemsBaseQuery

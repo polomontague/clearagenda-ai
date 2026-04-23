@@ -65,7 +65,7 @@ model items {
 	importance Float?
 	notes String? @db.VarChar(300)
 	starts DateTime?
-	ends DateTime?
+	duration Int?
 	repeat Json?
 	created DateTime @default(now())
 	updated DateTime @updatedAt

@@ -34,7 +34,7 @@ const assembleItem = (result: ItemResult): Item => {
         name: result.name,
         notes: result.notes ? result.notes : undefined,
         starts: result.starts!.toISOString(),
-        ends: result.ends!.toISOString(),
+        duration: result.duration!,
         repeat: result.repeat ? result.repeat as Repeat : undefined,
         created: result.created.toISOString(),
         updated: result.updated.toISOString()

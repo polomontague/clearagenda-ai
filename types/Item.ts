@@ -1,6 +1,6 @@
 import SimpleUser from "@/types/SimpleUser"
 
-type Ordinal = 1 | 2 | 3 | 4 | 5 | -1 | -2
+export type Ordinal = 1 | 2 | 3 | 4 | 5 | -1 | -2
 
 type Daily = {
     frequency: "daily",
@@ -39,7 +39,7 @@ type DayYearly = {
 }
 
 type WeekdayYearly = {
-    type: "day",
+    type: "weekday",
     frequency: "yearly",
     interval: number,
     months: number[],
@@ -81,22 +81,10 @@ export type Event = BaseItem & {
     type: "event",
     notes?: string,
     starts: string // ISO 8601 datetime,
-    ends: string // ISO 8601 datetime
+    duration: number, // minutes
     repeat?: Repeat
 }
 
 type Item = Task | Event
 
 export default Item
-// occurrences
-// occurs
-
-type SingeEvent = {
-    starts: string,
-    duration: 90
-}
-
-type RepeatEvent = {
-    
-    duration: 90
-}

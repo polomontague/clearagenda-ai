@@ -1,0 +1,44 @@
+.background{
+    width: 100%;
+    padding-left: var(--spacing-medium);
+    padding-top: var(--spacing-small);
+    padding-right: var(--spacing-medium);
+    padding-bottom: var(--spacing-small);
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.lstOptions{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-small);
+}
+
+.lstOptions > li{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+}
+
+.btnOption{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--field-size);
+    height: var(--field-size);
+    border-radius: var(--border-radius);
+    color: var(--layer-3-light);
+}
+
+.btnOption.selected{
+    background-color: var(--accent);
+    font-weight: bolder;
+    color: var(--accent-contrast);
+}

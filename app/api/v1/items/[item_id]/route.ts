@@ -42,7 +42,7 @@ export const PUT = async (req: NextRequest, props: { params: Promise<{ item_id: 
                 name: body.name,
                 notes: body.notes,
                 starts: body.starts,
-                ends: body.ends,
+                duration: body.duration,
                 repeat: body.repeat
             })
         }
