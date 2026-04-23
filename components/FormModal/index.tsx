@@ -1,6 +1,8 @@
 "use client"
+import styles from "./FormModal.module.css"
 import { ReactNode, useContext, SetStateAction, RefObject, Dispatch, createContext, useRef, useState, useEffect } from "react"
-import styles from "./Modal.module.css"
+export { default as Option } from "./Option"
+export { default as Slide } from "./Slide"
 
 type FormModalProps = {
     open: boolean,
@@ -55,6 +57,11 @@ export default function FormModal(props: FormModalProps) {
         <SubmitContext.Provider value={{ ghostButtonRef, setDoneDisabled }}>
             <div className={`${styles.overlay} ${props.open ? styles.open : styles.closed}`}>
                 <div className={styles.window}>
+                    <div className={styles.containerScroll}>
+                        <div className={styles.containerChildren}>
+                            {props.children}
+                        </div>
+                    </div>
                     <header className={styles.header}>
                         <button
                             type="button"
@@ -69,11 +76,6 @@ export default function FormModal(props: FormModalProps) {
                             onClick={handleDoneClick}
                         >Done</button>
                     </header>
-                    <div className={styles.containerScroll}>
-                        <div className={styles.containerChildren}>
-                            {props.children}
-                        </div>
-                    </div>
                 </div>
             </div>
         </SubmitContext.Provider>

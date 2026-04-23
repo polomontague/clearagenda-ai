@@ -1,0 +1,37 @@
+.background{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    width: 100%;
+    height: var(--field-size);
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.label{
+    flex: 1;
+    font-weight: bolder;
+}
+
+.value{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    color: var(--layer-3-light);
+}
+
+.value > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--layer-3-light);
+}

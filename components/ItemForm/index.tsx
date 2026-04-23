@@ -22,6 +22,9 @@ import Collapses, { Collapse } from "@/components/Collapses"
 import InnerButton from "@/components/InnerButton"
 import SelectList from "@/components/SelectList"
 import TextInput from "@/components/TextInput"
+import { Option, Slide } from "@/components/FormModal"
+import DurationSelect from "@/components/DurationSelect"
+import MultiSelect from "../MultiSelect"
 
 type BaseProps = {
     onSuccess: (item: Item) => void
@@ -50,8 +53,7 @@ export default function ItemForm(props: ItemFormProps) {
     const [notes, setNotes] = useState("")
     const [starts, setStarts] = useState(new Date())
     const [ends, setEnds] = useState(new Date())
-    const [duration, setDuration] = useState(0)
-    const durations = [ 5, 10, 15, 30, 45, 60, 90, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720 ]
+    const [duration, setDuration] = useState(15)
     const [frequency, setFrequency] = useState("daily")
     const [interval, setInterval] = useState(1)
     const [weekday, setWeekday] = useState({ ordinal: 0, weekday: 0 })
@@ -61,6 +63,17 @@ export default function ItemForm(props: ItemFormProps) {
     const [months, setMonths] = useState([0])
     const [name, setName] = useState("")
     const [repeat, setRepeat] = useState(false)
+    const frequencyLabelMap: Record<string, string> = {
+        daily: "Daily",
+        weekly: "Weekly",
+        monthly: "Monthly",
+        yearly: "Yearly"
+    }
+    const [occurs, setOccurs] = useState<"once" | "repeat">("once")
+
+    useEffect(() => {
+        console.log(duration)
+    }, [duration])
 
     useEffect(() => {
         if (props.type === "edit") {
@@ -95,6 +108,22 @@ export default function ItemForm(props: ItemFormProps) {
             yearly: "Year"
         }
         return `${interval > 1 ? `${interval} ` : ""}${labelMap[frequency]}${interval > 1 ? "s" : ""}`
+    }
+
+    const getWeekdaysLabel = (weekdays: number[]) => {
+        const SHOW = 3
+        const names = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+        if (weekdays.length === 7) return "Every Day"
+        const remaining = weekdays.length - SHOW
+        return `${weekdays.slice(0, SHOW).map(weekday => names[weekday]).join(", ")}${remaining ? ` +${remaining}` : ""}`
+    }
+
+    const getMonthsLabel = (months: number[]) => {
+        const SHOW = 3
+        const names = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+        if (months.length === 12) return "Every Month"
+        const remaining = months.length - SHOW
+        return `${months.slice(0, SHOW).map(month => names[month]).join(", ")}${remaining ? ` +${remaining}` : ""}`
     }
 
     const validate = () => {
@@ -178,12 +207,18 @@ export default function ItemForm(props: ItemFormProps) {
                     ) : type === "event" ? (
                         <>
                             <TextInput placeholder="Name..." value={name} onChange={setName} />
-                            <LabelField label="Repeat">
-                                <Toggle on={repeat} onChange={setRepeat} />
-                            </LabelField>
-                            {repeat ? (
-                                <>
-                                    <Fieldset>
+                            <Fieldset>
+                                <SelectBar
+                                    fieldset
+                                    options={[
+                                        { value: "once", label: "One Time" },
+                                        { value: "repeat", label: "Repeating" }
+                                    ] as const}
+                                    value={occurs}
+                                    onChange={setOccurs}
+                                />
+                                {occurs === "repeat" ? (
+                                    <>
                                         <LabelField fieldset label="Starts">
                                             <InnerButton
                                                 label={Utility.formatTime(starts)}
@@ -193,37 +228,69 @@ export default function ItemForm(props: ItemFormProps) {
                                         <Collapse value="repeat_start">
                                             <TimePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
                                         </Collapse>
-                                        <LabelField fieldset label="Length">
-                                            <InnerValue label={Utility.formatDuration(durations[duration])} />
-                                        </LabelField>
-                                        <RangeInput fieldset step={1} min={0} max={durations.length - 1} value={duration} onChange={setDuration} />
-                                    </Fieldset>
-                                    <Fieldset label="Repeats">
-                                        <SelectBar
+                                        <Option
                                             fieldset
-                                            options={[
-                                                { value: "daily", label: "Daily" },
-                                                { value: "weekly", label: "Weekly" },
-                                                { value: "monthly", label: "Monthly" },
-                                                { value: "yearly", label: "Yearly" }
-                                            ]}
-                                            value={frequency}
-                                            onChange={setFrequency}
-                                        />
-                                        <LabelField fieldset label="Every">
-                                            <InnerValue label={getIntervalLabel(frequency, interval)} />
-                                        </LabelField>
-                                        <RangeInput fieldset min={1} max={30} step={1} value={interval} onChange={setInterval} />
+                                            label="Length"
+                                            value={Utility.formatDuration(duration)}
+                                        >
+                                            <Slide>
+                                                <DurationSelect value={duration} onChange={setDuration} />
+                                            </Slide>
+                                        </Option>
+                                        <Option
+                                            fieldset
+                                            label="Frequency"
+                                            value={frequencyLabelMap[frequency]}
+                                        >
+                                            <Slide>
+                                                <SelectList
+                                                    options={[
+                                                        { value: "daily", label: "Daily" },
+                                                        { value: "weekly", label: "Weekly" },
+                                                        { value: "monthly", label: "Monthly" },
+                                                        { value: "yearly", label: "Yearly" }
+                                                    ]}
+                                                    value={frequency}
+                                                    onChange={setFrequency}
+                                                />
+                                            </Slide>
+                                        </Option>
+                                        <Option
+                                            fieldset
+                                            label="Every"
+                                            value={getIntervalLabel(frequency, interval)}
+                                        >
+                                            <Slide>
+                                                <MultiSelect
+                                                    options={{
+                                                        days: Array.from({ length: 100 }).map((_, i) => ({
+                                                            value: i + 1,
+                                                            label: `${i + 1}`
+                                                        }))
+                                                    }}
+                                                    value={{ days: interval }}
+                                                    onChange={(val) => setInterval(val.days)}
+                                                />
+                                            </Slide>
+                                        </Option>
                                         {frequency === "weekly" ? (
-                                            <SelectList
+                                            <Option
                                                 fieldset
-                                                options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
-                                                    value: i,
-                                                    label: weekday
-                                                }))}
-                                                value={weekdays}
-                                                onChange={setWeekdays}
-                                            />
+                                                label="Weekdays"
+                                                value={getWeekdaysLabel(weekdays)}
+                                            >
+                                                <Slide>
+                                                    <SelectList
+                                                        multiple
+                                                        options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
+                                                            value: i,
+                                                            label: weekday
+                                                        }))}
+                                                        value={weekdays}
+                                                        onChange={setWeekdays}
+                                                    />
+                                                </Slide>
+                                            </Option>
                                         ) : frequency === "monthly" ? (
                                             <>
                                                 <SelectBar
@@ -243,15 +310,23 @@ export default function ItemForm(props: ItemFormProps) {
                                             </>
                                         ) : frequency === "yearly" ? (
                                             <>
-                                                <SelectList
+                                                <Option
                                                     fieldset
-                                                    options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, i) => ({
-                                                        value: i,
-                                                        label: month
-                                                    }))}
-                                                    value={months}
-                                                    onChange={setMonths}
-                                                />
+                                                    label="Months"
+                                                    value={getMonthsLabel(months)}
+                                                >
+                                                    <Slide>
+                                                        <SelectList
+                                                            multiple
+                                                            options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, i) => ({
+                                                                value: i,
+                                                                label: month
+                                                            }))}
+                                                            value={months}
+                                                            onChange={setMonths}
+                                                        />
+                                                    </Slide>
+                                                </Option>
                                                 <SelectBar
                                                     fieldset
                                                     options={[
@@ -268,32 +343,37 @@ export default function ItemForm(props: ItemFormProps) {
                                                 ) : null}
                                             </>
                                         ) : null}
-                                    </Fieldset>
-                                </>
-                            ) : (
-                                <Fieldset>
-                                    <LabelField fieldset label="Starts">
-                                        <InnerButton
-                                            label={Utility.formatDate(starts)}
-                                            onClick={() => setOpen(open === "starts_date" ? undefined : "starts_date")}
-                                        />
-                                        <InnerButton
-                                            label={Utility.formatTime(starts)}
-                                            onClick={() => setOpen(open === "starts_time" ? undefined : "starts_time")}
-                                        />
-                                    </LabelField>
-                                    <Collapse value="starts_date">
-                                        <DatePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
-                                    </Collapse>
-                                    <Collapse value="starts_time">
-                                        <TimePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
-                                    </Collapse>
-                                    <LabelField fieldset label="Length">
-                                        <InnerValue label={Utility.formatDuration(durations[duration])} />
-                                    </LabelField>
-                                    <RangeInput fieldset step={1} min={0} max={durations.length - 1} value={duration} onChange={setDuration} />
-                                </Fieldset>
-                            )}
+                                    </>
+                                ) : occurs === "once" ? (
+                                    <>
+                                        <LabelField fieldset label="Starts">
+                                            <InnerButton
+                                                label={Utility.formatDate(starts)}
+                                                onClick={() => setOpen(open === "starts_date" ? undefined : "starts_date")}
+                                            />
+                                            <InnerButton
+                                                label={Utility.formatTime(starts)}
+                                                onClick={() => setOpen(open === "starts_time" ? undefined : "starts_time")}
+                                            />
+                                        </LabelField>
+                                        <Collapse value="starts_date">
+                                            <DatePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
+                                        </Collapse>
+                                        <Collapse value="starts_time">
+                                            <TimePicker fieldset value={starts} onChange={(val) => setStarts(val)} />
+                                        </Collapse>
+                                        <Option
+                                            fieldset
+                                            label="Length"
+                                            value={Utility.formatDuration(duration)}
+                                        >
+                                            <Slide>
+                                                <DurationSelect value={duration} onChange={setDuration} />
+                                            </Slide>
+                                        </Option>
+                                    </>
+                                ) : null}
+                            </Fieldset>
                             <TextArea rows={6} placeholder="Notes..." value={notes} onChange={(val) => setNotes(val)} />
                         </>
                     ) : <></>}

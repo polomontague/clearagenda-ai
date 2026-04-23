@@ -7,19 +7,35 @@ type Option<Value> = {
     label: string
 }
 
-type SelectListProps<Value> = {
+type BaseProps<Value> = {
     fieldset?: boolean,
     options: Option<Value>[],
+}
+
+type SingleProps<Value> = BaseProps<Value> & {
+    multiple?: false,
+    value: Value,
+    onChange: (value: Value) => void
+}
+
+type MultipleProps<Value> = BaseProps<Value> & {
+    multiple: true,
     value: Value[],
     onChange: (value: Value[]) => void
 }
 
+type SelectListProps<Value> = SingleProps<Value> | MultipleProps<Value>
+
 export default function SelectList<Value>(props: SelectListProps<Value>) {
     const handleClick = (option: Option<Value>) => {
-        if (props.value.includes(option.value)) {
-            props.onChange(props.value.filter(value => value !== option.value))
+        if (props.multiple) {
+            if (props.value.includes(option.value)) {
+                props.onChange(props.value.filter(value => value !== option.value))
+            } else {
+                props.onChange([ ...props.value, option.value ])
+            }
         } else {
-            props.onChange([ ...props.value, option.value ])
+            props.onChange(option.value)
         }
     }
 
@@ -27,7 +43,7 @@ export default function SelectList<Value>(props: SelectListProps<Value>) {
         <div className={`${styles.background} ${props.fieldset ? styles.fieldset : ""}`}>
             <ul className={styles.lstOptions}>
                 {props.options.map((option, i) => {
-                    const selected = props.value.includes(option.value)
+                    const selected = props.multiple ? props.value.includes(option.value) : props.value === option.value
                     return (
                         <li key={i}>
                             <button

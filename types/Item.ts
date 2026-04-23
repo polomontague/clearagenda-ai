@@ -49,12 +49,6 @@ type WeekdayYearly = {
 
 type Yearly = DayYearly | WeekdayYearly
 
-{
-    "frequency": "yearly",
-    "interval": 1,
-    "days": [1]
-}
-
 export type Repeat = Daily | Weekly | Monthly | Yearly
 
 type BaseItem = {
