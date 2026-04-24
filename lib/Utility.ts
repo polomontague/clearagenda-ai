@@ -46,7 +46,7 @@ const Utility = {
         const hours = date.getHours()
         const minutes = date.getMinutes()
         const amOrPm = hours < 12 ? "AM" : "PM"
-        return `${hours % 12}:${minutes.toString().padStart(2, "0")} ${amOrPm}`
+        return `${hours % 12 || 12}:${minutes.toString().padStart(2, "0")} ${amOrPm}`
     },
     getRepeatLabel: (repeat: Repeat) => {
         const WEEKDAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]

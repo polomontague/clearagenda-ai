@@ -49,7 +49,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
             }
         })
         return completionItems.filter(item => {
-            if (!completed && item.completed) return false
+            //if (!completed && item.completed) return false
             if (item.name.toLowerCase().includes(search.toLowerCase())) return true
             if (item.type === "task") {
                 if (item.description.toLowerCase().includes(search.toLowerCase())) return true
@@ -89,7 +89,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
         return new Date()
     }
 
-    const getDuration = (item: Item) => {
+    const getTaskDuration = (item: Item) => {
         let duration = 0
         if (item.type === "task") {
             item.steps.forEach(step => duration += step.duration)
@@ -177,13 +177,46 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
         setItems(newItems)
     }
 
+    const getEventTimesLabel = (item: Event) => {
+        const starts = new Date(item.starts)
+        const ends = new Date(starts)
+        ends.setMinutes(ends.getMinutes() + item.duration)
+        return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
+    }
+
+    const getStatus = (item: Item): { color: string, label: string } => {
+        if (item.type === "task") {
+            if (item.occurs === "once") {
+                const completed = getCompleted(item)
+                if (completed) return { color: "var(--layer-4-light)", label: "Completed" }
+                return { color: "var(--yellow)", label: "Scheduled" }
+            }
+            if (item.occurs === "repeating") {
+                return { color: "var(--sky)", label: "Repeating" }
+            }
+        }
+        if (item.type === "event") {
+            if (item.occurs === "once") {
+                const completed = getCompleted(item)
+                if (completed) return { color: "var(--layer-4-light)", label: "Passed" }
+                return { color: "var(--yellow)", label: "Scheduled" }
+            }
+            if (item.occurs === "repeating") {
+                return { color: "var(--sky)", label: "Repeating" }
+            }
+        }
+        return { color: "", label: "" }
+    }
+
     if (!user) return
 
     return (
         <>
             <List>
                 {filteredItems.map((item, i) => {
-                    const completion = item.type === "task" ? getCompletion(item) : 0
+                    const repeatLabel = item.occurs === "repeating" ? Utility.getRepeatLabel(item.repeat) : undefined
+                    const status = getStatus(item)
+                    console.log(status)
                     return (
                         <ListItem key={i}>
                             <Card
@@ -193,55 +226,55 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                     { icon: <TrashCanIcon />, onClick: () => handleRequestDelete(item) }
                                 ]}
                             >
-                                {item.type === "task" ? (
-                                    <FieldFrame>
-                                        <Fieldset label="Description">
-                                            <ValueBox fieldset value={item.description} />
-                                        </Fieldset>
-                                        <LabelField label="Steps">
-                                            <InnerButton
-                                                label={`${item.steps.length} ${item.steps.length === 1 ? "Step" : "Steps"}`}
-                                                onClick={() => handleStepsClick(item)}
-                                            />
-                                        </LabelField>
-                                        {item.deadline ? (
-                                            <LabelField label="Deadline">
-                                                <InnerValue
-                                                    color="var(--red)"
-                                                    label={Utility.formatDate(new Date(item.deadline))}
-                                                />
-                                            </LabelField>
-                                        ) : <></>}
-                                        <LabelField label="Time">
-                                            <InnerValue label={Utility.formatDuration(getDuration(item), averageHours(user))} />
-                                        </LabelField>
-                                        <Fieldset>
-                                            <LabelField fieldset label="Completion">
-                                                <InnerValue label={completion === 0 ? "Scheduled" : completion === 1 ? "Complete" : `${completion * 100}%`} />
-                                            </LabelField>
-                                            <Range
-                                                fieldset
-                                                value={completion}
-                                            />
-                                        </Fieldset>
-                                    </FieldFrame>
-                                ) : item.type === "event" ? (
-                                    <FieldFrame>
-                                        {item.notes ? (
-                                            <Fieldset label="Notes">
-                                                <ValueBox fieldset value={item.notes} />
-                                            </Fieldset>
-                                        ) : <></>}
-                                        <Fieldset label="Date">
-                                            <LabelField fieldset label="Starts">
-                                                <InnerValue label={Utility.formatDate(new Date(item.starts))} />
-                                            </LabelField>
-                                            <LabelField fieldset label="Ends">
-                                                <InnerValue label={Utility.formatDate(getEventEnds(item))} />
-                                            </LabelField>
-                                        </Fieldset>
-                                    </FieldFrame>
-                                ) : null}
+                                <FieldFrame>
+                                    {item.type === "task" ? (
+                                        item.occurs === "once" ? (
+                                            <>
+                                                <LabelField label="Time">
+                                                    <InnerValue label={Utility.formatDuration(getTaskDuration(item))} />
+                                                </LabelField>
+                                                <LabelField label="Status">
+                                                    <InnerValue color={status.color} label={status.label} />
+                                                </LabelField>
+                                            </>
+                                        ) : item.occurs === "repeating" ? (
+                                            <>
+                                                <Fieldset description={repeatLabel}>
+                                                    <LabelField fieldset label="Time">
+                                                        <InnerValue
+                                                            label={Utility.formatDuration(getTaskDuration(item))}
+                                                        />
+                                                    </LabelField>
+                                                </Fieldset>
+                                                <LabelField label="Status">
+                                                    <InnerValue color={status.color} label={status.label} />
+                                                </LabelField>
+                                            </>
+                                        ) : <></>
+                                    ) : item.type === "event" ? (
+                                        item.occurs === "once" ? (
+                                            <>
+                                                <LabelField label="Time">
+                                                    <InnerValue label={getEventTimesLabel(item)} />
+                                                </LabelField>
+                                                <LabelField label="Status">
+                                                    <InnerValue color={status.color} label={status.label} />
+                                                </LabelField>
+                                            </>
+                                        ) : item.occurs === "repeating" ? (
+                                            <>
+                                                <Fieldset description={repeatLabel}>
+                                                    <LabelField fieldset label="Time">
+                                                        <InnerValue label={getEventTimesLabel(item)} />
+                                                    </LabelField>
+                                                </Fieldset>
+                                                <LabelField label="Status">
+                                                    <InnerValue color={status.color} label={status.label} />
+                                                </LabelField>
+                                            </>
+                                        ) : <></>
+                                    ) : <></>}
+                                </FieldFrame>
                             </Card>
                         </ListItem>
                     )

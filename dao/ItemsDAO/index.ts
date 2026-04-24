@@ -60,6 +60,7 @@ const ItemsDAO = {
                 user_id: options.user_id
             },
             orderBy: [
+                { occurs: "desc" },
                 { deadline: "asc" },
                 { importance: "desc" }
             ],

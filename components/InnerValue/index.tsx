@@ -5,15 +5,15 @@ type InnerValueProps = {
     label: string
 }
 
-export default function InnerValue(props: InnerValueProps) {
+export default function InnerValue({ color, label }: InnerValueProps) {
     return (
         <p
             className={styles.value}
             style={{
-                color: props.color
+                color
             }}
         >
-            {props.label}
+            {label}
         </p>
     )
 }

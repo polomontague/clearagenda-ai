@@ -481,7 +481,7 @@ export default function ItemForm(props: ItemFormProps) {
                                                 ) : null}
                                             </>
                                         ) : null}
-                                        <LabelField fieldset label="Start Repeating">
+                                        <LabelField fieldset label="Begin">
                                             <InnerButton
                                                 label={Utility.formatDate(repeatStart)}
                                                 onClick={() => setOpen(open === "start_repeating" ? undefined : "start_repeating")}

@@ -1,6 +1,6 @@
 import SimpleUser from "@/types/SimpleUser"
-import { Task, RepeatingTask } from "./Task"
-import { Event, RepeatingEvent } from "./Event"
+import { Task, OnceTask, RepeatingTask } from "./Task"
+import { Event, OnceEvent, RepeatingEvent } from "./Event"
 
 export type BaseItem = {
     id: number,
@@ -12,6 +12,7 @@ export type BaseItem = {
 
 type Item = Task | Event
 
+export type OnceItem = OnceTask | OnceEvent
 export type RepeatingItem = RepeatingTask | RepeatingEvent
 
 export type { Repeat } from "./Repeat"
