@@ -1,7 +1,7 @@
 "use client"
 import List, { ListItem } from "@/components/List"
 import API from "@/lib/API"
-import Item, { Task, Step } from "@/types/Item"
+import Item, { Task, Event } from "@/types/Item"
 import { useState, useContext, useMemo } from "react"
 import Fieldset from "@/components/Fieldset"
 import FieldFrame from "@/components/FieldFrame"
@@ -43,20 +43,9 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
     const today = new Date()
     const filteredItems = useMemo(() => {
         const completionItems = items.map(item => {
-            let completed = true
-            if (item.type === "task") {
-                for (let i = 0; i < item.steps.length; i++) {
-                    if (!item.steps[i].completed) {
-                        completed = false
-                        break
-                    }
-                }
-            } else if (item.type === "event") {
-                if (new Date(item.ends).getTime() > today.getTime()) completed = false
-            }
             return {
                 ...item,
-                completed
+                completed: getCompleted(item)
             }
         })
         return completionItems.filter(item => {
@@ -74,6 +63,31 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
             return false
         })
     }, [items, search, completed])
+
+    function getCompleted(item: Item) {
+        if (item.type === "task") {
+            for (let i = 0; i < item.steps.length; i++) {
+                if (!item.steps[i].completed) {
+                    return false
+                }
+            }
+        } else if (item.type === "event") {
+            if (item.occurs === "once") {
+                const ends = new Date(item.starts)
+                ends.setMinutes(ends.getMinutes() + item.duration)
+                if (new Date(ends).getTime() > today.getTime()) completed = false
+            }
+            if (item.occurs === "repeating") {
+                return false // Ongoing repeat ing events are not completed
+            }
+        }
+        return true
+    }
+
+    const getEventEnds = (item: Event) => {
+
+        return new Date()
+    }
 
     const getDuration = (item: Item) => {
         let duration = 0
@@ -211,7 +225,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                             />
                                         </Fieldset>
                                     </FieldFrame>
-                                ) : (
+                                ) : item.type === "event" ? (
                                     <FieldFrame>
                                         {item.notes ? (
                                             <Fieldset label="Notes">
@@ -223,11 +237,11 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                                 <InnerValue label={Utility.formatDate(new Date(item.starts))} />
                                             </LabelField>
                                             <LabelField fieldset label="Ends">
-                                                <InnerValue label={Utility.formatDate(new Date(item.ends))} />
+                                                <InnerValue label={Utility.formatDate(getEventEnds(item))} />
                                             </LabelField>
                                         </Fieldset>
                                     </FieldFrame>
-                                )}
+                                ) : null}
                             </Card>
                         </ListItem>
                     )

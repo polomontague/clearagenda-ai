@@ -1,12 +1,8 @@
-import { Event } from "@/types/Item"
+import { RepeatingItem } from "@/types/Item"
 import getNthWeekdayOfMonth from "./getNthWeekdayOfMonth"
 
-export default function occursOnDate(item: Event, date: Date): boolean {
-    if (!item.repeat) {
-        return new Date(item.starts).toLocaleDateString("en-CA") === date.toLocaleDateString("en-CA")
-    }
-
-    const starts = new Date(item.starts)
+export default function occursOnDate(item: RepeatingItem, date: Date): boolean {
+    const starts = new Date(item.repeat.starts)
     const target = new Date(date)
     // Normalize times (compare dates only)
     starts.setHours(0, 0, 0, 0)
@@ -37,8 +33,13 @@ export default function occursOnDate(item: Event, date: Date): boolean {
         const diffYears = target.getFullYear() - starts.getFullYear()
         if (diffYears < 0 || diffYears % repeat.interval !== 0) return false
         if (!repeat.months.includes(target.getMonth())) return false
-        const weekday = getNthWeekdayOfMonth(target.getFullYear(), target.getMonth(), repeat.weekday, repeat.ordinal)
-        return weekday?.getTime() === target.getTime()
+        if (repeat.type === "day") {
+            return repeat.day === target.getDate()
+        }
+        if (repeat.type === "weekday") {
+            const weekday = getNthWeekdayOfMonth(target.getFullYear(), target.getMonth(), repeat.weekday, repeat.ordinal)
+            return weekday?.getTime() === target.getTime()
+        }
     }
     return false
 }

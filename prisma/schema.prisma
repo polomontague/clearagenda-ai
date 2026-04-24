@@ -54,18 +54,30 @@ model users {
 	updated DateTime @updatedAt
 }
 
+enum item_type {
+	task
+	event
+}
+
+enum item_occurs {
+	once
+	repeating
+}
+
 model items {
 	id Int @id @default(autoincrement())
 	user_id Int
 	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	type item_type
 	name String @db.VarChar(100)
 	description String? @db.Text
 	steps item_steps[]
-	deadline DateTime?
 	importance Float?
 	notes String? @db.VarChar(300)
 	starts DateTime?
 	duration Int?
+	occurs item_occurs
+	deadline DateTime?
 	repeat Json?
 	created DateTime @default(now())
 	updated DateTime @updatedAt

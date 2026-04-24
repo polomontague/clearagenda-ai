@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `items` ALTER COLUMN `occcurs` DROP DEFAULT,
+    ALTER COLUMN `type` DROP DEFAULT;

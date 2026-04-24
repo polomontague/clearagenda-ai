@@ -1,6 +1,6 @@
 "use client"
 import Form from "@/components/Form"
-import Item, { Event, Ordinal } from "@/types/Item"
+import Item, { Event, Ordinal, Repeat } from "@/types/Item"
 import { useState, useEffect } from "react"
 import TextArea from "@/components/TextArea"
 import FieldFrame from "@/components/FieldFrame"
@@ -50,7 +50,7 @@ export default function ItemForm(props: ItemFormProps) {
         starts: roundMinutes(new Date()),
         duration: 15,
         occurs: "once" as const,
-        frequency: "daily",
+        frequency: "daily" as const,
         interval: 1,
         ordinal: 1 as const,
         weekday: new Date().getDay(),
@@ -60,6 +60,7 @@ export default function ItemForm(props: ItemFormProps) {
         yearly_type: "day" as const,
         months: [ new Date().getMonth() ],
         day: new Date().getDate(),
+        repeat_start: new Date(),
         notes: ""
     }
     const [type, setType] = useState<"task" | "event">(DEFAULTS.type)
@@ -69,8 +70,8 @@ export default function ItemForm(props: ItemFormProps) {
     const [name, setName] = useState(DEFAULTS.name)
     const [starts, setStarts] = useState(DEFAULTS.starts)
     const [duration, setDuration] = useState(DEFAULTS.duration)
-    const [occurs, setOccurs] = useState<"once" | "repeat">(DEFAULTS.occurs)
-    const [frequency, setFrequency] = useState(DEFAULTS.frequency)
+    const [occurs, setOccurs] = useState<"once" | "repeating">(DEFAULTS.occurs)
+    const [frequency, setFrequency] = useState<"daily" | "weekly" | "monthly" | "yearly">(DEFAULTS.frequency)
     const [interval, setInterval] = useState(DEFAULTS.interval)
     const [ordinal, setOrdinal] = useState<Ordinal>(DEFAULTS.ordinal)
     const [weekday, setWeekday] = useState(DEFAULTS.weekday)
@@ -80,6 +81,7 @@ export default function ItemForm(props: ItemFormProps) {
     const [yearlyType, setYearlyType] = useState<"day" | "weekday">(DEFAULTS.yearly_type)
     const [months, setMonths] = useState(DEFAULTS.months)
     const [day, setDay] = useState(DEFAULTS.day)
+    const [repeatStart, setRepeatStart] = useState(DEFAULTS.repeat_start)
     const [notes, setNotes] = useState(DEFAULTS.notes)
     const [doneDisabled, setDoneDisabled] = useState(true)
     const [alertMessage, setAlertMessage] = useState("")
@@ -111,22 +113,22 @@ export default function ItemForm(props: ItemFormProps) {
         setType(item.type)
         if (item.type === "task") {
             setDescription(item.description)
-            setHasDeadline(!!item.deadline)
-            setDeadline(item.deadline ? new Date(item.deadline) : new Date())
+            if ("deadline" in item) setHasDeadline(!!item.deadline)
+            if ("deadline" in item) setDeadline(item.deadline ? new Date(item.deadline) : new Date())
         } else {
             setName(item.name)
             setStarts(new Date(item.starts))
             setDuration(item.duration)
-            setOccurs(item.repeat ? "repeat" : "once")
-            if (item.repeat) {
+            setOccurs(("repeat" in item && item.repeat) ? "repeating" : "once")
+            if ("repeat" in item && item.repeat) {
                 setFrequency(item.repeat.frequency)
                 setInterval(item.repeat.interval)
-                if ("ordinal" in item.repeat) setOrdinal(item.repeat.ordinal)
-                if ("weekday" in item.repeat) setWeekday(item.repeat.weekday)
-                if ("weekdays" in item.repeat) setWeekdays(item.repeat.weekdays)
-                if (item.repeat.frequency === "monthly") setMonthlyType(item.repeat.type)
-                if ("months" in item.repeat) setMonths(item.repeat.months)
-                if (item.repeat.frequency === "yearly") setYearlyType(item.repeat.type)
+                if ("repeat" in item && "ordinal" in item.repeat) setOrdinal(item.repeat.ordinal)
+                if ("repeat" in item && "weekday" in item.repeat) setWeekday(item.repeat.weekday)
+                if ("repeat" in item && "weekdays" in item.repeat) setWeekdays(item.repeat.weekdays)
+                if ("repeat" in item && item.repeat.frequency === "monthly") setMonthlyType(item.repeat.type)
+                if ("repeat" in item && "months" in item.repeat) setMonths(item.repeat.months)
+                if ("repeat" in item && item.repeat.frequency === "yearly") setYearlyType(item.repeat.type)
                 if (item.notes) setNotes(item.notes)
             }
         }
@@ -149,6 +151,7 @@ export default function ItemForm(props: ItemFormProps) {
         setMonthlyType(DEFAULTS.monthly_type)
         setMonths(DEFAULTS.months)
         setYearlyType(DEFAULTS.yearly_type)
+        setRepeatStart(DEFAULTS.repeat_start)
         setNotes(DEFAULTS.notes)
     }
 
@@ -167,7 +170,6 @@ export default function ItemForm(props: ItemFormProps) {
         const names = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
         if (weekdays.length === 7) return "Every Day"
         const remaining = weekdays.length - SHOW
-        console.log(remaining)
         return `${weekdays.slice(0, SHOW).map(weekday => names[weekday]).join(", ")}${remaining > 0 ? ` +${remaining}` : ""}`
     }
 
@@ -189,60 +191,90 @@ export default function ItemForm(props: ItemFormProps) {
         return true
     }
 
-    const handleSubmit = () => {
-        setLoading(true)
-        const method = props.type === "new" ? "post" : "put"
-        const endpoint = `/api/v1/items${props.type === "edit" ? `/${props.item.id}` : ""}`
-        const repeat: Event["repeat"] = occurs === "repeat" ? (
+    const getRepeat = () => {
+        const repeat: Repeat = (
             frequency === "daily" ? {
+                starts: repeatStart.toISOString(),
                 frequency,
                 interval
             } : frequency === "weekly" ? {
+                starts: repeatStart.toISOString(),
                 frequency,
                 interval,
                 weekdays
             } : frequency === "monthly" ? (
                 monthlyType === "days" ? {
                     type: monthlyType,
+                    starts: repeatStart.toISOString(),
                     frequency,
                     interval,
                     days
-                } : monthlyType === "weekday" ? {
+                } : { // weekday
                     type: monthlyType,
+                    starts: repeatStart.toISOString(),
                     frequency,
                     interval,
                     ordinal,
                     weekday
-                } : undefined
-            ) : frequency === "yearly" ? (
+                }
+            ) : ( // yearly
                 yearlyType === "day" ? {
                     type: yearlyType,
+                    starts: repeatStart.toISOString(),
                     frequency,
                     interval,
                     months,
                     day
-                } : yearlyType === "weekday" ? {
+                } : { // weekday
                     type: yearlyType,
+                    starts: repeatStart.toISOString(),
                     frequency,
                     interval,
                     months,
                     ordinal,
                     weekday
-                } : undefined
-            ) : undefined
-        ) : undefined
-        const body = type === "task" ? {
-            type: "task",
-            description,
-            deadline: hasDeadline ? deadline.toISOString() : undefined
-        } : type === "event" ? {
-            type: "event",
-            name,
-            notes: notes ? notes : undefined,
-            starts: starts.toISOString(),
-            duration,
-            repeat
-        } : {}
+                }
+            )
+        )
+        return repeat
+    }
+
+    const handleSubmit = () => {
+        setLoading(true)
+        const method = props.type === "new" ? "post" : "put"
+        const endpoint = `/api/v1/items${props.type === "edit" ? `/${props.item.id}` : ""}`
+        const repeat = getRepeat()
+        const body = type === "task" ? (
+            occurs === "once" ? {
+                type,
+                description,
+                occurs,
+                deadline: hasDeadline ? deadline.toISOString() : undefined
+            } : occurs == "repeating" ? {
+                type,
+                description,
+                deadline: hasDeadline ? deadline.toISOString() : undefined,
+                occurs,
+                repeat
+            } : {}
+        ) : type === "event" ? (
+            occurs === "once" ? {
+                type: "event",
+                name,
+                notes: notes || undefined,
+                duration,
+                occurs,
+                starts
+            } : occurs === "repeating" ? {
+                type: "event",
+                name,
+                notes: notes || undefined,
+                duration,
+                occurs,
+                starts: starts.toISOString(),
+                repeat
+            } : {}
+        ) : {}
         API[method]<{ item: Item }>(endpoint, body, true).then(data => {
             setLoading(false)
             if (props.type === "new") clear()
@@ -297,17 +329,19 @@ export default function ItemForm(props: ItemFormProps) {
                     ) : type === "event" ? (
                         <>
                             <TextInput placeholder="Name..." value={name} onChange={setName} />
-                            <Fieldset>
+                            <Fieldset
+                                description={Utility.getRepeatLabel(getRepeat())}
+                            >
                                 <SelectBar
                                     fieldset
                                     options={[
                                         { value: "once", label: "One Time" },
-                                        { value: "repeat", label: "Repeating" }
+                                        { value: "repeating", label: "Repeating" }
                                     ] as const}
                                     value={occurs}
                                     onChange={setOccurs}
                                 />
-                                {occurs === "repeat" ? (
+                                {occurs === "repeating" ? (
                                     <>
                                         <LabelField fieldset label="Starts">
                                             <InnerButton
@@ -447,6 +481,15 @@ export default function ItemForm(props: ItemFormProps) {
                                                 ) : null}
                                             </>
                                         ) : null}
+                                        <LabelField fieldset label="Start Repeating">
+                                            <InnerButton
+                                                label={Utility.formatDate(repeatStart)}
+                                                onClick={() => setOpen(open === "start_repeating" ? undefined : "start_repeating")}
+                                            />
+                                        </LabelField>
+                                        <Collapse value="start_repeating">
+                                            <DatePicker fieldset value={repeatStart} onChange={setRepeatStart} />
+                                        </Collapse>
                                     </>
                                 ) : occurs === "once" ? (
                                     <>

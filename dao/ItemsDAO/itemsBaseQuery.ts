@@ -4,6 +4,7 @@ const itemsBaseQuery = {
     select: {
         id: true,
         user: simpleUsersBaseQuery,
+        type: true,
         name: true,
         description: true,
         steps: {
@@ -15,11 +16,12 @@ const itemsBaseQuery = {
                 completed: true
             }
         },
-        deadline: true,
         importance: true,
         notes: true,
         starts: true,
         duration: true,
+        occurs: true,
+        deadline: true,
         repeat: true,
         created: true,
         updated: true

@@ -1,30 +1,38 @@
 import prisma from "@/lib/prisma"
-import Item, { Task, Step, Event } from "@/types/Item"
+import { Step, OnceTask, RepeatingTask, OnceEvent, RepeatingEvent } from "@/types/Item"
 import assembleItem from "./assembleItem"
 import itemsBaseQuery from "./itemsBaseQuery"
 
-type TaskData = Pick<Task, "name" | "description" | "deadline" | "importance"> & {
+type OnceTaskData = Pick<OnceTask, "type" | "name" | "description" | "importance" | "occurs" | "deadline"> & {
     user_id: number,
     steps: Pick<Step, "name" | "notes" | "duration">[]
 }
-
-type EventData = Pick<Event, "name" | "notes" | "starts" | "duration" | "repeat"> & {
+type RepeatingTaskData = Pick<RepeatingTask, "type" | "name" | "description" | "importance" | "occurs" | "repeat"> & {
+    user_id: number,
+    steps: Pick<Step, "name" | "notes" | "duration">[]
+}
+type TaskData = OnceTaskData | RepeatingTaskData
+type OnceEventData = Pick<OnceEvent, "type" | "name" | "notes" | "starts" | "duration" | "occurs"> & {
     user_id: number
 }
-
+type RepeatingEventData = Pick<RepeatingEvent, "type" | "name" | "notes" | "starts" | "duration" | "occurs" | "repeat"> & {
+    user_id: number
+}
+type EventData = OnceEventData | RepeatingEventData
 type CreateItemData = TaskData | EventData
 
 type GetItemsOptions = {
     user_id?: number
 }
 
-type UpdateItemData = Omit<TaskData, "user_id"> | Omit<EventData, "user_id">
+type UpdateItemData = Omit<OnceTaskData, "user_id"> | Omit<RepeatingTaskData, "user_id"> | Omit<OnceEventData, "user_id"> | Omit<RepeatingEventData, "user_id">
 
 const ItemsDAO = {
     createItem: async (data: CreateItemData) => {
         const result = await prisma.items.create({
             data: {
                 user_id: data.user_id,
+                type: data.type,
                 name: data.name,
                 description: "description" in data ? data.description : undefined,
                 steps: "steps" in data ? {
@@ -34,11 +42,12 @@ const ItemsDAO = {
                         duration: step.duration
                     }))
                 } : undefined,
-                deadline: "deadline" in data ? data.deadline : undefined,
                 importance: "importance" in data ? data.importance : undefined,
                 notes: "notes" in data ? data.notes : undefined,
                 starts: "starts" in data ? data.starts : undefined,
                 duration: "duration" in data ? data.duration : undefined,
+                occurs: data.occurs,
+                deadline: "deadline" in data ? data.deadline : undefined,
                 repeat: "repeat" in data ? data.repeat : undefined
             },
             ...itemsBaseQuery
@@ -50,6 +59,10 @@ const ItemsDAO = {
             where: {
                 user_id: options.user_id
             },
+            orderBy: [
+                { deadline: "asc" },
+                { importance: "desc" }
+            ],
             ...itemsBaseQuery
         })
         return result.map(result => assembleItem(result))
@@ -69,21 +82,22 @@ const ItemsDAO = {
                 id: itemId
             },
             data: {
+                type: data.type,
                 name: data.name,
                 description: "description" in data ? data.description : undefined,
-                steps: {
-                    deleteMany: {},
-                    create: "steps" in data ? data.steps.map(step => ({
+                steps: "steps" in data ? {
+                    create: data.steps.map(step => ({
                         name: step.name,
                         notes: step.notes,
                         duration: step.duration
-                    })) : undefined
-                },
-                deadline: "deadline" in data ? data.deadline : undefined,
+                    }))
+                } : undefined,
                 importance: "importance" in data ? data.importance : undefined,
                 notes: "notes" in data ? data.notes : undefined,
-                starts: "starts" in data ? new Date(data.starts) : undefined,
+                starts: "starts" in data ? data.starts : undefined,
                 duration: "duration" in data ? data.duration : undefined,
+                occurs: data.occurs,
+                deadline: "deadline" in data ? data.deadline : undefined,
                 repeat: "repeat" in data ? data.repeat : undefined
             },
             ...itemsBaseQuery

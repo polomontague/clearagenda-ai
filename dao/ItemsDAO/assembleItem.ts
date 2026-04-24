@@ -1,44 +1,75 @@
 import { Prisma } from "@/lib/prisma"
 import itemsBaseQuery from "./itemsBaseQuery"
-import Item from "@/types/Item"
+import Item, { Repeat } from "@/types/Item"
 import assembleSimpleUser from "../UsersDAO/assembleSimpleUser"
-import { Repeat } from "@/types/Item"
 
 type ItemResult = Prisma.itemsGetPayload<typeof itemsBaseQuery>
 
 const assembleItem = (result: ItemResult): Item => {
-    const urgency = calculateUrgency(result.deadline)
-    return result.description ? {
-        type: "task",
-        id: result.id,
-        user: assembleSimpleUser(result.user),
-        name: result.name,
-        description: result.description,
-        steps: result.steps.map(step => ({
-            id: step.id,
-            name: step.name,
-            notes: step.notes,
-            duration: step.duration,
-            completed: step.completed ? step.completed.toISOString() : undefined
-        })),
-        deadline: result.deadline ? result.deadline.toISOString() : undefined,
-        urgency,
-        importance: result.importance!,
-        priority: calculatePriority(urgency, result.importance!),
-        created: result.created.toISOString(),
-        updated: result.updated.toISOString()
-    } : {
-        type: "event",
-        id: result.id,
-        user: assembleSimpleUser(result.user),
-        name: result.name,
-        notes: result.notes ? result.notes : undefined,
-        starts: result.starts!.toISOString(),
-        duration: result.duration!,
-        repeat: result.repeat ? result.repeat as Repeat : undefined,
-        created: result.created.toISOString(),
-        updated: result.updated.toISOString()
-    }
+    return result.type === "task" ? (
+        result.occurs === "once" ? {
+            type: "task",
+            id: result.id,
+            user: assembleSimpleUser(result.user),
+            name: result.name,
+            description: result.description ?? "",
+            steps: result.steps.map(step => ({
+                id: step.id,
+                name: step.name,
+                notes: step.notes,
+                duration: step.duration,
+                completed: step.completed?.toISOString()
+            })),
+            importance: result.importance ?? 0,
+            occurs: "once",
+            deadline: result.deadline?.toISOString(),
+            created: result.created.toISOString(),
+            updated: result.updated.toISOString()
+        } : { // Repeating
+            type: "task",
+            id: result.id,
+            user: assembleSimpleUser(result.user),
+            name: result.name,
+            description: result.description ?? "",
+            steps: result.steps.map(step => ({
+                id: step.id,
+                name: step.name,
+                notes: step.notes,
+                duration: step.duration,
+                completed: step.completed?.toISOString()
+            })),
+            importance: result.importance ?? 0,
+            occurs: "repeating",
+            repeat: result.repeat as Repeat,
+            created: result.created.toISOString(),
+            updated: result.updated.toISOString()
+        }
+    ) : ( // Type: Event
+        result.occurs === "once" ? {
+            type: "event",
+            id: result.id,
+            user: assembleSimpleUser(result.user),
+            name: result.name,
+            notes: result.notes ?? undefined,
+            duration: result.duration ?? 0,
+            occurs: "once",
+            starts: result.starts?.toISOString() ?? "",
+            created: result.created.toISOString(),
+            updated: result.updated.toISOString()
+        } : { // Repeating
+            type: "event",
+            id: result.id,
+            user: assembleSimpleUser(result.user),
+            name: result.name,
+            notes: result.notes ?? undefined,
+            duration: result.duration ?? 0,
+            occurs: "repeating",
+            starts: result.starts?.toISOString() ?? "",
+            repeat: result.repeat as Repeat,
+            created: result.created.toISOString(),
+            updated: result.updated.toISOString()
+        }
+    )
 }
 
 const calculateUrgency = (deadline: Date | null) => {

@@ -7,6 +7,7 @@ import ItemsDAO from "@/dao/ItemsDAO"
 import { itemBodySchema } from "@/schemas/items"
 import AI from "@/lib/AI"
 import Auth from "@/lib/Auth"
+import { Items } from "openai/resources/conversations.mjs"
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -16,28 +17,54 @@ export const POST = async (req: NextRequest) => {
         let item
         if (body.type === "task") {
             const data = await AI.plan(user.id, body.description)
-        
-            item = await ItemsDAO.createItem({
-                user_id: user.id,
-                name: data.name,
-                description: body.description,
-                steps: data.steps.map(step => ({
-                    name: step.name,
-                    notes: step.notes,
-                    duration: step.duration
-                })),
-                deadline: body.deadline,
-                importance: data.importance
-            })
+            if (body.occurs === "once") {
+                item = await ItemsDAO.createItem({
+                    user_id: user.id,
+                    type: body.type,
+                    name: data.name,
+                    description: body.description,
+                    steps: data.steps,
+                    importance: data.importance,
+                    occurs: body.occurs,
+                    deadline: body.deadline
+                })
+            }
+            if (body.occurs === "repeating") {
+                item = await ItemsDAO.createItem({
+                    user_id: user.id,
+                    type: body.type,
+                    name: data.name,
+                    description: body.description,
+                    steps: data.steps,
+                    importance: data.importance,
+                    occurs: body.occurs,
+                    repeat: body.repeat
+                })
+            }
         } else if (body.type === "event") {
-            item = await ItemsDAO.createItem({
-                user_id: user.id,
-                name: body.name,
-                notes: body.notes,
-                starts: body.starts,
-                duration: body.duration,
-                repeat: body.repeat
-            })
+            if (body.occurs === "once") {
+                item = await ItemsDAO.createItem({
+                    user_id: user.id,
+                    type: body.type,
+                    name: body.name,
+                    notes: body.notes,
+                    starts: body.starts,
+                    duration: body.duration,
+                    occurs: body.occurs
+                })
+            }
+            if (body.occurs === "repeating") {
+                item = await ItemsDAO.createItem({
+                    user_id: user.id,
+                    type: body.type,
+                    name: body.name,
+                    notes: body.notes,
+                    starts: body.starts,
+                    duration: body.duration,
+                    occurs: body.occurs,
+                    repeat: body.repeat
+                })
+            }
         }
 
         return Response.created({ item })

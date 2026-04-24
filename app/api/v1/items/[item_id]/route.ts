@@ -25,26 +25,50 @@ export const PUT = async (req: NextRequest, props: { params: Promise<{ item_id: 
                 steps: foundItem.steps,
                 importance: foundItem.importance
             }
-
-            item = await ItemsDAO.updateItem(params.item_id, {
-                name: data.name,
-                description: body.description,
-                steps: data.steps.map(step => ({
-                    name: step.name,
-                    notes: step.notes,
-                    duration: step.duration
-                })),
-                deadline: body.deadline,
-                importance: data.importance
-            })
+             if (body.occurs === "once") {
+                item = await ItemsDAO.updateItem(params.item_id, {
+                    type: body.type,
+                    name: data.name,
+                    description: body.description,
+                    steps: data.steps,
+                    importance: data.importance,
+                    occurs: body.occurs,
+                    deadline: body.deadline
+                })
+            }
+            if (body.occurs === "repeating") {
+                item = await ItemsDAO.updateItem(params.item_id, {
+                    type: body.type,
+                    name: data.name,
+                    description: body.description,
+                    steps: data.steps,
+                    importance: data.importance,
+                    occurs: body.occurs,
+                    repeat: body.repeat
+                })
+            }
         } else if (body.type === "event") {
-            item = await ItemsDAO.updateItem(params.item_id, {
-                name: body.name,
-                notes: body.notes,
-                starts: body.starts,
-                duration: body.duration,
-                repeat: body.repeat
-            })
+            if (body.occurs === "once") {
+                item = await ItemsDAO.updateItem(params.item_id, {
+                    type: body.type,
+                    name: body.name,
+                    notes: body.notes,
+                    starts: body.starts,
+                    duration: body.duration,
+                    occurs: body.occurs
+                })
+            }
+            if (body.occurs === "repeating") {
+                item = await ItemsDAO.updateItem(params.item_id, {
+                    type: body.type,
+                    name: body.name,
+                    notes: body.notes,
+                    starts: body.starts,
+                    duration: body.duration,
+                    occurs: body.occurs,
+                    repeat: body.repeat
+                })
+            }
         }
 
         return Response.ok({ item })
