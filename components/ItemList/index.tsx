@@ -1,11 +1,10 @@
 "use client"
 import List, { ListItem } from "@/components/List"
 import API from "@/lib/API"
-import Item, { Task, Event } from "@/types/Item"
+import Item, { Event } from "@/types/Item"
 import { useState, useContext, useMemo } from "react"
 import Fieldset from "@/components/Fieldset"
 import FieldFrame from "@/components/FieldFrame"
-import ValueBox from "@/components/ValueBox"
 import LabelField from "@/components/LabelField"
 import { EditIcon, TrashCanIcon } from "@/components/Icons"
 import InnerValue from "@/components/InnerValue"
@@ -16,11 +15,10 @@ import Alert from "@/components/Alert"
 import Confirm from "@/components/Confirm"
 import FormModal from "@/components/FormModal"
 import ItemForm from "@/components/ItemForm"
-import Modal from "@/components/Modal"
-import Toggle from "@/components/Toggle"
 import ItemsContext from "@/contexts/ItemsContext"
 import Card from "@/components/Card"
-import Range from "@/components/Range"
+import ItemModal from "./ItemModal"
+import Button from "@/components/Button"
 
 type ItemListProps = {
     filters: {
@@ -34,17 +32,17 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
     const { user } = useContext(UserContext)
     const [confirmMessage, setConfirmMessage] = useState("")
     const [confirmOpen, setConfirmOpen] = useState(false)
-    const [currentItem, setCurrentItem] = useState<Item | null>(null)
+    const [currentId, setCurrentId] = useState(0)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
-    const [stepsModalOpen, setStepsModalOpen] = useState(false)
+    const [modalOpen, setModalOpen] = useState(false)
     const today = new Date()
     const filteredItems = useMemo(() => {
         const completionItems = items.map(item => {
             return {
                 ...item,
-                completed: getCompleted(item)
+                completed: Utility.getItemCompleted(item)
             }
         })
         return completionItems.filter(item => {
@@ -62,50 +60,11 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
             return false
         })
     }, [items, search, completed])
-
-    function getCompleted(item: Item) {
-        if (item.type === "task") {
-            for (let i = 0; i < item.steps.length; i++) {
-                if (!item.steps[i].completed) {
-                    return false
-                }
-            }
-        } else if (item.type === "event") {
-            if (item.occurs === "once") {
-                const ends = new Date(item.starts)
-                ends.setMinutes(ends.getMinutes() + item.duration)
-                if (new Date(ends).getTime() > today.getTime()) completed = false
-            }
-            if (item.occurs === "repeating") {
-                return false // Ongoing repeat ing events are not completed
-            }
-        }
-        return true
-    }
+    const currentItem = useMemo(() => items.find(item => item.id === currentId), [ items, currentId ])
 
     const getEventEnds = (item: Event) => {
 
         return new Date()
-    }
-
-    const getTaskDuration = (item: Item) => {
-        let duration = 0
-        if (item.type === "task") {
-            item.steps.forEach(step => duration += step.duration)
-        } else if (item.type === "event") {
-            // add duration for events
-        }
-        return duration
-    }
-
-    const getCompletion = (item: Task) => {
-        let totalMinutes = 0
-        let completedMinutes = 0
-        for (const step of item.steps) {
-            totalMinutes += step.duration
-            if (step.completed) completedMinutes += step.duration
-        }
-        return Math.round((completedMinutes / totalMinutes) * 100) / 100
     }
 
     const averageHours = (user: User) => {
@@ -117,7 +76,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
     }
 
     const handleRequestEdit = (item: Item) => {
-        setCurrentItem(item)
+        setCurrentId(item.id)
         setEditModalOpen(true)
     }
 
@@ -132,7 +91,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
     }
 
     const handleRequestDelete = (item: Item) => {
-        setCurrentItem(item)
+        setCurrentId(item.id)
         setConfirmMessage(`Delete "${item.name}"?`)
         setConfirmOpen(true)
     }
@@ -150,61 +109,9 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
         })
     }
 
-    const handleStepsClick = (item: Item) => {
-        setCurrentItem(item)
-        setStepsModalOpen(true)
-    }
-
-    const handleCompletedChange = (item: Task, step: Step) => {
-        const prevCompleted = step.completed
-        const newCompleted = step.completed ? undefined : new Date().toISOString()
-        updateCompleted(item, step, newCompleted)
-        let url = `/api/v1/items/${item.id}/steps/${step.id}`
-        url += prevCompleted ? "/uncomplete" : "/complete"
-        API.post<{ completed?: string }>(url, {}, true).catch(err => {
-            updateCompleted(item, step, prevCompleted)
-        })
-    }
-
-    const updateCompleted = (item: Task, step: Step, completed?: string) => {
-        const newItems = [ ...items ]
-        const foundItem = newItems.find(item2 => item2.id === item.id)
-        if (foundItem?.type === "task") {
-            const foundStep = foundItem.steps.find(step2 => step2.id === step.id)
-            if (foundStep) foundStep.completed = completed
-        }
-        setItems(newItems)
-    }
-
-    const getEventTimesLabel = (item: Event) => {
-        const starts = new Date(item.starts)
-        const ends = new Date(starts)
-        ends.setMinutes(ends.getMinutes() + item.duration)
-        return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
-    }
-
-    const getStatus = (item: Item): { color: string, label: string } => {
-        if (item.type === "task") {
-            if (item.occurs === "once") {
-                const completed = getCompleted(item)
-                if (completed) return { color: "var(--layer-4-light)", label: "Completed" }
-                return { color: "var(--yellow)", label: "Scheduled" }
-            }
-            if (item.occurs === "repeating") {
-                return { color: "var(--sky)", label: "Repeating" }
-            }
-        }
-        if (item.type === "event") {
-            if (item.occurs === "once") {
-                const completed = getCompleted(item)
-                if (completed) return { color: "var(--layer-4-light)", label: "Passed" }
-                return { color: "var(--yellow)", label: "Scheduled" }
-            }
-            if (item.occurs === "repeating") {
-                return { color: "var(--sky)", label: "Repeating" }
-            }
-        }
-        return { color: "", label: "" }
+    const handleItemClick = (item: Item) => {
+        setCurrentId(item.id)
+        setModalOpen(true)
     }
 
     if (!user) return
@@ -214,8 +121,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
             <List>
                 {filteredItems.map((item, i) => {
                     const repeatLabel = item.occurs === "repeating" ? Utility.getRepeatLabel(item.repeat) : undefined
-                    const status = getStatus(item)
-                    console.log(status)
+                    const status = Utility.getItemStatus(item, user.preferences.accent)
                     return (
                         <ListItem key={i}>
                             <Card
@@ -229,8 +135,8 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                     {item.type === "task" ? (
                                         item.occurs === "once" ? (
                                             <>
-                                                <LabelField label="Time">
-                                                    <InnerValue label={Utility.formatDuration(getTaskDuration(item))} />
+                                                <LabelField label="Length">
+                                                    <InnerValue label={Utility.formatTaskLength(item)} />
                                                 </LabelField>
                                                 <LabelField label="Status">
                                                     <InnerValue color={status.color} label={status.label} />
@@ -239,9 +145,9 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                         ) : item.occurs === "repeating" ? (
                                             <>
                                                 <Fieldset description={repeatLabel}>
-                                                    <LabelField fieldset label="Time">
+                                                    <LabelField fieldset label="Length">
                                                         <InnerValue
-                                                            label={Utility.formatDuration(getTaskDuration(item))}
+                                                            label={Utility.formatTaskLength(item)}
                                                         />
                                                     </LabelField>
                                                 </Fieldset>
@@ -253,8 +159,8 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                     ) : item.type === "event" ? (
                                         item.occurs === "once" ? (
                                             <>
-                                                <LabelField label="Time">
-                                                    <InnerValue label={getEventTimesLabel(item)} />
+                                                <LabelField label="From">
+                                                    <InnerValue label={Utility.formatEventFrom(item)} />
                                                 </LabelField>
                                                 <LabelField label="Status">
                                                     <InnerValue color={status.color} label={status.label} />
@@ -263,8 +169,8 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                         ) : item.occurs === "repeating" ? (
                                             <>
                                                 <Fieldset description={repeatLabel}>
-                                                    <LabelField fieldset label="Time">
-                                                        <InnerValue label={getEventTimesLabel(item)} />
+                                                    <LabelField fieldset label="From">
+                                                        <InnerValue label={Utility.formatEventFrom(item)} />
                                                     </LabelField>
                                                 </Fieldset>
                                                 <LabelField label="Status">
@@ -273,36 +179,27 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                             </>
                                         ) : <></>
                                     ) : <></>}
+                                    <Button
+                                        label="See Details"
+                                        onClick={() => handleItemClick(item)}
+                                    />
                                 </FieldFrame>
                             </Card>
                         </ListItem>
                     )
                 })}
             </List>
-            <Modal
-                label="Steps"
-                open={stepsModalOpen}
-                onRequestClose={() => setStepsModalOpen(false)}
-            >
-                {currentItem && currentItem.type === "task" ? (
-                    <FieldFrame>
-                        {currentItem.steps.map((step, i) => (
-                            <Fieldset key={i} label={step.name}>
-                                <ValueBox fieldset value={step.notes} />
-                                <LabelField fieldset label="Duration">
-                                    <InnerValue label={Utility.formatDuration(step.duration, averageHours(user))} />
-                                </LabelField>
-                                <LabelField fieldset label="Completed">
-                                    <Toggle
-                                        on={!!step.completed}
-                                        onChange={() => handleCompletedChange(currentItem, step)}
-                                    />
-                                </LabelField>
-                            </Fieldset>
-                        ))}
-                    </FieldFrame>
-                ) : null}
-            </Modal>
+            {currentItem ? (
+                <ItemModal
+                    item={currentItem}
+                    items={{
+                        value: items,
+                        onChange: setItems
+                    }}
+                    open={modalOpen}
+                    onRequestClose={() => setModalOpen(false)}
+                />
+            ) : null}
             <FormModal
                 label="Edit Agenda Item"
                 open={editModalOpen}
