@@ -1,6 +1,7 @@
 type BaseRepeat = {
     interval: number,
-    starts: string // ISO 8601 datetime (when the repeat starts)
+    starts: string // ISO 8601 datetime
+    ends?: string // ISO 8601 datetime
 }
 
 export type Ordinal = 1 | 2 | 3 | 4 | 5 | -1 | -2

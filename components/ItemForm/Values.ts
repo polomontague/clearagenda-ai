@@ -18,9 +18,11 @@ type Values = {
     yearlyType: "day" | "weekday",
     day: number,
     repeatStart: Date,
+    hasRepeatEnd: boolean,
+    repeatEnd: Date,
     notes: string
 }
 
 export default Values
 
-export type RepeatValues = Pick<Values, "frequency" | "repeatStart" | "interval" | "weekdays" | "monthlyType" | "days" | "ordinal" | "weekday" | "yearlyType" | "months" | "day">
+export type RepeatValues = Pick<Values, "frequency" | "repeatStart" | "hasRepeatEnd" | "repeatEnd" | "interval" | "weekdays" | "monthlyType" | "days" | "ordinal" | "weekday" | "yearlyType" | "months" | "day">

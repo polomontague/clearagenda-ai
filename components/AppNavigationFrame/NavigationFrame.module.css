@@ -53,40 +53,56 @@
         height: var(--field-size);
         padding-left: var(--spacing-large);
         padding-right: var(--spacing-large);
+        border: var(--border-width) solid transparent;
         border-radius: var(--border-radius);
         color: var(--layer-2-light);
+        transition: var(--transition);
     }
 
     .btn > svg{
         width: var(--icon-size);
         height: var(--icon-size);
         fill: var(--layer-2-light);
+        transition: var(--transition);
     }
 
     .btn .label{
         color: var(--layer-2-light);
+        transition: var(--transition);
     }
 
     .btn:hover,
     .btn:active,
-    .btn:focus,
-    .btn.selected{
-        background-color: var(--accent);
-    }
-
-    .btn:hover > .label,
-    .btn:active > .label,
-    .btn:focus > .label,
-    .btn.selected > .label{
-        font-weight: bolder;
-        color: var(--accent-contrast)
+    .btn:focus{
+        background-color: var(--layer-3);
+        border: var(--border-width) solid var(--layer-3-border);
     }
 
     .btn:hover > svg,
     .btn:active > svg,
-    .btn:focus > svg,
+    .btn:focus > svg{
+        fill: var(--accent-contrast);
+    }
+
+    .btn:hover > .label,
+    .btn:active > .label,
+    .btn:focus > .label{
+        font-weight: bolder;
+        color: var(--accent-contrast);
+    }
+
+    .btn.selected{
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+
     .btn.selected > svg{
         fill: var(--accent-contrast);
+    }
+
+    .btn.selected > .label{
+        font-weight: bolder;
+        color: var(--accent-contrast);
     }
 
     .main{

@@ -16,11 +16,11 @@ type SendRequestOptions = {
 
 const sendRequest = async <Data>({ method, endpoint, body, authorize }: SendRequestOptions): Promise<Data> => {
     try {
-        if (authorize && !cookies.get("token")) {
+        const query = new URLSearchParams(window.location.search)
+        if (authorize && !cookies.get("token") || authorize && !query.get("token")) {
             // TODO: implement token refresh
         }
         const url = `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`
-        const query = new URLSearchParams(window.location.search)
         const config = {
             headers: {
                 Authorization: authorize && cookies.get("token") ? `Bearer ${cookies.get("token")}`

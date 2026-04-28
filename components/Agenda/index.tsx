@@ -104,17 +104,10 @@ export default function Agenda(props: AgendaProps) {
                                         </FieldFrame>
                                     ) : item.type === "event" ? (
                                         <FieldFrame>
-                                            <Fieldset label="Time">
-                                                <LabelField fieldset label="Starts">
-                                                    <InnerValue label={Utility.formatTime(new Date(item.starts))} />
-                                                </LabelField>
-                                                <LabelField fieldset label="Ends">
-                                                    <InnerValue label={Utility.formatTime(new Date(item.ends))} />
-                                                </LabelField>
-                                            </Fieldset>
-                                            <LabelField label="Duration">
-                                                <InnerValue label={Utility.formatDuration(((new Date(item.ends).getTime() - new Date(item.starts).getTime()) / 1000) / 60)} />
+                                            <LabelField label="From">
+                                                <InnerValue label={Utility.formatEventFrom(item)} />
                                             </LabelField>
+                                            <Button label="See Details" />
                                         </FieldFrame>
                                     ) : <></>}
                                 </Card>
@@ -130,7 +123,7 @@ export default function Agenda(props: AgendaProps) {
                                     <Fieldset label="Notes">
                                         <ValueBox fieldset value={current.step.notes} />
                                     </Fieldset>
-                                    <LabelField label="Time">
+                                    <LabelField label="Length">
                                         <InnerValue label={Utility.formatDuration(current.step.duration)} />
                                     </LabelField>
                                     {current.item.deadline ? (

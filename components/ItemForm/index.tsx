@@ -53,6 +53,8 @@ export default function ItemForm(props: ItemFormProps) {
     const [months, setMonths] = useState(DEFAULTS.months)
     const [day, setDay] = useState(DEFAULTS.day)
     const [repeatStart, setRepeatStart] = useState(DEFAULTS.repeat_start)
+    const [hasRepeatEnd, setHasRepeatEnd] = useState(DEFAULTS.has_repeat_end)
+    const [repeatEnd, setRepeatEnd] = useState(DEFAULTS.repeat_end)
     const [notes, setNotes] = useState(DEFAULTS.notes)
     const [doneDisabled, setDoneDisabled] = useState(true)
     const [alertMessage, setAlertMessage] = useState("")
@@ -81,6 +83,8 @@ export default function ItemForm(props: ItemFormProps) {
             setYearlyType,
             setDay,
             setRepeatStart,
+            setHasRepeatEnd,
+            setRepeatEnd,
             setNotes
         })
     }, [ props.type === "edit" ? props.item : null ])
@@ -103,14 +107,14 @@ export default function ItemForm(props: ItemFormProps) {
         setLoading(true)
         const method = props.type === "new" ? "post" : "put"
         const endpoint = `/api/v1/items${props.type === "edit" ? `/${props.item.id}` : ""}`
-        const repeat = getRepeat({ frequency, repeatStart, interval, weekdays, monthlyType, days, ordinal, weekday, yearlyType, months, day })
+        const repeat = getRepeat({ frequency, repeatStart, hasRepeatEnd, repeatEnd, interval, weekdays, monthlyType, days, ordinal, weekday, yearlyType, months, day })
         const body = type === "task" ? (
             occurs === "once" ? {
                 type,
                 description,
                 occurs,
                 deadline: hasDeadline ? deadline.toISOString() : undefined
-            } : occurs == "repeating" ? {
+            } : occurs === "repeating" ? {
                 type,
                 description,
                 deadline: hasDeadline ? deadline.toISOString() : undefined,
@@ -157,6 +161,8 @@ export default function ItemForm(props: ItemFormProps) {
                 setYearlyType,
                 setDay,
                 setRepeatStart,
+                setHasRepeatEnd,
+                setRepeatEnd,
                 setNotes
             })
             props.onSuccess(data.item)
@@ -186,12 +192,12 @@ export default function ItemForm(props: ItemFormProps) {
                             >
                                 <TextArea fieldset rows={8} placeholder="Describe the task..." value={description} onChange={(val) => setDescription(val)} />
                             </Fieldset>
-                            {renderOccurs({ type, occurs, hasDeadline, deadline, frequency, repeatStart, days, day, weekday, interval, weekdays, monthlyType, ordinal, yearlyType, months, open, starts, duration }, { setOccurs, setOpen, setHasDeadline, setDeadline, setStarts, setDuration, setFrequency, setInterval, setRepeatStart, setWeekday, setWeekdays, setMonthlyType, setDays, setOrdinal, setYearlyType, setMonths, setDay })}
+                            {renderOccurs({ type, occurs, hasDeadline, deadline, frequency, repeatStart, hasRepeatEnd, repeatEnd, days, day, weekday, interval, weekdays, monthlyType, ordinal, yearlyType, months, open, starts, duration }, { setOccurs, setOpen, setHasDeadline, setDeadline, setStarts, setDuration, setFrequency, setInterval, setRepeatStart, setHasRepeatEnd, setRepeatEnd, setWeekday, setWeekdays, setMonthlyType, setDays, setOrdinal, setYearlyType, setMonths, setDay })}
                         </>
                     ) : type === "event" ? (
                         <>
                             <TextInput placeholder="Name..." value={name} onChange={setName} />
-                            {renderOccurs({ type, occurs, hasDeadline, deadline, frequency, repeatStart, days, day, weekday, interval, weekdays, monthlyType, ordinal, yearlyType, months, open, starts, duration }, { setOccurs, setOpen, setHasDeadline, setDeadline, setStarts, setDuration, setFrequency, setInterval, setRepeatStart, setWeekday, setWeekdays, setMonthlyType, setDays, setOrdinal, setYearlyType, setMonths, setDay })}
+                            {renderOccurs({ type, occurs, hasDeadline, deadline, frequency, repeatStart, hasRepeatEnd, repeatEnd, days, day, weekday, interval, weekdays, monthlyType, ordinal, yearlyType, months, open, starts, duration }, { setOccurs, setOpen, setHasDeadline, setDeadline, setStarts, setDuration, setFrequency, setInterval, setRepeatStart, setHasRepeatEnd, setRepeatEnd, setWeekday, setWeekdays, setMonthlyType, setDays, setOrdinal, setYearlyType, setMonths, setDay })}
                             <TextArea rows={6} placeholder="Notes..." value={notes} onChange={(val) => setNotes(val)} />
                         </>
                     ) : <></>}

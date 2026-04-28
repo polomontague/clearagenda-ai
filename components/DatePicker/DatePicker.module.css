@@ -86,6 +86,26 @@
     height: var(--field-size);
     border-radius: var(--border-radius);
     color: var(--layer-3-light);
+    position: relative;
+}
+
+.btnDate:disabled > .containerStrike{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.btnDate:disabled .strike{
+    width: 80%;
+    height: var(--border-width);
+    background-color: var(--layer-3-light);
+    transform: rotate(-45deg);
 }
 
 .btnDate.today{

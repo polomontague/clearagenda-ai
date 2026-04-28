@@ -49,7 +49,59 @@ const Utility = {
         const amOrPm = hours < 12 ? "AM" : "PM"
         return `${hours % 12 || 12}:${minutes.toString().padStart(2, "0")} ${amOrPm}`
     },
-    getRepeatLabel: (repeat: Repeat) => {
+    formatOrdinal: (n: number) => {
+        if (n === -1) return "last"
+        if (n === -2) return "second last"
+        const suffix =
+            n % 10 === 1 && n % 100 !== 11 ? "st" :
+            n % 10 === 2 && n % 100 !== 12 ? "nd" :
+            n % 10 === 3 && n % 100 !== 13 ? "rd" :
+            "th"
+        return `${n}${suffix}`
+    },
+    getShortRepeatLabel: (repeat: Repeat): string => {
+        const WEEKDAYS = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
+        const MONTHS = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+        let message = ""
+        if (repeat.frequency === "daily") {
+            if (repeat.interval === 1) return "Every day"
+            return `Every ${repeat.interval} days`
+        }
+        if (repeat.frequency === "weekly") {
+            const weeks = repeat.interval === 1 ? "wk"
+                : `${repeat.interval} wks`
+            const weekdays = `${WEEKDAYS[repeat.weekdays[0]]}${repeat.weekdays.length > 1 ? ` +${repeat.weekdays.length - 1}` : ""}`
+            return `Every ${weeks} on ${weekdays}`
+        }
+        if (repeat.frequency === "monthly") {
+            const months = repeat.interval === 1 ? "mo"
+                : `${repeat.interval} mos`
+            if (repeat.type === "days") {
+                const days = `${Utility.formatOrdinal(repeat.days[0])}${repeat.days.length > 1 ? ` +${repeat.days.length - 1}` : ""}`
+                return `Every ${months} on the ${days}`
+            }
+            if (repeat.type === "weekday") {
+                const weekday = `${Utility.formatOrdinal(repeat.ordinal)} ${WEEKDAYS[repeat.weekday]}`
+                return `Every ${months}, ${weekday}`
+            }
+            return message
+        }
+        if (repeat.frequency === "yearly") {
+            const years = repeat.interval === 1 ? "yr"
+                : `${repeat.interval} yrs`
+            const months = `${MONTHS[repeat.months[0]]}${repeat.months.length > 1 ? ` +${repeat.months.length - 1}` : ""}`
+            if (repeat.type === "day") {
+                const day = Utility.formatOrdinal(repeat.day)
+                return `Every ${years} on the ${day} of ${months}`
+            }
+            if (repeat.type === "weekday") {
+                const weekday = `${Utility.formatOrdinal(repeat.ordinal)} ${WEEKDAYS[repeat.weekday]}`
+                return `Every ${years} on the ${weekday} of ${months}`
+            }
+        }
+        return "Repeats"
+    },
+    getRepeatLabel: (repeat: Repeat): string => {
         const WEEKDAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         const MONTHS = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
@@ -61,43 +113,34 @@ const Utility = {
             return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`
         }
         const formatMonths = (months: number[]) => joinList(months.map(m => MONTHS[m]))
-        const formatSingleOrdinal = (n: number) => {
-            if (n === -1) return "last"
-            if (n === -2) return "second last"
-            const suffix =
-                n % 10 === 1 && n % 100 !== 11 ? "st" :
-                n % 10 === 2 && n % 100 !== 12 ? "nd" :
-                n % 10 === 3 && n % 100 !== 13 ? "rd" :
-                "th"
-            return `${n}${suffix}`
-        }
-        const formatOrdinals = (nums: number[]) => joinList(nums.map(formatSingleOrdinal))
+        const formatOrdinals = (nums: number[]) => joinList(nums.map(Utility.formatOrdinal))
         const interval = repeat.interval
         const every = interval === 1 ? "every" : `every ${interval}`
+        let message = ""
         if (repeat.frequency === "daily") {
-            return interval === 1 ? "Occurs every day" : `Occurs ${every} days`
+            message = interval === 1 ? "Occurs every day" : `Occurs ${every} days`
         }
         if (repeat.frequency === "weekly") {
             const days = formatWeekdaysShort(repeat.weekdays)
             if (interval === 1 && days.length === 1) {
-                return `Occurs every ${days[0]}`
+                message = `Occurs every ${days[0]}`
             }
-            return `Occurs ${every} week${interval > 1 ? "s" : ""}${days.length ? ` on ${joinList(days)}` : ""}`
+            message = `Occurs ${every} week${interval > 1 ? "s" : ""}${days.length ? ` on ${joinList(days)}` : ""}`
         }
         if (repeat.frequency === "monthly") {
-        if (repeat.type === "days") {
-            if (!repeat.days.length) return "Occurs every month"
-            const days = formatOrdinals(repeat.days)
-            return interval === 1
-                ? `Occurs every month on the ${days}`
-                : `Occurs every ${interval} months on the ${days}`
-        }
-        if (repeat.type === "weekday") {
-            const ord = formatSingleOrdinal(repeat.ordinal)
-            const weekday = formatWeekday(repeat.weekday)
-            return interval === 1
-                ? `Occurs on the ${ord} ${weekday} of every month`
-                : `Occurs on the ${ord} ${weekday} of every ${interval} months`
+            if (repeat.type === "days") {
+                if (!repeat.days.length) message = "Occurs every month"
+                const days = formatOrdinals(repeat.days)
+                message = interval === 1
+                    ? `Occurs every month on the ${days}`
+                    : `Occurs every ${interval} months on the ${days}`
+            }
+            if (repeat.type === "weekday") {
+                const ord = Utility.formatOrdinal(repeat.ordinal)
+                const weekday = formatWeekday(repeat.weekday)
+                message = interval === 1
+                    ? `Occurs on the ${ord} ${weekday} of every month`
+                    : `Occurs on the ${ord} ${weekday} of every ${interval} months`
             }
         }
         if (repeat.frequency === "yearly") {
@@ -106,18 +149,27 @@ const Utility = {
                 ? "Occurs every year"
                 : `Occurs every ${interval} years`
             if (repeat.type === "day") {
-                const day = formatSingleOrdinal(repeat.day)
+                const day = Utility.formatOrdinal(repeat.day)
                 const monthPart = months ? ` of ${months}` : ""
-                return `${base} on the ${day}${monthPart}`
+                message = `${base} on the ${day}${monthPart}`
             }
             if (repeat.type === "weekday") {
-                const ord = formatSingleOrdinal(repeat.ordinal)
+                const ord = Utility.formatOrdinal(repeat.ordinal)
                 const weekday = formatWeekday(repeat.weekday)
                 const monthPart = months ? ` of ${months}` : ""
-                return `${base} on the ${ord} ${weekday}${monthPart}`
+                message = `${base} on the ${ord} ${weekday}${monthPart}`
             }
         }
-        return "Repeats"
+        const startsDate = new Date(repeat.starts)
+        const endsDate = repeat.ends ? new Date(repeat.ends) : undefined
+        const starts = `${MONTHS[startsDate.getMonth()]} ${Utility.formatOrdinal(startsDate.getDate())}, ${startsDate.getFullYear()}`
+        const ends = endsDate ? `${MONTHS[endsDate.getMonth()]} ${Utility.formatOrdinal(endsDate.getDate())}, ${endsDate.getFullYear()}` : ""
+        if (ends) {
+            message += ` from ${starts} to ${ends}`
+        } else {
+            message += ` starting on ${starts}`
+        }
+        return message
     },
     formatEventFrom: (item: Event) => {
         const starts = new Date(item.starts)
@@ -130,41 +182,27 @@ const Utility = {
         item.steps.forEach(step => minutes += step.duration)
         return Utility.formatDuration(minutes)
     },
-    getItemStatus(item: Item, accent: User["preferences"]["accent"]): {
-        color: string,
-        label: string
-    } {
-        const colors = {
-            sky: accent === "sky" ? "var(--turquoise)" : "var(--sky)",
-            red: accent === "red" ? "var(--coral)" : "var(--red)",
-            yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
-            lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
-            gray: "var(--layer-4-light)"
-        }
+    getItemStatus: (item: Item): "completed" | "overdue" | "upcoming" | "in_progress" | "repeating" | "ended" => {
         if (item.type === "task") {
             if (item.occurs === "once") {
                 const completion = Utility.getTaskCompletion(item)
-                if (completion === 1) return { color: colors.gray, label: "Completed" }
+                if (completion === 1) return "completed"
                 const overdue = item.deadline ? new Date(item.deadline) < new Date() : false
-                if (overdue) return { color: colors.red, label: "Overdue" }
-                if (completion === 0) return { color: colors.sky, label: "Upcoming" }
-                return { color: colors.yellow, label: "In Progress" }
+                if (overdue) return "overdue"
+                if (completion === 0) return "upcoming"
+                return "in_progress"
+            } else { // repeating
+                return "repeating"
             }
-            if (item.occurs === "repeating") {
-                return { color: colors.lavender, label: "Repeating" }
-            }
-        }
-        if (item.type === "event") {
+        } else { // event
             if (item.occurs === "once") {
                 const completed = Utility.getItemCompleted(item)
-                if (completed) return { color: colors.gray, label: "Ended" }
-                return { color: colors.sky, label: "Upcoming" }
-            }
-            if (item.occurs === "repeating") {
-                return { color: colors.lavender, label: "Repeating" }
+                if (completed) return "ended"
+                return "upcoming"
+            } else { // repeating
+                return "repeating"
             }
         }
-        return { color: "", label: "" }
     },
     getTaskCompletion: (item: Task) => {
         let totalMinutes = 0

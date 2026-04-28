@@ -3,11 +3,14 @@ import getNthWeekdayOfMonth from "./getNthWeekdayOfMonth"
 
 export default function occursOnDate(item: RepeatingItem, date: Date): boolean {
     const starts = new Date(item.repeat.starts)
+    const ends = item.repeat.ends ? new Date(item.repeat.ends) : undefined
     const target = new Date(date)
     // Normalize times (compare dates only)
     starts.setHours(0, 0, 0, 0)
+    if (ends) ends.setHours(23, 59, 59, 999) // final milisecond of the day
     target.setHours(0, 0, 0, 0)
     if (target < starts) return false
+    if (ends && target > ends) return false
     const diffDays = Math.floor((target.getTime() - starts.getTime()) / (1000 * 60 * 60 * 24))
     if (diffDays < 0) return false // ??? if its in the future, return false ???
     const repeat = item.repeat

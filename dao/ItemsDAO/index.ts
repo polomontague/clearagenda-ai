@@ -87,6 +87,7 @@ const ItemsDAO = {
                 name: data.name,
                 description: "description" in data ? data.description : undefined,
                 steps: "steps" in data ? {
+                    deleteMany: {},
                     create: data.steps.map(step => ({
                         name: step.name,
                         notes: step.notes,

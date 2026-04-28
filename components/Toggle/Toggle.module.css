@@ -18,7 +18,7 @@
     height: var(--dot-size);
     background-color: var(--layer-4-light);
     border-radius: 50%;
-    margin-left: 2px;
+    margin-left: 1px;
     transition: var(--transition);
 }
 
@@ -29,5 +29,5 @@
 
 .toggle.on > .dot{
     background-color: var(--accent-contrast);
-    margin-left: 18px;
+    margin-left: 19px;
 }

@@ -19,6 +19,7 @@ import DaySelect from "@/components/DaySelect"
 import getMonthsLabel from "./getMonthsLabel"
 import DatePicker from "@/components/DatePicker"
 import Toggle from "@/components/Toggle"
+import FieldFrame from "../FieldFrame"
 
 type OccursValues = RepeatValues & Pick<Values, "occurs" | "deadline" | "starts" | "duration" | "type" | "hasDeadline"> & {
     open?: string
@@ -41,6 +42,8 @@ export default function renderOccurs(values: OccursValues, setters: OccursSetter
             description={values.occurs === "repeating" ? Utility.getRepeatLabel(getRepeat({
                 frequency: values.frequency,
                 repeatStart: values.repeatStart,
+                hasRepeatEnd: values.hasRepeatEnd,
+                repeatEnd: values.repeatEnd,
                 interval: values.interval,
                 weekdays: values.weekdays,
                 monthlyType: values.monthlyType,
@@ -123,152 +126,212 @@ export default function renderOccurs(values: OccursValues, setters: OccursSetter
                             <Collapse value="repeat_start">
                                 <TimePicker fieldset value={values.starts} onChange={(val) => setters.setStarts(val)} />
                             </Collapse>
-                        </>
-                    ) : null}
-                    <Option
-                        fieldset
-                        label="Length"
-                        value={Utility.formatDuration(values.duration)}
-                    >
-                        <Slide>
-                            <DurationSelect value={values.duration} onChange={setters.setDuration} />
-                        </Slide>
-                    </Option>
-                    <Option
-                        fieldset
-                        label="Frequency"
-                        value={frequencyLabelMap[values.frequency]}
-                    >
-                        <Slide>
-                            <SelectList
-                                options={[
-                                    { value: "daily", label: "Daily" },
-                                    { value: "weekly", label: "Weekly" },
-                                    { value: "monthly", label: "Monthly" },
-                                    { value: "yearly", label: "Yearly" }
-                                ]}
-                                value={values.frequency}
-                                onChange={setters.setFrequency}
-                            />
-                        </Slide>
-                    </Option>
-                    <Option
-                        fieldset
-                        label="Every"
-                        value={getIntervalLabel(values.frequency, values.interval)}
-                    >
-                        <Slide>
-                            <MultiSelect
-                                options={{
-                                    days: Array.from({ length: 100 }).map((_, i) => ({
-                                        value: i + 1,
-                                        label: `${i + 1}`
-                                    }))
-                                }}
-                                value={{ days: values.interval }}
-                                onChange={(val) => setters.setInterval(val.days)}
-                            />
-                        </Slide>
-                    </Option>
-                    {values.frequency === "weekly" ? (
-                        <Option
-                            fieldset
-                            label="Weekdays"
-                            value={getWeekdaysLabel(values.weekdays)}
-                        >
-                            <Slide>
-                                <SelectList
-                                    multiple
-                                    options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
-                                        value: i,
-                                        label: weekday
-                                    }))}
-                                    value={values.weekdays}
-                                    onChange={(val) => setters.setWeekdays(val)}
-                                />
-                            </Slide>
-                        </Option>
-                    ) : values.frequency === "monthly" ? (
-                        <>
-                            <SelectBar
-                                fieldset
-                                options={[
-                                    { value: "days", label: "Each" },
-                                    { value: "weekday", label: "On The" }
-                                ] as const}
-                                value={values.monthlyType}
-                                onChange={setters.setMonthlyType}
-                            />
-                            {values.monthlyType === "days" ? (
-                                <DaySelect fieldset multiple value={values.days} onChange={setters.setDays} />
-                            ) : values.monthlyType === "weekday" ? (
-                                <NthWeekdaySelect
-                                    fieldset
-                                    value={{
-                                        ordinal: values.ordinal,
-                                        weekday: values.weekday
-                                    }}
-                                    onChange={({ ordinal, weekday }) => {
-                                        setters.setOrdinal(ordinal)
-                                        setters.setWeekday(weekday)
-                                    }}
-                                />
-                            ) : null}
-                        </>
-                    ) : values.frequency === "yearly" ? (
-                        <>
                             <Option
                                 fieldset
-                                label="Months"
-                                value={getMonthsLabel(values.months)}
+                                label="Length"
+                                value={Utility.formatDuration(values.duration)}
                             >
                                 <Slide>
-                                    <SelectList
-                                        multiple
-                                        options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, i) => ({
-                                            value: i,
-                                            label: month
-                                        }))}
-                                        value={values.months}
-                                        onChange={(val) => setters.setMonths(val)}
-                                    />
+                                    <DurationSelect value={values.duration} onChange={setters.setDuration} />
                                 </Slide>
                             </Option>
-                            <SelectBar
-                                fieldset
-                                options={[
-                                    { value: "day", label: "Each" },
-                                    { value: "weekday", label: "On The" }
-                                ] as const}
-                                value={values.yearlyType}
-                                onChange={setters.setYearlyType}
-                            />
-                            {values.yearlyType === "day" ? (
-                                <DaySelect fieldset value={values.day} onChange={setters.setDay} />
-                            ) : values.yearlyType === "weekday" ? (
-                                <NthWeekdaySelect
-                                    fieldset
-                                    value={{
-                                        ordinal: values.ordinal,
-                                        weekday: values.weekday
-                                    }}
-                                    onChange={({ ordinal, weekday }) => {
-                                        setters.setOrdinal(ordinal)
-                                        setters.setWeekday(weekday)
-                                    }}
-                                />
-                            ) : null}
                         </>
                     ) : null}
-                    <LabelField fieldset label="Begin">
-                        <InnerButton
-                            label={Utility.formatDate(values.repeatStart)}
-                            onClick={() => setters.setOpen(values.open === "start_repeating" ? undefined : "start_repeating")}
-                        />
-                    </LabelField>
-                    <Collapse value="start_repeating">
-                        <DatePicker fieldset value={values.repeatStart} onChange={setters.setRepeatStart} />
-                    </Collapse>
+                    <Option
+                        fieldset
+                        label="Repeat"
+                        value={Utility.getShortRepeatLabel(getRepeat({
+                            frequency: values.frequency,
+                            repeatStart: values.repeatStart,
+                            hasRepeatEnd: values.hasRepeatEnd,
+                            repeatEnd: values.repeatEnd,
+                            interval: values.interval,
+                            weekdays: values.weekdays,
+                            monthlyType: values.monthlyType,
+                            days: values.days,
+                            ordinal: values.ordinal,
+                            weekday: values.weekday,
+                            yearlyType: values.yearlyType,
+                            months: values.months,
+                            day: values.day
+                        }))}
+                    >
+                        <Slide>
+                            <FieldFrame>
+                                <Fieldset
+                                    description={values.occurs === "repeating" ? Utility.getRepeatLabel(getRepeat({
+                                        frequency: values.frequency,
+                                        repeatStart: values.repeatStart,
+                                        hasRepeatEnd: values.hasRepeatEnd,
+                                        repeatEnd: values.repeatEnd,
+                                        interval: values.interval,
+                                        weekdays: values.weekdays,
+                                        monthlyType: values.monthlyType,
+                                        days: values.days,
+                                        ordinal: values.ordinal,
+                                        weekday: values.weekday,
+                                        yearlyType: values.yearlyType,
+                                        months: values.months,
+                                        day: values.day
+                                    })) : undefined}
+                                >
+                                    <Option
+                                        fieldset
+                                        label="Frequency"
+                                        value={frequencyLabelMap[values.frequency]}
+                                    >
+                                        <Slide>
+                                            <SelectList
+                                                options={[
+                                                    { value: "daily", label: "Daily" },
+                                                    { value: "weekly", label: "Weekly" },
+                                                    { value: "monthly", label: "Monthly" },
+                                                    { value: "yearly", label: "Yearly" }
+                                                ]}
+                                                value={values.frequency}
+                                                onChange={setters.setFrequency}
+                                            />
+                                        </Slide>
+                                    </Option>
+                                    <Option
+                                        fieldset
+                                        label="Every"
+                                        value={getIntervalLabel(values.frequency, values.interval)}
+                                    >
+                                        <Slide>
+                                            <MultiSelect
+                                                options={{
+                                                    days: Array.from({ length: 100 }).map((_, i) => ({
+                                                        value: i + 1,
+                                                        label: `${i + 1}`
+                                                    }))
+                                                }}
+                                                value={{ days: values.interval }}
+                                                onChange={(val) => setters.setInterval(val.days)}
+                                            />
+                                        </Slide>
+                                    </Option>
+                                    {values.frequency === "weekly" ? (
+                                        <Option
+                                            fieldset
+                                            label="Weekdays"
+                                            value={getWeekdaysLabel(values.weekdays)}
+                                        >
+                                            <Slide>
+                                                <SelectList
+                                                    multiple
+                                                    options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
+                                                        value: i,
+                                                        label: weekday
+                                                    }))}
+                                                    value={values.weekdays}
+                                                    onChange={(val) => setters.setWeekdays(val)}
+                                                />
+                                            </Slide>
+                                        </Option>
+                                    ) : values.frequency === "monthly" ? (
+                                        <>
+                                            <SelectBar
+                                                fieldset
+                                                options={[
+                                                    { value: "days", label: "Each" },
+                                                    { value: "weekday", label: "On The" }
+                                                ] as const}
+                                                value={values.monthlyType}
+                                                onChange={setters.setMonthlyType}
+                                            />
+                                            {values.monthlyType === "days" ? (
+                                                <DaySelect fieldset multiple value={values.days} onChange={setters.setDays} />
+                                            ) : values.monthlyType === "weekday" ? (
+                                                <NthWeekdaySelect
+                                                    fieldset
+                                                    value={{
+                                                        ordinal: values.ordinal,
+                                                        weekday: values.weekday
+                                                    }}
+                                                    onChange={({ ordinal, weekday }) => {
+                                                        setters.setOrdinal(ordinal)
+                                                        setters.setWeekday(weekday)
+                                                    }}
+                                                />
+                                            ) : null}
+                                        </>
+                                    ) : values.frequency === "yearly" ? (
+                                        <>
+                                            <Option
+                                                fieldset
+                                                label="Months"
+                                                value={getMonthsLabel(values.months)}
+                                            >
+                                                <Slide>
+                                                    <SelectList
+                                                        multiple
+                                                        options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, i) => ({
+                                                            value: i,
+                                                            label: month
+                                                        }))}
+                                                        value={values.months}
+                                                        onChange={(val) => setters.setMonths(val)}
+                                                    />
+                                                </Slide>
+                                            </Option>
+                                            <SelectBar
+                                                fieldset
+                                                options={[
+                                                    { value: "day", label: "Each" },
+                                                    { value: "weekday", label: "On The" }
+                                                ] as const}
+                                                value={values.yearlyType}
+                                                onChange={setters.setYearlyType}
+                                            />
+                                            {values.yearlyType === "day" ? (
+                                                <DaySelect fieldset value={values.day} onChange={setters.setDay} />
+                                            ) : values.yearlyType === "weekday" ? (
+                                                <NthWeekdaySelect
+                                                    fieldset
+                                                    value={{
+                                                        ordinal: values.ordinal,
+                                                        weekday: values.weekday
+                                                    }}
+                                                    onChange={({ ordinal, weekday }) => {
+                                                        setters.setOrdinal(ordinal)
+                                                        setters.setWeekday(weekday)
+                                                    }}
+                                                />
+                                            ) : null}
+                                        </>
+                                    ) : null}
+                                </Fieldset>
+                                <Fieldset>
+                                    <LabelField fieldset label="Begin">
+                                        <InnerButton
+                                            label={Utility.formatDate(values.repeatStart)}
+                                            onClick={() => setters.setOpen(values.open === "start_repeating" ? undefined : "start_repeating")}
+                                        />
+                                    </LabelField>
+                                    <Collapse value="start_repeating">
+                                        <DatePicker fieldset value={values.repeatStart} onChange={setters.setRepeatStart} />
+                                    </Collapse>
+                                    <LabelField fieldset label="End">
+                                        <Toggle on={values.hasRepeatEnd} onChange={(val) => setters.setHasRepeatEnd(val)} />
+                                    </LabelField>
+                                    {values.hasRepeatEnd ? (
+                                        <>
+                                            <LabelField fieldset label="On">
+                                                <InnerButton
+                                                    label={Utility.formatDate(values.repeatEnd)}
+                                                    onClick={() => setters.setOpen(values.open === "stop_repeating" ? undefined : "stop_repeating")}
+                                                />
+                                            </LabelField>
+                                            <Collapse value="stop_repeating">
+                                                <DatePicker fieldset min={values.repeatStart} value={values.repeatEnd} onChange={setters.setRepeatEnd} />
+                                            </Collapse>
+                                        </>
+                                    ) : null}
+                                </Fieldset>
+                            </FieldFrame>
+                        </Slide>
+                    </Option>
                 </>
             ) : null}
         </Fieldset>

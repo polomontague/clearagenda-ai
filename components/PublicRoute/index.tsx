@@ -14,7 +14,7 @@ export default function PublicRoute(props: PublicRouteProps) {
 
     useEffect(() => {
         if (cookies.token) router.push(Routes.AUTH_LANDING_PAGE)
-    }, [router])
+    }, [cookies.token, router])
 
     return props.children
 }

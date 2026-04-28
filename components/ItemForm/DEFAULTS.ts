@@ -23,6 +23,8 @@ const DEFAULTS = {
     months: [ new Date().getMonth() ],
     day: new Date().getDate(),
     repeat_start: new Date(),
+    has_repeat_end: false,
+    repeat_end: new Date(),
     notes: ""
 }
 

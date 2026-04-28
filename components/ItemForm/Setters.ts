@@ -18,9 +18,11 @@ type Setters = {
     setYearlyType: (value: "day" | "weekday") => void,
     setDay: (value: number) => void,
     setRepeatStart: (value: Date) => void,
+    setHasRepeatEnd: (value: boolean) => void,
+    setRepeatEnd: (value: Date) => void,
     setNotes: (value: string) => void
 }
 
 export default Setters
 
-export type RepeatSetters = Pick<Setters, "setFrequency" | "setRepeatStart" | "setInterval" | "setWeekdays" | "setMonthlyType" | "setDays" | "setOrdinal" | "setWeekday" | "setYearlyType" | "setMonths" | "setDay">
+export type RepeatSetters = Pick<Setters, "setFrequency" | "setRepeatStart" | "setHasRepeatEnd" | "setRepeatEnd" | "setInterval" | "setWeekdays" | "setMonthlyType" | "setDays" | "setOrdinal" | "setWeekday" | "setYearlyType" | "setMonths" | "setDay">

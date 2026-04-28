@@ -5,6 +5,7 @@ import IconButton from "@/components/IconButton"
 
 type Button = {
     icon: ReactElement<SVGElement>,
+    disabled?: boolean,
     onClick: () => void
 }
 
@@ -33,6 +34,7 @@ export default function Card(props: CardProps) {
                             <IconButton
                                 key={i}
                                 icon={button.icon}
+                                disabled={button.disabled}
                                 onClick={button.onClick}
                             />
                         ))}

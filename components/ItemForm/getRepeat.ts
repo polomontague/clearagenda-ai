@@ -1,48 +1,54 @@
 import { Repeat } from "@/types/Item"
 import Values, { RepeatValues } from "./Values"
 
-export default function getRepeat({ frequency, repeatStart, interval, weekdays, monthlyType, days, ordinal, weekday, yearlyType, months, day }: RepeatValues) {
+export default function getRepeat({ frequency, repeatStart, hasRepeatEnd, repeatEnd, interval, weekdays, monthlyType, days, ordinal, weekday, yearlyType, months, day }: RepeatValues) {
     const repeat: Repeat = (
         frequency === "daily" ? {
-            starts: repeatStart.toISOString(),
-            frequency,
-            interval
-        } : frequency === "weekly" ? {
-            starts: repeatStart.toISOString(),
             frequency,
             interval,
-            weekdays
+            starts: repeatStart.toISOString(),
+            ends: hasRepeatEnd ? repeatEnd.toISOString() : undefined
+        } : frequency === "weekly" ? {
+            frequency,
+            interval,
+            weekdays,
+            starts: repeatStart.toISOString(),
+            ends: hasRepeatEnd ? repeatEnd.toISOString() : undefined
         } : frequency === "monthly" ? (
             monthlyType === "days" ? {
                 type: monthlyType,
-                starts: repeatStart.toISOString(),
                 frequency,
                 interval,
-                days
+                days,
+                starts: repeatStart.toISOString(),
+                ends: hasRepeatEnd ? repeatEnd.toISOString() : undefined
             } : { // weekday
                 type: monthlyType,
-                starts: repeatStart.toISOString(),
                 frequency,
                 interval,
                 ordinal,
-                weekday
+                weekday,
+                starts: repeatStart.toISOString(),
+                ends: hasRepeatEnd ? repeatEnd.toISOString() : undefined
             }
         ) : ( // yearly
             yearlyType === "day" ? {
                 type: yearlyType,
-                starts: repeatStart.toISOString(),
                 frequency,
                 interval,
                 months,
-                day
+                day,
+                starts: repeatStart.toISOString(),
+                ends: hasRepeatEnd ? repeatEnd.toISOString() : undefined
             } : { // weekday
                 type: yearlyType,
-                starts: repeatStart.toISOString(),
                 frequency,
                 interval,
                 months,
                 ordinal,
-                weekday
+                weekday,
+                starts: repeatStart.toISOString(),
+                ends: hasRepeatEnd ? repeatEnd.toISOString() : undefined
             }
         )
     )

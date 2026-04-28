@@ -2,11 +2,12 @@
 import styles from "./DatePicker.module.css"
 import IconButton from "@/components/IconButton"
 import { LeftArrowIcon, RightArrowIcon } from "@/components/Icons"
-import { useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import MultiSelect from "@/components/MultiSelect"
 
 type DatePickerProps = {
     fieldset?: boolean,
+    min?: Date
     value: Date,
     onChange: (value: Date) => void
 }
@@ -17,6 +18,17 @@ export default function DatePicker(props: DatePickerProps) {
     const [mode, setMode] = useState<"month" | "date">("date")
     const startYear = new Date().getFullYear() - 100
     const years = Array.from({ length: 201 }).map((_, i) => startYear + i)
+    const min = useMemo(() => {
+        if (!props.min) return undefined
+        const min = new Date(props.min)
+        min.setHours(0, 0, 0, 0) // normalize time for clean comparing
+        return min
+    }, [props.min])
+    const today = new Date()
+
+    useEffect(() => {
+        console.log(min)
+    }, [min])
 
     const getDays = (date: Date) => {
         const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
@@ -109,18 +121,25 @@ export default function DatePicker(props: DatePickerProps) {
                     </ul>
                     <ul className={styles.lstDates}>
                         {getDays(date).map((day, i) => {
-                            const currentDate = new Date()
-                            const today = (date.getFullYear() === currentDate.getFullYear()) && (date.getMonth() === currentDate.getMonth()) && (day === currentDate.getDate())
+                            const current = new Date(date)
+                            if (day) current.setDate(day)
+                            current.setHours(0, 0, 0, 0) // normalize time for clean comparison
+                            const isToday = current.toLocaleDateString("en-CA") === today.toLocaleDateString("en-CA")
+                            const disabled = min ? current < min : false
                             const selected = (props.value.getFullYear() === date.getFullYear()) && (props.value.getMonth() === date.getMonth()) && (day === props.value.getDate())
                             return (
                                 <li key={i}>
                                     {day ? (
                                         <button
                                             type="button"
-                                            className={`${styles.btnDate} ${today ? styles.today : ""} ${selected ? styles.selected : ""}`}
+                                            className={`${styles.btnDate} ${isToday ? styles.today : ""} ${selected ? styles.selected : ""}`}
+                                            disabled={disabled}
                                             onClick={() => handleDateClick(day)}
                                         >
                                             {day}
+                                            <div className={styles.containerStrike}>
+                                                <div className={styles.strike}></div>
+                                            </div>
                                         </button>
                                     ) : null}
                                 </li>

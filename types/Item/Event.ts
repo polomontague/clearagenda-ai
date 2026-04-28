@@ -9,7 +9,7 @@ type BaseEvent = BaseItem & {
 
 export type OnceEvent = BaseEvent & {
     occurs: "once",
-    starts: string, // ISO 8601 datetime,
+    starts: string // ISO 8601 datetime,
 }
 
 export type RepeatingEvent = BaseEvent & {
