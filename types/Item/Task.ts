@@ -4,7 +4,7 @@ import { Repeat } from "./Repeat"
 export type Step = {
     id: number,
     name: string,
-    notes: string,
+    notes?: string,
     duration: number, // minutes
     completed?: string // ISO 8601 datetime
 }

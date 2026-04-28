@@ -88,7 +88,7 @@ model item_steps {
 	item_id Int
 	item items @relation(fields: [item_id], references: [id], onDelete: Cascade)
 	name String @db.VarChar(100)
-	notes String @db.VarChar(500)
+	notes String? @db.VarChar(500)
 	duration Int
 	completed DateTime?
 }

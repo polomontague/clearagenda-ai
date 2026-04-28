@@ -26,7 +26,7 @@ const AI = {
                 }
             ]
         })
-        const output = res.choices[0].message.content ?? "{}"
+        const output = JSON.parse(res.choices[0].message.content ?? "{}")
         await GenerationsDAO.createGeneration({
             user_id: userId,
             model,
@@ -35,7 +35,7 @@ const AI = {
                 output: res.usage?.completion_tokens ?? 0
             }
         })
-        return JSON.parse(output)
+        return output
     }
 }
 

@@ -61,14 +61,6 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
         })
     }, [items, search, completed])
     const currentItem = useMemo(() => items.find(item => item.id === currentId), [ items, currentId ])
-    const STATUSES: Record<"completed" | "overdue" | "upcoming" | "in_progress" | "repeating" | "ended", { color: string, label: string }> = {
-        upcoming: { color: user?.preferences.accent === "sky" ? "var(--turquoise)" : "var(--sky)", label: "Upcoming" },
-        overdue: { color: user?.preferences.accent === "red" ? "var(--coral)" : "var(--red)", label: "Overdue" },
-        in_progress: { color: user?.preferences.accent === "yellow" ? "var(--orange)" : "var(--yellow)", label: "In Progress" },
-        repeating: { color: user?.preferences.accent === "lavender" ? "var(--pink)" : "var(--lavender)", label: "Repeating" },
-        completed: { color: "var(--layer-4-light)", label: "Completed" },
-        ended: { color: "var(--layer-4-light)", label: "Ended" }
-    }
 
     const getEventEnds = (item: Event) => {
 
@@ -129,8 +121,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
             <List>
                 {filteredItems.map((item, i) => {
                     const repeatLabel = item.occurs === "repeating" ? Utility.getRepeatLabel(item.repeat) : undefined
-                    const statusCode = Utility.getItemStatus(item)
-                    const status = STATUSES[statusCode]
+                    const status = Utility.getItemStatus(item)
                     return (
                         <ListItem key={i}>
                             <Card
@@ -138,7 +129,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
                                 buttons={[
                                     {
                                         icon: <EditIcon />,
-                                        disabled: statusCode === "completed" || statusCode === "ended",
+                                        disabled: status.code === "completed" || status.code === "ended",
                                         onClick: () => handleRequestEdit(item) },
                                     {
                                         icon: <TrashCanIcon />,

@@ -16,7 +16,7 @@ const assembleItem = (result: ItemResult): Item => {
             steps: result.steps.map(step => ({
                 id: step.id,
                 name: step.name,
-                notes: step.notes,
+                notes: step.notes ?? undefined,
                 duration: step.duration,
                 completed: step.completed?.toISOString()
             })),
@@ -34,7 +34,7 @@ const assembleItem = (result: ItemResult): Item => {
             steps: result.steps.map(step => ({
                 id: step.id,
                 name: step.name,
-                notes: step.notes,
+                notes: step.notes ?? undefined,
                 duration: step.duration,
                 completed: step.completed?.toISOString()
             })),

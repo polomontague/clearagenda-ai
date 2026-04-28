@@ -26,7 +26,7 @@ type ItemModalProps = {
 
 export default function ItemModal(props: ItemModalProps) {
     const { user } = useContext(UserContext)
-    const status = useMemo(() => Utility.getItemStatus(props.item, user!.preferences.accent), [ props.item, user ])
+    const status = useMemo(() => Utility.getItemStatus(props.item), [ props.item, user ])
     const completion = props.item.type === "task" ? Utility.getTaskCompletion(props.item) : 0
     
     const handleCompletedChange = (item: Task, step: Step) => {

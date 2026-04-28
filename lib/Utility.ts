@@ -182,25 +182,36 @@ const Utility = {
         item.steps.forEach(step => minutes += step.duration)
         return Utility.formatDuration(minutes)
     },
-    getItemStatus: (item: Item): "completed" | "overdue" | "upcoming" | "in_progress" | "repeating" | "ended" => {
+    getItemStatus: (item: Item, accent: User["preferences"]["accent"]): {
+        code: "completed" | "overdue" | "upcoming" | "in_progress" | "repeating" | "ended",
+        color: string,
+        label: string
+    } => {
+        const COLORS = {
+        sky: accent === "sky" ? "var(--turquoise)" : "var(--sky)",
+        red: accent === "red" ? "var(--coral)" : "var(--red)",
+        yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
+        lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
+        gray: "var(--layer-4-light)"
+    }
         if (item.type === "task") {
             if (item.occurs === "once") {
                 const completion = Utility.getTaskCompletion(item)
-                if (completion === 1) return "completed"
+                if (completion === 1) return { code: "completed", color: COLORS.gray, label: "Completed" }
                 const overdue = item.deadline ? new Date(item.deadline) < new Date() : false
-                if (overdue) return "overdue"
-                if (completion === 0) return "upcoming"
-                return "in_progress"
+                if (overdue) return { code: "overdue", color: COLORS.red, label: "Overdue" }
+                if (completion === 0) return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
+                return { code: "in_progress", color: COLORS.yellow, label: "In Progress" }
             } else { // repeating
-                return "repeating"
+                return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
             }
         } else { // event
             if (item.occurs === "once") {
                 const completed = Utility.getItemCompleted(item)
-                if (completed) return "ended"
-                return "upcoming"
+                if (completed) return { code: "ended", color: COLORS.gray, label: "Ended" }
+                return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
             } else { // repeating
-                return "repeating"
+                return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
             }
         }
     },
