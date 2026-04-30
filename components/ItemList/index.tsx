@@ -121,7 +121,7 @@ export default function ItemList({ filters: { search, completed } }: ItemListPro
             <List>
                 {filteredItems.map((item, i) => {
                     const repeatLabel = item.occurs === "repeating" ? Utility.getRepeatLabel(item.repeat) : undefined
-                    const status = Utility.getItemStatus(item)
+                    const status = Utility.getItemStatus(item, user.preferences.accent)
                     return (
                         <ListItem key={i}>
                             <Card
