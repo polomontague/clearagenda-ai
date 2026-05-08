@@ -76,7 +76,7 @@ model task_step_completions {
 	id Int @id @default(autoincrement())
 	step_id Int
 	step task_steps @relation(fields: [step_id], references: [id], onDelete: Cascade)
-	date DateTime @db.Date
+	date String
 	completed DateTime
 }
 
@@ -89,7 +89,8 @@ model tasks {
 	description String @db.Text
 	steps task_steps[]
 	importance Float
-	deadline DateTime? @db.Date
+	once_deadline String?
+	repeating_deadline Int?
 	repeat Json?
 	created DateTime @default(now())
 	updated DateTime @updatedAt
@@ -97,6 +98,7 @@ model tasks {
 
 model events {
 	id Int @id @default(autoincrement())
+	occurs occurs
 	user_id Int
 	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 	name String @db.VarChar(100)
@@ -104,7 +106,7 @@ model events {
 	duration Int
 	timezone String @db.VarChar(30)
 	once_starts DateTime?
-	repeating_starts DateTime? @db.Time
+	repeating_starts String?
 	repeat Json?
 	created DateTime @default(now())
 	updated DateTime @updatedAt
@@ -112,11 +114,12 @@ model events {
 
 model reminders {
 	id Int @id @default(autoincrement())
+	occurs occurs
 	user_id Int
 	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 	name String @db.VarChar(100)
-	once_at DateTime? @db.DateTime
-	repeating_at DateTime? @db.Time
+	once_at String?
+	repeating_at String?
 	repeat Json?
 	created DateTime @default(now())
 	updated DateTime @updatedAt

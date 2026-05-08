@@ -1,28 +1,21 @@
 import z from "zod"
 import Validation from "@/lib/Validation"
+import { floatingRepeat } from "./floatingRepeat"
 
-export const taskParamsSchema = z.object({
-    task_id: z.coerce.number("task_id must be a number").min(1, "task_id must be 1 or greater")
+const onceTaskBodySchema = z.object({
+    occurs: z.literal("once", 'occurs must be "once" or "repeating"'),
+    description: z.string("description must be a string").trim().min(1, "description must be 1 or more characters"),
+    deadline: z.string("deadline must be a string").trim().refine(value => Validation.date(value), "deadline must be a valid date").optional()
 })
 
-const simpleTaskBodySchema = z.object({
-    name: z.string("name must be a string").min(1, "name must be 1 or more characters"),
-    notes: z.string("notes must be a string").min(1, "notes must be 1 or more characters").optional(),
-    deadline: z.string("deadline must be a string").refine(value => Validation.dateTime(value), "deadline must be an ISO 8601 date").optional()
-}).strict()
-
-const complexTaskBodySchema = z.object({
-    name: z.string("name must be a string").min(1, "name must be 1 or more characters"),
-    description: z.string("description must be a string").min(1, "description must be 1 or more characters"),
-    deadline: z.string("deadline must be a string").refine(value => Validation.dateTime(value), "deadline must be an ISO 8601 date").optional()
-}).strict()
-
-export const taskBodySchema = z.union([
-    simpleTaskBodySchema,
-    complexTaskBodySchema
-])
-
-export const taskStepParamsSchema = z.object({
-    task_id: z.coerce.number("task_id must be a number").min(1, "task_id must be 1 or greater"),
-    step_id: z.coerce.number("step_id must be a number").min(1, "step_id must be 1 or greater")
+const repeatingTaskBodySchema = z.object({
+    occurs: z.literal("repeating", 'occurs must be "once" or "repeating"'),
+    description: z.string("description must be a string").trim().min(1, "description must be 1 or more characters"),
+    deadline: z.number("deadline must be a number").min(1, "deadline must be 1 or greater").optional(),
+    repeat: floatingRepeat
 })
+
+export const taskBodySchema = z.discriminatedUnion("occurs", [
+    onceTaskBodySchema,
+    repeatingTaskBodySchema
+], 'occurs must be "once" or "repeating"')

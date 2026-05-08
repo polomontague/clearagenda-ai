@@ -13,12 +13,12 @@ type BaseEvent = {
     updated: string
 }
 
-type OnceEvent = BaseEvent & {
+export type OnceEvent = BaseEvent & {
     occurs: "once",
     starts: string
 }
 
-type RepeatingEvent = BaseEvent & {
+export type RepeatingEvent = BaseEvent & {
     occurs: "repeating",
     starts: string,
     repeat: Repeat

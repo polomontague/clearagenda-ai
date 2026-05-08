@@ -7,7 +7,7 @@ const Validation = {
         const regex = /^\d+$/
         return regex.test(value) && value.length === 11
     },
-    password: (value: string) => {
+    password: (value: string): boolean => {
         // Check length
         if (value.length < 8) return false
         // Check for at least one capital letter
@@ -24,12 +24,26 @@ const Validation = {
         return regex.test(value)
     },
     dateTime: (value: string) => {
+        const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}$/
+        return regex.test(value)
+    },
+    isoDateTime: (value: string) => {
         const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
         return regex.test(value)
     },
     time: (value: string) => {
-        const regex = /^\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+        const regex = /^\d{2}:\d{2}:\d{2}\.\d{3}$/
         return regex.test(value)
+    },
+    timezone: (value: string): boolean => {
+        try {
+            Intl.DateTimeFormat(undefined, {
+                timeZone: value
+            })
+            return true
+        } catch {
+            return false
+        }
     }
 }
 

@@ -41,6 +41,7 @@ export type RepeatingStep = BaseStep & {
 export type RepeatingTask = BaseTask & {
     occurs: "repeating",
     steps: RepeatingStep[],
+    deadline?: number,
     repeat: Repeat
 }
 

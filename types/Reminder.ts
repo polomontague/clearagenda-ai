@@ -2,17 +2,18 @@ import SimpleUser from "./SimpleUser"
 import Repeat from "./Repeat"
 
 type BaseReminder = {
+    type: "reminder",
     id: number,
     user: SimpleUser,
     name: string,
     at: string
 }
 
-type OnceReminder = BaseReminder & {
+export type OnceReminder = BaseReminder & {
     occurs: "once"
 }
 
-type RepeatingReminder = BaseReminder & {
+export type RepeatingReminder = BaseReminder & {
     occurs: "repeating",
     repeat: Repeat
 }
