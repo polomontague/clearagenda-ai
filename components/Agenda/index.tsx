@@ -16,7 +16,7 @@ import UserContext from "@/contexts/UserContext"
 import Columns from "@/components/Columns"
 import getCurrent from "./getCurrent"
 import Range from "@/components/Range"
-import getDateItems, { CompletionItem } from "./getDateItems"
+import getDateItems, { CompletionItem } from "./getDateItems(2)"
 
 type AgendaProps = {
     date: Date

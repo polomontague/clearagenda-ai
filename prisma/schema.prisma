@@ -34,7 +34,9 @@ enum accent {
 
 model users {
 	id Int @id @default(autoincrement())
-	items items[]
+	tasks tasks[]
+	events events[]
+	reminders reminders[]
 	generations generations[]
 	first_name String @db.VarChar(30)
 	last_name String @db.VarChar(60)
@@ -54,6 +56,88 @@ model users {
 	updated DateTime @updatedAt
 }
 
+enum occurs {
+	once
+	repeating
+}
+
+model task_steps {
+	id Int @id @default(autoincrement())
+	task_id Int
+	task tasks @relation(fields: [task_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	notes String? @db.VarChar(500)
+	duration Int
+	completed DateTime?
+	completions task_step_completions[]
+}
+
+model task_step_completions {
+	id Int @id @default(autoincrement())
+	step_id Int
+	step task_steps @relation(fields: [step_id], references: [id], onDelete: Cascade)
+	date DateTime @db.Date
+	completed DateTime
+}
+
+model tasks {
+	id Int @id @default(autoincrement())
+	occurs occurs
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	description String @db.Text
+	steps task_steps[]
+	importance Float
+	deadline DateTime? @db.Date
+	repeat Json?
+	created DateTime @default(now())
+	updated DateTime @updatedAt
+}
+
+model events {
+	id Int @id @default(autoincrement())
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	notes String? @db.VarChar(300)
+	duration Int
+	timezone String @db.VarChar(30)
+	once_starts DateTime?
+	repeating_starts DateTime? @db.Time
+	repeat Json?
+	created DateTime @default(now())
+	updated DateTime @updatedAt
+}
+
+model reminders {
+	id Int @id @default(autoincrement())
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	once_at DateTime? @db.DateTime
+	repeating_at DateTime? @db.Time
+	repeat Json?
+	created DateTime @default(now())
+	updated DateTime @updatedAt
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 enum item_type {
 	task
 	event
@@ -67,7 +151,7 @@ enum item_occurs {
 model items {
 	id Int @id @default(autoincrement())
 	user_id Int
-	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	// user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 	type item_type
 	name String @db.VarChar(100)
 	description String? @db.Text
@@ -79,6 +163,7 @@ model items {
 	occurs item_occurs
 	deadline DateTime?
 	repeat Json?
+	timezone String? @db.VarChar(30)
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 }

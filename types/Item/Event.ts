@@ -4,7 +4,8 @@ import { BaseItem } from "."
 type BaseEvent = BaseItem & {
     type: "event",
     notes?: string,
-    duration: number // minutes
+    duration: number, // minutes
+    timezone: string
 }
 
 export type OnceEvent = BaseEvent & {

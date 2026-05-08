@@ -54,6 +54,7 @@ const assembleItem = (result: ItemResult): Item => {
             duration: result.duration ?? 0,
             occurs: "once",
             starts: result.starts?.toISOString() ?? "",
+            timezone: result.timezone ?? "",
             created: result.created.toISOString(),
             updated: result.updated.toISOString()
         } : { // Repeating
@@ -65,6 +66,7 @@ const assembleItem = (result: ItemResult): Item => {
             duration: result.duration ?? 0,
             occurs: "repeating",
             starts: result.starts?.toISOString() ?? "",
+            timezone: result.timezone ?? "",
             repeat: result.repeat as Repeat,
             created: result.created.toISOString(),
             updated: result.updated.toISOString()

@@ -23,6 +23,7 @@ const itemsBaseQuery = {
         occurs: true,
         deadline: true,
         repeat: true,
+        timezone: true,
         created: true,
         updated: true
     }
