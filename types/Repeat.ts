@@ -12,20 +12,20 @@ type DailyRepeat = BaseRepeat & {
 
 type WeeklyRepeat = BaseRepeat & {
     frequency: "weekly",
-    weekdays: number[]
+    weekdays: number[] // 0-6
 }
 
 type DaysMonthlyRepeat = BaseRepeat & {
     type: "days",
     frequency: "monthly",
-    days: number[]
+    days: number[] // 1-31
 }
 
 type WeekdayMonthlyRepeat = BaseRepeat & {
     type: "weekday",
     frequency: "monthly",
     ordinal: Ordinal,
-    weekday: number,
+    weekday: number, // 0-6
 }
 
 type MonthlyRepeat = DaysMonthlyRepeat | WeekdayMonthlyRepeat
@@ -33,14 +33,14 @@ type MonthlyRepeat = DaysMonthlyRepeat | WeekdayMonthlyRepeat
 type DayYearlyRepeat = BaseRepeat & {
     type: "day",
     frequency: "yearly",
-    months: number[],
-    day: number
+    months: number[], // 0-11
+    day: number // 1-31
 }
 
 type WeekdayYearlyRepeat = BaseRepeat & {
     type: "weekday",
     frequency: "yearly",
-    months: number[],
+    months: number[], // 0-11
     ordinal: Ordinal,
     weekday: number
 }

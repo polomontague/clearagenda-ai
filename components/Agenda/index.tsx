@@ -11,34 +11,41 @@ import Button from "@/components/Button"
 import Confirm from "@/components/Confirm"
 import API from "@/lib/API"
 import Alert from "@/components/Alert"
-import ItemsContext from "@/contexts/ItemsContext"
 import UserContext from "@/contexts/UserContext"
 import Columns from "@/components/Columns"
-import getCurrent from "./getCurrent"
 import Range from "@/components/Range"
-import getDateItems, { CompletionItem } from "./getDateItems(2)"
+import Task from "@/types/Task"
+import TasksContext from "@/contexts/TasksContext"
+import EventsContext from "@/contexts/EventsContext"
+import RemindersContext from "@/contexts/RemindersContext"
+import Event from "@/types/Event"
+import Reminder from "@/types/Reminder"
+import getDateReminders from "./getDateReminders"
 
 type AgendaProps = {
     date: Date
 }
 
 export default function Agenda(props: AgendaProps) {
-    const { items } = useContext(ItemsContext)
-    const [agendaItems, setAgendaItems] = useState<CompletionItem[]>([])
     const [confirmMessage, setConfirmMessage] = useState("")
     const [confirmOpen, setConfirmOpen ] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const { user } = useContext(UserContext)
-    const current = useMemo(() => getCurrent(agendaItems), [agendaItems])
+    //const current = useMemo(() => getCurrent(agendaItems), [agendaItems])
     const today = props.date.toLocaleDateString("en-CA") === new Date().toLocaleDateString("en-CA")
 
+    const { tasks } = useContext(TasksContext)
+    const { events } = useContext(EventsContext)
+    const { reminders } = useContext(RemindersContext)
+    const [dateTasks, setDateTasks] = useState<Task[]>([])
+    const [dateEvents, setDateEvents] = useState<Event[]>([])
+    const [dateReminders, setDateReminders] = useState<Reminder[]>([])
+
     useEffect(() => {
-        if (items.length && user) {
-            const newAgendaItems = getDateItems(items, props.date, user.preferences.hours)
-            setAgendaItems(newAgendaItems)
-        }
-    }, [items, user, props.date])
+        if (!reminders.length || !user) return
+        setDateReminders(getDateReminders(reminders, props.date))
+    }, [reminders, user, props.date])
 
     const getDeadlineStatus = (deadline: Date) => {
         const today = new Date()
@@ -72,8 +79,8 @@ export default function Agenda(props: AgendaProps) {
             <Columns
                 left={(
                     <FieldFrame>
-                        {agendaItems.map((item, i) => {
-                            const isCurrent = item.id === current?.item.id
+                        {[].map((item, i) => {
+                            const isCurrent = true //item.id === current?.item.id
                             return (
                                 <Card key={i} label={item.name}>
                                     {item.type === "task" ? (
@@ -116,7 +123,7 @@ export default function Agenda(props: AgendaProps) {
                     </FieldFrame>
                 )}
                 right={today ? <>
-                    {current ? (
+                    {/* current */ false ? (
                         <Fieldset layer={2} label={current.item.name}>
                             <Card fieldset label={current.step.name}>
                                 <FieldFrame>

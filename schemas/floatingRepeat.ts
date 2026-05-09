@@ -65,4 +65,4 @@ const weekdayYearly = z.object({
     ends
 })
 const yearly = z.discriminatedUnion("type", [ dayYearly, weekdayYearly ])
-export const floatingRepeat = z.discriminatedUnion("frequency", [daily, weekly, monthly, yearly], 'repeat.type must be "daily", "weekly", "monthly", or "yearly"')
+export const floatingRepeat = z.discriminatedUnion("frequency", [daily, weekly, monthly, yearly], 'repeat.frequency must be "daily", "weekly", "monthly", or "yearly"')

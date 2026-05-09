@@ -29,6 +29,8 @@ export const POST = async (req: NextRequest) => {
                 repeat: body.repeat
             })
         }
+
+        return Response.ok({ reminder })
     } catch(err) {
         if (err instanceof HttpError) return err.response
         Error.notify(err)

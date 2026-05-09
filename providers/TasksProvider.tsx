@@ -15,10 +15,6 @@ export default function TasksProvider(props: {
         })
     }, [])
 
-    useEffect(() => {
-        console.log(tasks)
-    }, [tasks])
-
     const addTask = (task: Task) => {
         setTasks([ ...tasks, task ])
     }
