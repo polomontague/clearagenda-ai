@@ -2,7 +2,7 @@ import Reminder from "@/types/Reminder"
 import getDateKey from "./getDateKey"
 import occursOnFloatingDate from "./occursOnFloatingDate"
 
-const getDateReminders = (reminders: Reminder[], date: Date) => {
+const getDateReminders = (reminders: Reminder[], date: Date): Reminder[] => {
     const result: Reminder[] = []
     for (const reminder of reminders) {
         if (reminder.occurs === "once") {
@@ -19,8 +19,7 @@ const getDateReminders = (reminders: Reminder[], date: Date) => {
             }
         }
     }
-
-    console.log('reminders result', result)
+    return result
 }
 
 export default getDateReminders

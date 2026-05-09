@@ -2,7 +2,7 @@ import { RepeatingReminder } from "@/types/Reminder"
 import getDateKey from "./getDateKey"
 import getNthWeekdayOfMonth from "./getNthWeekdayOfMonth"
 
-export default function reminderOccursOnDate(reminder: RepeatingReminder, date: Date) {
+export default function reminderOccursOnDate(reminder: RepeatingReminder, date: Date): boolean {
     const { repeat } = reminder
     const { starts, ends } = repeat
     const dateKey = getDateKey(date)
@@ -42,6 +42,7 @@ export default function reminderOccursOnDate(reminder: RepeatingReminder, date: 
             return getDateKey(day) === getDateKey(date)
         }
     }
+    return false
 }
 
 const getDiffDays = (starts: string, date: Date) => {

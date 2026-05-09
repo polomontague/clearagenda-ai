@@ -21,6 +21,7 @@ import RemindersContext from "@/contexts/RemindersContext"
 import Event from "@/types/Event"
 import Reminder from "@/types/Reminder"
 import getDateReminders from "./getDateReminders"
+import getDateEvents from "./getDateEvents"
 
 type AgendaProps = {
     date: Date
@@ -41,6 +42,11 @@ export default function Agenda(props: AgendaProps) {
     const [dateTasks, setDateTasks] = useState<Task[]>([])
     const [dateEvents, setDateEvents] = useState<Event[]>([])
     const [dateReminders, setDateReminders] = useState<Reminder[]>([])
+
+    useEffect(() => {
+        if (!events.length || !user) return
+        setDateEvents(getDateEvents(events, props.date))
+    }, [events, user, props.date])
 
     useEffect(() => {
         if (!reminders.length || !user) return
