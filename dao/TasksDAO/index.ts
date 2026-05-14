@@ -27,7 +27,6 @@ type GetTasksOptions = {
 
 const TasksDAO = {
     createTask: async (data: CreateTaskData) => {
-        console.log(data)
         const result = await prisma.tasks.create({
             data: {
                 occurs: data.occurs,

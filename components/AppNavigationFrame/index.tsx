@@ -3,7 +3,7 @@ import styles from "./NavigationFrame.module.css"
 import { ReactElement, ReactNode, useState } from "react"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
-import { CalendarIcon, BrainIcon, GearIcon, PlusIcon, LogoutIcon } from "@/components/Icons"
+import { CalendarIcon, BrainIcon, GearIcon, PlusIcon, LogoutIcon, MenuIcon } from "@/components/Icons"
 import SettingsModal from "@/components/SettingsModal"
 import FormModal from "@/components/FormModal"
 import ItemForm from "@/components/ItemForm"
@@ -12,6 +12,11 @@ import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import Logo from "@/components/Logo"
 import Link from "next/link"
+import SelectButton from "@/components/SelectButton"
+import SelectBar from "../SelectBar"
+import FieldFrame from "../FieldFrame"
+import TaskForm from "../TaskForm"
+import EventForm from "../EventForm"
 
 type Link = {
     type: "link",
@@ -43,7 +48,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
         {
             type: "button",
             icon: <PlusIcon />,
-            label: "Add Item",
+            label: "New",
             onClick: () => setAddItemModalOpen(true)
         },
         {
@@ -57,20 +62,21 @@ export default function NavigationFrame(props: NavigationFrameProps) {
             icon: <BrainIcon />,
             href: "/memory",
             label: "Memory"
-        },
+        }
+    ]
+    const moreOptions = [
         {
-            type: "button",
             icon: <GearIcon />,
             label: "Settings",
             onClick: () => setSettingsModalOpen(true)
         },
         {
-            type: "button",
             icon: <LogoutIcon />,
             label: "Logout",
             onClick: handleLogoutClick
         }
     ]
+    const [type, setType] = useState<"task" | "event" | "reminder">("task")
 
     const handleAddItemSuccess = (item: Item) => {
         setAddItemModalOpen(false)
@@ -118,6 +124,12 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                                 </li>
                             )
                         })}
+                        <li className={styles.containerBtnMore}>
+                            <SelectButton
+                                icon={<MenuIcon />}
+                                options={moreOptions}
+                            />
+                        </li>
                     </ul>
                 </nav>
             </aside>
@@ -125,13 +137,25 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                 {props.children}
                 <FormModal
                     open={addItemModalOpen}
-                    label="Add Agenda Item"
+                    label="New"
                     onRequestCancel={() => setAddItemModalOpen(false)}
                 >
-                    <ItemForm
-                        type="new"
-                        onSuccess={handleAddItemSuccess}
-                    />
+                    <FieldFrame>
+                        <SelectBar
+                            options={[
+                                { value: "task", label: "Task" },
+                                { value: "event", label: "Event" },
+                                { value: "reminder", label: "Reminder" }
+                            ]as const}
+                            value={type}
+                            onChange={setType}
+                        />
+                        {type === "task" ? (
+                            <TaskForm />
+                        ) : type === "event" ? (
+                            <EventForm />
+                        ) : <></>}
+                    </FieldFrame>
                 </FormModal>
                 <SettingsModal open={settingsModalOpen} onRequestClose={() => setSettingsModalOpen(false)} />
             </main>

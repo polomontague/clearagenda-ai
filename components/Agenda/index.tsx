@@ -1,4 +1,5 @@
 "use client"
+import styles from "./Agenda.module.css"
 import { useState, useContext, useEffect, useMemo } from "react"
 import Card from "@/components/Card"
 import FieldFrame from "@/components/FieldFrame"
@@ -14,7 +15,7 @@ import Alert from "@/components/Alert"
 import UserContext from "@/contexts/UserContext"
 import Columns from "@/components/Columns"
 import Range from "@/components/Range"
-import Task from "@/types/Task"
+import Task, { Step } from "@/types/Task"
 import TasksContext from "@/contexts/TasksContext"
 import EventsContext from "@/contexts/EventsContext"
 import RemindersContext from "@/contexts/RemindersContext"
@@ -22,6 +23,10 @@ import Event from "@/types/Event"
 import Reminder from "@/types/Reminder"
 import getDateReminders from "./getDateReminders"
 import getDateEvents from "./getDateEvents"
+import getDateTasks from "./getDateTasks"
+import Timeline from "@/components/Timeline"
+import getCurrentTaskAndStep from "./getCurrentTaskAndStep"
+import DateCard from "@/components/DateCard"
 
 type AgendaProps = {
     date: Date
@@ -33,15 +38,19 @@ export default function Agenda(props: AgendaProps) {
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const { user } = useContext(UserContext)
-    //const current = useMemo(() => getCurrent(agendaItems), [agendaItems])
     const today = props.date.toLocaleDateString("en-CA") === new Date().toLocaleDateString("en-CA")
-
     const { tasks } = useContext(TasksContext)
     const { events } = useContext(EventsContext)
     const { reminders } = useContext(RemindersContext)
     const [dateTasks, setDateTasks] = useState<Task[]>([])
     const [dateEvents, setDateEvents] = useState<Event[]>([])
     const [dateReminders, setDateReminders] = useState<Reminder[]>([])
+    const currentTaskAndStep = useMemo(() => getCurrentTaskAndStep(dateTasks, props.date), [dateTasks])
+
+    useEffect(() => {
+        if (!tasks.length || !user) return
+        setDateTasks(getDateTasks(tasks, events, user, props.date))
+    }, [tasks, user, props.date])
 
     useEffect(() => {
         if (!events.length || !user) return
@@ -49,9 +58,9 @@ export default function Agenda(props: AgendaProps) {
     }, [events, user, props.date])
 
     useEffect(() => {
-        if (!reminders.length || !user) return
+        if (!events.length || !user) return
         setDateReminders(getDateReminders(reminders, props.date))
-    }, [reminders, user, props.date])
+    }, [events, user, props.date])
 
     const getDeadlineStatus = (deadline: Date) => {
         const today = new Date()
@@ -80,94 +89,45 @@ export default function Agenda(props: AgendaProps) {
         })
     }
 
+    const renderCurrentStep = (task: Task, step: Step) => {
+        return (
+            <Card layer={3} fieldset label={step.name}>
+                Current Step
+            </Card>
+        )
+    }
+
     return(
-        <>
-            <Columns
-                left={(
-                    <FieldFrame>
-                        {[].map((item, i) => {
-                            const isCurrent = true //item.id === current?.item.id
-                            return (
-                                <Card key={i} label={item.name}>
-                                    {item.type === "task" ? (
-                                        <FieldFrame>
-                                            <Fieldset label="Steps">
-                                                {item.steps.map((step, i) => {
-                                                    return (
-                                                        <LabelField
-                                                            key={i}
-                                                            fieldset
-                                                            strike={!!step.completed}
-                                                            label={step.name}
-                                                        />
-                                                    )
-                                                })}
-                                            </Fieldset>
-                                            {today && isCurrent ? (
-                                                <Fieldset>
-                                                    <LabelField fieldset label="Completion">
-                                                        <InnerValue label={`${Math.round(item.completion * 100)}%`} />
-                                                    </LabelField>
-                                                    <Range
-                                                        fieldset
-                                                        value={item.completion}
-                                                    />
-                                                </Fieldset>
-                                            ) : <></>}
-                                        </FieldFrame>
-                                    ) : item.type === "event" ? (
-                                        <FieldFrame>
-                                            <LabelField label="From">
-                                                <InnerValue label={Utility.formatEventFrom(item)} />
+        <div className={styles.frame}>
+            <div>
+                <FieldFrame>
+                    <DateCard />
+                    <Timeline events={dateEvents} />
+                </FieldFrame>
+            </div>
+            <div>
+                <FieldFrame>
+                    {dateTasks.map((task, i) => {
+                        return (
+                            <Card key={i} label={task.name}>
+                                <Fieldset label="Steps">
+                                    {task.steps.map((step, i) => {
+                                        const current = currentTaskAndStep && currentTaskAndStep.task.id === task.id && currentTaskAndStep.step.id === step.id
+                                        return current ? renderCurrentStep(currentTaskAndStep.task, currentTaskAndStep.step) : (
+                                            <LabelField
+                                                fieldset
+                                                label={step.name}
+                                            >
+
                                             </LabelField>
-                                            <Button label="See Details" />
-                                        </FieldFrame>
-                                    ) : <></>}
-                                </Card>
-                            )
-                        })}
-                    </FieldFrame>
-                )}
-                right={today ? <>
-                    {/* current */ false ? (
-                        <Fieldset layer={2} label={current.item.name}>
-                            <Card fieldset label={current.step.name}>
-                                <FieldFrame>
-                                    <Fieldset label="Notes">
-                                        <ValueBox fieldset value={current.step.notes} />
-                                    </Fieldset>
-                                    <LabelField label="Length">
-                                        <InnerValue label={Utility.formatDuration(current.step.duration)} />
-                                    </LabelField>
-                                    {current.item.deadline ? (
-                                        <LabelField label="Deadline">
-                                            <InnerValue
-                                                label={getDeadlineStatus(new Date(current.item.deadline)) === "on_time" ? "On Time" : "Past Due"}
-                                                color={getDeadlineStatus(new Date(current.item.deadline)) === "on_time" ? "var(--green)" : "var(--red)"}
-                                            />
-                                        </LabelField>
-                                    ) : <></>}
-                                    <Button
-                                        label="Mark Complete"
-                                        onClick={() => handleCompleteClick()}
-                                    />
-                                </FieldFrame>
+                                        )
+                                    })}
+                                </Fieldset>
                             </Card>
-                        </Fieldset>
-                    ) : <></>}
-                </> : <></>}
-            />
-            <Alert
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
-            />
-            <Confirm
-                message={confirmMessage}
-                open={confirmOpen}
-                onRequestCancel={() => setConfirmOpen(false)}
-                onRequestConfirm={handleCompleteConfirm}
-            />
-        </>
+                        )
+                    })}
+                </FieldFrame>
+            </div>
+        </div>
     )
 }

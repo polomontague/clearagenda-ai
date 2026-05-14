@@ -1,9 +1,8 @@
-import { RepeatingReminder } from "@/types/Reminder"
+import Repeat from "@/types/Repeat"
 import getDateKey from "./getDateKey"
-import getNthWeekdayOfMonth from "./getNthWeekdayOfMonth"
+import getLocalNthWeekdayOfMonth from "./getLocalNthWeekdayOfMonth"
 
-export default function reminderOccursOnDate(reminder: RepeatingReminder, date: Date): boolean {
-    const { repeat } = reminder
+export default function occursOnLocalDate(repeat: Repeat, date: Date): boolean {
     const { starts, ends } = repeat
     const dateKey = getDateKey(date)
     if (dateKey < starts) return false
@@ -23,7 +22,7 @@ export default function reminderOccursOnDate(reminder: RepeatingReminder, date: 
             return repeat.days.includes(date.getDate())
         }
         if (repeat.type === "weekday") {
-            const day = getNthWeekdayOfMonth(date.getFullYear(), date.getMonth(), repeat.weekday, repeat.ordinal)
+            const day = getLocalNthWeekdayOfMonth(date.getFullYear(), date.getMonth(), repeat.weekday, repeat.ordinal)
             if (!day) return false
             return getDateKey(day) === getDateKey(date)
         }
@@ -37,7 +36,7 @@ export default function reminderOccursOnDate(reminder: RepeatingReminder, date: 
             return repeat.day === date.getDay()
         }
         if (repeat.type === "weekday") {
-            const day = getNthWeekdayOfMonth(date.getFullYear(), date.getMonth(), repeat.weekday, repeat.ordinal)
+            const day = getLocalNthWeekdayOfMonth(date.getFullYear(), date.getMonth(), repeat.weekday, repeat.ordinal)
             if (!day) return false
             return getDateKey(day) === getDateKey(date)
         }

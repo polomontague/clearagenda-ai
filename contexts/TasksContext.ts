@@ -5,12 +5,14 @@ const TasksContext = createContext<{
     tasks: Task[],
     addTask: (task: Task) => void,
     updateTask: (task: Task) => void,
-    removeTask: (task: Task) => void
+    removeTask: (task: Task) => void,
+    loading: boolean
 }>({
     tasks: [],
     addTask: () => {},
     updateTask: () => {},
-    removeTask: () => {}
+    removeTask: () => {},
+    loading: true
 })
 
 export default TasksContext

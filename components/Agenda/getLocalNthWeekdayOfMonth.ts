@@ -1,4 +1,4 @@
-export default function getNthWeekdayOfMonth(year: number, month: number, weekday: number, ordinal: number) {
+export default function getLocalNthWeekdayOfMonth(year: number, month: number, weekday: number, ordinal: number) {
     const matches: Date[] = []
     for (let d = 1; d <= 31; d++) {
         const date = new Date(year, month, d)

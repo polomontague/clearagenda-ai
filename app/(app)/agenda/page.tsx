@@ -7,6 +7,7 @@ import DatePicker from "@/components/DatePicker"
 import Modal from "@/components/Modal"
 import SquareButton from "@/components/SquareButton"
 import { CalendarIcon } from "@/components/Icons"
+import LabelField from "@/components/LabelField"
 
 export default function AgendaPage() {
     const [modalOpen, setModalOpen] = useState(false)
@@ -39,14 +40,8 @@ export default function AgendaPage() {
         <PageFrame
             header={{
                 center: (
-                    <SelectBar
-                        layer={2}
-                        options={[
-                            { value: "today", label: "Today" },
-                            { value: "tomorrow", label: "Tomorrow" }
-                        ]}
-                        value={tabMap[date.toLocaleDateString("en-CA")]}
-                        onChange={handleTabChange}
+                    <LabelField
+                        label="May 13, 2026"
                     />
                 ),
                 right: (

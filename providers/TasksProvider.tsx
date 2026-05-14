@@ -8,10 +8,14 @@ export default function TasksProvider(props: {
     children: ReactNode
 }) {
     const [tasks, setTasks] = useState<Task[]>([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         API.get<{ tasks: Task[] }>("/api/v1/tasks", true).then(data => {
             setTasks(data.tasks)
+            setLoading(false)
+        }).catch(() => {
+            setLoading(false)
         })
     }, [])
 
@@ -37,7 +41,8 @@ export default function TasksProvider(props: {
                 tasks,
                 addTask,
                 updateTask,
-                removeTask
+                removeTask,
+                loading
             }}
         >
             {props.children}

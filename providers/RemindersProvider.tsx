@@ -8,10 +8,14 @@ export default function RemindersProvider(props: {
     children: ReactNode
 }) {
     const [reminders, setReminders] = useState<Reminder[]>([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         API.get<{ reminders: Reminder[] }>("/api/v1/reminders", true).then(data => {
             setReminders(data.reminders)
+            setLoading(false)
+        }).catch(() => {
+            setLoading(false)
         })
     }, [])
 
@@ -37,7 +41,8 @@ export default function RemindersProvider(props: {
                 reminders,
                 addReminder,
                 updateReminder,
-                removeReminder
+                removeReminder,
+                loading
             }}
         >
             {props.children}

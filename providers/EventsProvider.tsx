@@ -8,10 +8,14 @@ export default function EventsProvider(props: {
     children: ReactNode
 }) {
     const [events, setEvents] = useState<Event[]>([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         API.get<{ events: [] }>("/api/v1/events", true).then(data => {
             setEvents(data.events)
+            setLoading(false)
+        }).catch(() => {
+            setLoading(false)
         })
     }, [])
 
@@ -37,7 +41,8 @@ export default function EventsProvider(props: {
                 events,
                 addEvent,
                 updateEvent,
-                removeEvent
+                removeEvent,
+                loading
             }}
         >
             {props.children}

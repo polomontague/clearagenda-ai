@@ -1,0 +1,16 @@
+.background{
+    width: 100%;
+    padding: var(--spacing-medium);
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--outer-border-radius);
+}
+
+.date{
+    font-size: 24px;
+    font-weight: bolder;
+}
+
+.time{
+    color: var(--layer-2-light);
+}

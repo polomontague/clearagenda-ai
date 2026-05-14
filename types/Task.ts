@@ -45,6 +45,8 @@ export type RepeatingTask = BaseTask & {
     repeat: Repeat
 }
 
+export type Step = OnceStep | RepeatingStep
+
 type Task = OnceTask | RepeatingTask
 
 export default Task

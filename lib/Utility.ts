@@ -2,9 +2,9 @@ import Item, { Task, Event, Repeat } from "@/types/Item"
 import User from "@/types/User"
 
 const Utility = {
-    formatDate: (date: Date) => {
+    formatDate: (date: Date, noToday?: boolean) => {
         const today = new Date()
-        if (date.toLocaleDateString("en-CA") === today.toLocaleDateString("en-CA")) return "Today"
+        if (!noToday && date.toLocaleDateString("en-CA") === today.toLocaleDateString("en-CA")) return "Today"
         const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
         return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
     },
@@ -177,23 +177,18 @@ const Utility = {
         ends.setMinutes(ends.getMinutes() + item.duration)
         return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
     },
-    formatTaskLength: (item: Task) => {
-        let minutes = 0
-        item.steps.forEach(step => minutes += step.duration)
-        return Utility.formatDuration(minutes)
-    },
     getItemStatus: (item: Item, accent: User["preferences"]["accent"]): {
         code: "completed" | "overdue" | "upcoming" | "in_progress" | "repeating" | "ended",
         color: string,
         label: string
     } => {
         const COLORS = {
-        sky: accent === "sky" ? "var(--turquoise)" : "var(--sky)",
-        red: accent === "red" ? "var(--coral)" : "var(--red)",
-        yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
-        lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
-        gray: "var(--layer-4-light)"
-    }
+            sky: accent === "sky" ? "var(--turquoise)" : "var(--sky)",
+            red: accent === "red" ? "var(--coral)" : "var(--red)",
+            yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
+            lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
+            gray: "var(--layer-4-light)"
+        }
         if (item.type === "task") {
             if (item.occurs === "once") {
                 const completion = Utility.getTaskCompletion(item)

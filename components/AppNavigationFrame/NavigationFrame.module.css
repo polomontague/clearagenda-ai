@@ -105,6 +105,12 @@
         color: var(--accent-contrast);
     }
 
+    .containerBtnMore{
+        position: absolute;
+        left: var(--spacing-large);
+        bottom: var(--spacing-large);
+    }
+
     .main{
         margin-left: var(--sidebar-width);
     }

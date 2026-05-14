@@ -5,12 +5,14 @@ const EventsContext = createContext<{
     events: Event[],
     addEvent: (event: Event) => void,
     updateEvent: (event: Event) => void,
-    removeEvent: (event: Event) => void
+    removeEvent: (event: Event) => void,
+    loading: boolean
 }>({
     events: [],
     addEvent: () => {},
     updateEvent: () => {},
-    removeEvent: () => {}
+    removeEvent: () => {},
+    loading: true
 })
 
 export default EventsContext

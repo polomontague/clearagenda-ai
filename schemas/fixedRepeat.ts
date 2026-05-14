@@ -12,8 +12,8 @@ const ordinal = z.union([
     z.literal(-2)
 ], "repeat.ordinal must be 1, 2, 3, 4, 5, -1, or -2")
 const weekday = z.number("repeat.weekday must be a number").refine(value => [0, 1, 2, 3, 4, 5, 6].includes(value), "repeat.weekday must be 0-6")
-const starts = z.string("repeat.starts must be a string").trim().refine(value => Validation.isoDateTime(value), "repeat.starts must be a valid ISO 8601 datetime")
-const ends = z.string("repeats.ends must be a string").trim().refine(value => Validation.isoDateTime(value), "repeats.ends must be a valid ISO 8601 datetime").optional()
+const starts = z.string("repeat.starts must be a string").trim().refine(value => Validation.date(value), "repeat.starts must be a valid date")
+const ends = z.string("repeats.ends must be a string").trim().refine(value => Validation.date(value), "repeats.ends must be a valid date").optional()
 const daily = z.object({
     frequency: z.literal("daily", 'frequency must be "daily", "weekly", "monthly", or "yearly"'),
     interval,
