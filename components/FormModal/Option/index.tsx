@@ -1,7 +1,6 @@
 import styles from "./Option.module.css"
 import { ReactElement, cloneElement, useState } from "react"
 import { RightArrowIcon } from "@/components/Icons"
-import InnerValue from "@/components/InnerValue"
 import Slide, { SlideProps } from "../Slide"
 
 type SlideElement = ReactElement<SlideProps, typeof Slide>

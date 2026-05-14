@@ -1,6 +1,6 @@
 "use client"
 import styles from "./NavigationFrame.module.css"
-import { ReactElement, ReactNode, useState } from "react"
+import { ReactElement, ReactNode, useState, useContext } from "react"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
 import { CalendarIcon, BrainIcon, GearIcon, PlusIcon, LogoutIcon, MenuIcon } from "@/components/Icons"
@@ -18,6 +18,12 @@ import FieldFrame from "../FieldFrame"
 import TaskForm from "../TaskForm"
 import EventForm from "../EventForm"
 import ReminderForm from "../ReminderForm"
+import TasksContext from "@/contexts/TasksContext"
+import EventsContext from "@/contexts/EventsContext"
+import RemindersContext from "@/contexts/RemindersContext"
+import Task from "@/types/Task"
+import Event from "@/types/Event"
+import Reminder from "@/types/Reminder"
 
 type Link = {
     type: "link",
@@ -78,10 +84,28 @@ export default function NavigationFrame(props: NavigationFrameProps) {
         }
     ]
     const [type, setType] = useState<"task" | "event" | "reminder">("task")
+    const { addTask } = useContext(TasksContext)
+    const { addEvent } = useContext(EventsContext)
+    const { addReminder } = useContext(RemindersContext)
 
     const handleAddItemSuccess = (item: Item) => {
         setAddItemModalOpen(false)
         console.log(item)
+    }
+
+    const handleCreateTaskSuccess = (task: Task) => {
+        addTask(task)
+        setAddItemModalOpen(false)
+    }
+
+    const handleCreateEventSuccess = (event: Event) => {
+        addEvent(event)
+        setAddItemModalOpen(false)
+    }
+
+    const handleCreateReminderSuccess = (reminder: Reminder) => {
+        addReminder(reminder)
+        setAddItemModalOpen(false)
     }
 
     function handleLogoutClick() {
@@ -152,11 +176,11 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                             onChange={setType}
                         />
                         {type === "task" ? (
-                            <TaskForm />
+                            <TaskForm mode="new" onSuccess={handleCreateTaskSuccess} />
                         ) : type === "event" ? (
-                            <EventForm />
+                            <EventForm mode="new" onSuccess={handleCreateEventSuccess} />
                         ) : type === "reminder" ? (
-                            <ReminderForm />
+                            <ReminderForm mode="new" onSuccess={handleCreateReminderSuccess} />
                         ) : <></>}
                     </FieldFrame>
                 </FormModal>

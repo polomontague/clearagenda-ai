@@ -17,6 +17,11 @@ export default function Modal(props: ModalProps) {
     return (
         <div className={`${styles.overlay} ${props.open ? styles.open : styles.closed}`}>
             <div className={styles.window}>
+                <div className={styles.containerScroll}>
+                    <div className={styles.containerChildren}>
+                        {props.children}
+                    </div>
+                </div>
                 <header className={styles.header}>
                     <h6 className={styles.label}>{props.label}</h6>
                     <button
@@ -27,11 +32,6 @@ export default function Modal(props: ModalProps) {
                         Close
                     </button>
                 </header>
-                <div className={styles.containerScroll}>
-                    <div className={styles.containerChildren}>
-                        {props.children}
-                    </div>
-                </div>
             </div>
         </div>
     )

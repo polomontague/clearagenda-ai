@@ -3,7 +3,7 @@ import Form from "../Form"
 import Fieldset from "../Fieldset"
 import TextArea from "../TextArea"
 import FieldFrame from "../FieldFrame"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SelectBar from "../SelectBar"
 import { Option, Slide } from "@/components/FormModal"
 import Repeat from "../Repeat"
@@ -14,26 +14,81 @@ import DatePicker from "../DatePicker"
 import Toggle from "../Toggle"
 import InnerButton from "../InnerButton"
 import RepeatType from "@/types/Repeat"
+import DEFAULTS from "./DEFAULTS"
+import Loading from "../Loading"
+import Alert from "../Alert"
+import API from "@/lib/API"
+import { DoneButton } from "@/components/FormModal"
+import Task from "@/types/Task"
 
-export default function TaskForm() {
-    const [description, setDescription] = useState("")
-    const [occurs, setOccurs] = useState<"once" | "repeating">("once")
-    const [hasDeadline, setHasDeadline] = useState(false)
-    const [onceDeadline, setOnceDeadline] = useState(new Date())
-    const [repeatingDeadline, setRepeatingDeadline] = useState(1)
-    const [repeat, setRepeat] = useState<RepeatType>({
-        frequency: "daily",
-        interval: 1,
-        starts: Utility.getDateKey(new Date())
-    })
+type BaseProps = {
+    onSuccess: (task: Task) => void
+}
+
+type NewProps = BaseProps & {
+    mode: "new"
+}
+
+type EditProps = BaseProps & {
+    mode: "edit",
+    task: Task
+}
+
+type TaskFormProps = NewProps | EditProps
+
+export default function TaskForm(props: TaskFormProps) {
+    const [description, setDescription] = useState(DEFAULTS.description)
+    const [occurs, setOccurs] = useState<"once" | "repeating">(DEFAULTS.occurs)
+    const [hasDeadline, setHasDeadline] = useState(DEFAULTS.hasDeadline)
+    const [onceDeadline, setOnceDeadline] = useState(DEFAULTS.onceDeadline)
+    const [repeatingDeadline, setRepeatingDeadline] = useState(DEFAULTS.repeatingDeadline)
+    const [repeat, setRepeat] = useState<RepeatType>(DEFAULTS.repeat)
     const [open, setOpen] = useState<"deadline" | undefined>(undefined)
+    const [doneDisabled, setDoneDisabled] = useState(true)
+    const [loading, setLoading] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertOpen, setAlertOpen] = useState(false)
 
-    const handleSubmit = () => {
+    useEffect(() => {
+        setDoneDisabled(!validate(description))
+    }, [description])
 
+    const validate = (description: string): boolean => {
+        if (!description) return false
+        return true
     }
 
     const formatDays = (days: number) => {
         return `${days} ${days === 1 ? "Day" : "Days"}`
+    }
+
+    const handleSubmit = () => {
+        setLoading(true)
+        const method = props.mode === "new" ? "post" : "put"
+        const body = {
+            occurs,
+            description,
+            deadline: hasDeadline ? (occurs === "once" ? Utility.getDateKey(onceDeadline) : repeatingDeadline) : undefined,
+            repeat: occurs === "repeating" ? repeat : undefined
+        }
+        API[method]<{ task: Task }>("/api/v1/tasks", body, true).then(data => {
+            setLoading(false)
+            if (props.mode === "new") clear()
+            props.onSuccess(data.task)
+        }).catch(err => {
+            setLoading(false)
+            setAlertMessage(err.message)
+            setAlertOpen(true)
+        })
+    }
+
+    const clear = () => {
+        setDescription(DEFAULTS.description)
+        setOccurs(DEFAULTS.occurs)
+        setHasDeadline(DEFAULTS.hasDeadline)
+        setOnceDeadline(DEFAULTS.onceDeadline)
+        setRepeatingDeadline(DEFAULTS.repeatingDeadline)
+        setRepeat(DEFAULTS.repeat)
     }
 
     return (
@@ -78,12 +133,17 @@ export default function TaskForm() {
                             </>
                         ) : occurs === "repeating" ? (
                             <>
-                            <LabelField fieldset label="Deadline">
-                                <InnerButton
-                                    label={formatDays(repeatingDeadline)}
-                                    onClick={() => setOpen(open === "deadline" ? undefined : "deadline")}
-                                />
-                            </LabelField>
+                                <LabelField fieldset label="Deadline">
+                                    <Toggle on={hasDeadline} onChange={setHasDeadline}/>
+                                </LabelField>
+                                {hasDeadline ? (
+                                    <LabelField fieldset label="Days Out">
+                                        <InnerButton
+                                            label={formatDays(repeatingDeadline)}
+                                            onClick={() => setOpen(open === "deadline" ? undefined : "deadline")}
+                                        />
+                                    </LabelField>
+                                ) : null}
                                 <Option 
                                     fieldset
                                     label="Repeat"
@@ -98,6 +158,9 @@ export default function TaskForm() {
                     </Fieldset>
                 </FieldFrame>
             </Collapses>
+            <Loading loading={loading} />
+            <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+            <DoneButton disabled={doneDisabled} />
         </Form>
     )
 }

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Form from "../Form"
 import TextInput from "../TextInput"
 import FieldFrame from "../FieldFrame"
@@ -13,22 +13,80 @@ import DurationSelect from "../DurationSelect"
 import Repeat from "../Repeat"
 import TextArea from "../TextArea"
 import RepeatType from "@/types/Repeat"
+import Loading from "../Loading"
+import { DoneButton } from "@/components/FormModal"
+import API from "@/lib/API"
+import Event from "@/types/Event"
+import Alert from "../Alert"
+import DEFAULTS from "./DEFAULTS"
 
-export default function EventForm() {
-    const [name, setName] = useState("")
-    const [occurs, setOccurs] = useState<"once" | "repeating">("once")
-    const [onceStarts, setOnceStarts] = useState(Utility.roundTime(new Date()))
-    const [duration, setDuration] = useState(60)
-    const [repeat, setRepeat] = useState<RepeatType>({
-        frequency: "daily",
-        interval: 1,
-        starts: Utility.getDateKey(new Date())
-    })
-    const [timezone, setTimezone] = useState("America/New_York")
-    const [notes, setNotes] = useState("")
+type BaseProps = {
+    onSuccess: (event: Event) => void
+}
+
+type NewProps = BaseProps & {
+    mode: "new"
+}
+
+type EditProps = BaseProps & {
+    mode: "edit",
+    event: Event
+}
+
+type EventFormProps = NewProps | EditProps
+
+export default function EventForm(props: EventFormProps) {
+    const [name, setName] = useState(DEFAULTS.name)
+    const [occurs, setOccurs] = useState<"once" | "repeating">(DEFAULTS.occurs)
+    const [starts, setStarts] = useState(DEFAULTS.starts)
+    const [duration, setDuration] = useState(DEFAULTS.duration)
+    const [timezone, setTimezone] = useState(DEFAULTS.timezone)
+    const [repeat, setRepeat] = useState<RepeatType>(DEFAULTS.repeat)
+    const [notes, setNotes] = useState(DEFAULTS.notes)
+    const [doneDisabled, setDoneDisabled] = useState(true)
+    const [loading, setLoading] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertOpen, setAlertOpen] = useState(false)
+
+    useEffect(() => {
+        setDoneDisabled(!validate(name))
+    }, [name])
+
+    const validate = (name: string): boolean => {
+        if (!name) return false
+        return true
+    }
 
     const handleSubmit = () => {
+        setLoading(true)
+        const method = props.mode === "new" ? "post" : "put"
+        const body = {
+            occurs,
+            name,
+            starts: occurs === "once" ? starts.toISOString() : Utility.formatTime(starts),
+            duration,
+            timezone,
+            repeat: occurs === "once" ? repeat : undefined
+        }
+        API[method]<{ event: Event }>("/api/v1/events", body, true).then(data => {
+            setLoading(false)
+            if (props.mode === "new") clear()
+            props.onSuccess(data.event)
+        }).catch(err => {
+            setLoading(false)
+            setAlertMessage(err.message)
+            setAlertOpen(true)
+        })
+    }
 
+    const clear = () => {
+        setName(DEFAULTS.name)
+        setOccurs(DEFAULTS.occurs)
+        setStarts(DEFAULTS.starts)
+        setDuration(DEFAULTS.duration)
+        setTimezone(DEFAULTS.timezone)
+        setRepeat(DEFAULTS.repeat)
+        setNotes(DEFAULTS.notes)
     }
 
     return (
@@ -51,11 +109,11 @@ export default function EventForm() {
                         <>
                             <LabelField fieldset label="Starts">
                                 <InnerButton
-                                    label={Utility.formatDate(onceStarts)}
+                                    label={Utility.formatDate(starts)}
                                     onClick={() => {}}
                                 />
                                 <InnerButton
-                                    label={Utility.formatTime(onceStarts)}
+                                    label={Utility.formatTime(starts)}
                                     onClick={() => {}}
                                 />
                             </LabelField>
@@ -69,7 +127,7 @@ export default function EventForm() {
                         <>
                             <LabelField fieldset label="Starts">
                                 <InnerButton
-                                    label={Utility.formatTime(onceStarts)}
+                                    label={Utility.formatTime(starts)}
                                     onClick={() => {}}
                                 />
                             </LabelField>
@@ -87,6 +145,9 @@ export default function EventForm() {
                     ) : null}
                 </Fieldset>
                 <TextArea rows={6} placeholder="Notes..." value={notes} onChange={setNotes} />
+                <Loading loading={loading} />
+                <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+                <DoneButton disabled={doneDisabled} />
             </FieldFrame>
         </Form>
     )

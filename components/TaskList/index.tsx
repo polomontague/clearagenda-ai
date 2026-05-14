@@ -1,5 +1,5 @@
 "use client"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import List, { ListItem } from "@/components/List"
 import Task from "@/types/Task"
 import Card from "@/components/Card"
@@ -11,6 +11,8 @@ import FieldFrame from "@/components/FieldFrame"
 import UserContext from "@/contexts/UserContext"
 import User from "@/types/User"
 import { OnceTask } from "@/types/Item"
+import Button from "../Button"
+import TaskModal from "../TaskModal"
 
 type TaskListProps = {
     tasks: Task[]
@@ -18,6 +20,8 @@ type TaskListProps = {
 
 export default function TaskList(props: TaskListProps) {
     const { user } = useContext(UserContext)
+    const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
+    const [modalOpen, setModalOpen] = useState(false)
 
     const getLength = (task: Task) => {
         let minutes = task.steps.reduce((total, step) => total + step.duration, 0)
@@ -63,42 +67,60 @@ export default function TaskList(props: TaskListProps) {
         return Math.round((completedMinutes / totalMinutes) * 100) / 100
     }
 
+    const handleTaskClick = (task: Task) => {
+        setCurrentTask(task)
+        setModalOpen(true)
+    }
+
     if (!user) return
 
     return (
-        <List>
-            {props.tasks.map((task, i) => {
-                const status = getStatus(task, user)
-                return (
-                    <ListItem key={i}>
-                        <Card
-                            label={task.name}
-                            buttons={[
-                                {
-                                    icon: <EditIcon />,
-                                    onClick: () => {}
-                                },
-                                {
-                                    icon: <TrashCanIcon />,
-                                    onClick: () => {}
-                                }
-                            ]}
-                        >
-                            <FieldFrame>
-                                <LabelField label="Length">
-                                    <InnerValue label={getLength(task)} />
-                                </LabelField>
-                                <LabelField label="Status">
-                                    <InnerValue
-                                        color={status.color}
-                                        label={status.label}
+        <>
+            <List>
+                {props.tasks.map((task, i) => {
+                    const status = getStatus(task, user)
+                    return (
+                        <ListItem key={i}>
+                            <Card
+                                label={task.name}
+                                buttons={[
+                                    {
+                                        icon: <EditIcon />,
+                                        onClick: () => {}
+                                    },
+                                    {
+                                        icon: <TrashCanIcon />,
+                                        onClick: () => {}
+                                    }
+                                ]}
+                            >
+                                <FieldFrame>
+                                    <LabelField label="Length">
+                                        <InnerValue label={getLength(task)} />
+                                    </LabelField>
+                                    <LabelField label="Status">
+                                        <InnerValue
+                                            color={status.color}
+                                            label={status.label}
+                                        />
+                                    </LabelField>
+                                    <Button
+                                        label="See Task"
+                                        onClick={() => handleTaskClick(task)}
                                     />
-                                </LabelField>
-                            </FieldFrame>
-                        </Card>
-                    </ListItem>
-                )
-            })}
-        </List>
+                                </FieldFrame>
+                            </Card>
+                        </ListItem>
+                    )
+                })}
+            </List>
+            {currentTask ? (
+                <TaskModal
+                    task={currentTask}
+                    open={modalOpen}
+                    onRequestClose={() => setModalOpen(false)}
+                />
+            ) : null}
+        </>
     )
 }
