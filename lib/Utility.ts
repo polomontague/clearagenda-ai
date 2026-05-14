@@ -1,5 +1,7 @@
 import Item, { Task, Event, Repeat } from "@/types/Item"
 import User from "@/types/User"
+import { timeStamp } from "console"
+import { DateTime } from "luxon"
 
 const Utility = {
     formatDate: (date: Date, noToday?: boolean) => {
@@ -101,7 +103,7 @@ const Utility = {
         }
         return "Repeats"
     },
-    getRepeatLabel: (repeat: Repeat): string => {
+    getRepeatLabel: (repeat: Repeat, timezone?: string): string => {
         const WEEKDAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         const MONTHS = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
@@ -160,8 +162,20 @@ const Utility = {
                 message = `${base} on the ${ord} ${weekday}${monthPart}`
             }
         }
-        const startsDate = new Date(repeat.starts)
-        const endsDate = repeat.ends ? new Date(repeat.ends) : undefined
+        const [ startsYear, startsMonth, startsDay ] = repeat.starts.split("-").map(Number)
+        let startsDate = new Date(startsYear, startsMonth, startsDay)
+        if (timezone) {
+            startsDate = DateTime.fromObject({ year: startsYear, month: startsMonth, day: startsDay }, { zone: timezone }).toJSDate()
+        }
+        let endsDate
+        if (repeat.ends) {
+            const [endsYear, endsMonth, endsDay] = repeat.ends.split("-").map(Number)
+            if (timezone) {
+                endsDate = DateTime.fromObject({ year: endsYear, month: endsMonth, day: endsDay }, { zone: timezone }).toJSDate()
+            } else {
+                endsDate = new Date(endsYear, endsMonth, endsDay)
+            }
+        }
         const starts = `${MONTHS[startsDate.getMonth()]} ${Utility.formatOrdinal(startsDate.getDate())}, ${startsDate.getFullYear()}`
         const ends = endsDate ? `${MONTHS[endsDate.getMonth()]} ${Utility.formatOrdinal(endsDate.getDate())}, ${endsDate.getFullYear()}` : ""
         if (ends) {
@@ -233,6 +247,19 @@ const Utility = {
             if (item.occurs === "repeating") return false // Ongoing repeat ing events are not completed
         }
         return true
+    },
+    roundTime: (date: Date) => {
+        const result = new Date(date)
+        const minutes = result.getMinutes()
+        const roundedMinutes = Math.ceil(minutes / 5) * 5
+        result.setMinutes(roundedMinutes, 0, 0)
+        return result
+    },
+    getDateKey: (date: Date) => {
+        const year = date.getFullYear()
+        const months = date.getMonth()
+        const day = date.getDate()
+        return `${year}-${(months + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`
     }
 }
 

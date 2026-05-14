@@ -17,6 +17,7 @@ import SelectBar from "../SelectBar"
 import FieldFrame from "../FieldFrame"
 import TaskForm from "../TaskForm"
 import EventForm from "../EventForm"
+import ReminderForm from "../ReminderForm"
 
 type Link = {
     type: "link",
@@ -154,6 +155,8 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                             <TaskForm />
                         ) : type === "event" ? (
                             <EventForm />
+                        ) : type === "reminder" ? (
+                            <ReminderForm />
                         ) : <></>}
                     </FieldFrame>
                 </FormModal>

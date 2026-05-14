@@ -1,31 +1,30 @@
 "use client"
-import { useState } from "react"
 import Form from "../Form"
-import TextInput from "../TextInput"
 import FieldFrame from "../FieldFrame"
+import TextInput from "../TextInput"
+import { useState, useEffect } from "react"
 import Fieldset from "../Fieldset"
 import SelectBar from "../SelectBar"
 import LabelField from "../LabelField"
 import InnerButton from "../InnerButton"
 import Utility from "@/lib/Utility"
 import { Option, Slide } from "@/components/FormModal"
-import DurationSelect from "../DurationSelect"
 import Repeat from "../Repeat"
-import TextArea from "../TextArea"
 import RepeatType from "@/types/Repeat"
 
-export default function EventForm() {
+export default function ReminderForm() {
     const [name, setName] = useState("")
     const [occurs, setOccurs] = useState<"once" | "repeating">("once")
-    const [onceStarts, setOnceStarts] = useState(Utility.roundTime(new Date()))
-    const [duration, setDuration] = useState(60)
+    const [at, setAt] = useState(Utility.roundTime(new Date()))
     const [repeat, setRepeat] = useState<RepeatType>({
         frequency: "daily",
         interval: 1,
         starts: Utility.getDateKey(new Date())
     })
-    const [timezone, setTimezone] = useState("America/New_York")
-    const [notes, setNotes] = useState("")
+
+    useEffect(() => {
+        console.log('Repeat:', repeat)
+    }, [repeat])
 
     const handleSubmit = () => {
 
@@ -36,7 +35,7 @@ export default function EventForm() {
             <FieldFrame>
                 <TextInput placeholder="Name..." value={name} onChange={setName} />
                 <Fieldset
-                    description={occurs === "repeating" ? Utility.getRepeatLabel(repeat, timezone) : undefined}
+                    description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
                 >
                     <SelectBar
                         fieldset
@@ -49,44 +48,33 @@ export default function EventForm() {
                     />
                     {occurs === "once" ? (
                         <>
-                            <LabelField fieldset label="Starts">
+                            <LabelField fieldset label="At">
                                 <InnerButton
-                                    label={Utility.formatDate(onceStarts)}
+                                    label={Utility.formatDate(at)}
                                     onClick={() => {}}
                                 />
                                 <InnerButton
-                                    label={Utility.formatTime(onceStarts)}
+                                    label={Utility.formatTime(at)}
                                     onClick={() => {}}
                                 />
                             </LabelField>
-                            <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
-                                <Slide>
-                                    <DurationSelect value={duration} onChange={setDuration} />
-                                </Slide>
-                            </Option>
                         </>
                     ) : occurs === "repeating" ? (
                         <>
-                            <LabelField fieldset label="Starts">
+                            <LabelField fieldset label="At">
                                 <InnerButton
-                                    label={Utility.formatTime(onceStarts)}
+                                    label={Utility.formatTime(at)}
                                     onClick={() => {}}
                                 />
                             </LabelField>
-                            <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
-                                <Slide>
-                                    <DurationSelect value={duration} onChange={setDuration} />
-                                </Slide>
-                            </Option>
                             <Option fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
                                 <Slide>
-                                    <Repeat timezone={timezone} value={repeat} onChange={setRepeat} />
+                                    <Repeat value={repeat} onChange={setRepeat} />
                                 </Slide>
                             </Option>
                         </>
                     ) : null}
                 </Fieldset>
-                <TextArea rows={6} placeholder="Notes..." value={notes} onChange={setNotes} />
             </FieldFrame>
         </Form>
     )

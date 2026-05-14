@@ -1,5 +1,5 @@
 import Task from "@/types/Task"
-import getDateKey from "./getDateKey"
+import Utility from "@/lib/Utility"
 
 export default function getCurrentTaskAndStep(tasks: Task[], date: Date) {
     for (let i = 0; i < tasks.length; i++) {
@@ -16,7 +16,7 @@ export default function getCurrentTaskAndStep(tasks: Task[], date: Date) {
             }
             if (task.occurs === "repeating") {
                 const step = task.steps[i2]
-                const dateKey = getDateKey(date)
+                const dateKey = Utility.getDateKey(date)
                 const completed = Boolean(step.completions.find(completion => completion.date === dateKey))
                 if (!completed) {
                     return {

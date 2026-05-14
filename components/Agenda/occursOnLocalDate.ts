@@ -1,10 +1,10 @@
 import Repeat from "@/types/Repeat"
-import getDateKey from "./getDateKey"
+import Utility from "@/lib/Utility"
 import getLocalNthWeekdayOfMonth from "./getLocalNthWeekdayOfMonth"
 
 export default function occursOnLocalDate(repeat: Repeat, date: Date): boolean {
     const { starts, ends } = repeat
-    const dateKey = getDateKey(date)
+    const dateKey = Utility.getDateKey(date)
     if (dateKey < starts) return false
     if (ends && dateKey > ends) return false
     if (repeat.frequency === "daily") {
@@ -24,7 +24,7 @@ export default function occursOnLocalDate(repeat: Repeat, date: Date): boolean {
         if (repeat.type === "weekday") {
             const day = getLocalNthWeekdayOfMonth(date.getFullYear(), date.getMonth(), repeat.weekday, repeat.ordinal)
             if (!day) return false
-            return getDateKey(day) === getDateKey(date)
+            return Utility.getDateKey(day) === Utility.getDateKey(date)
         }
     }
     if (repeat.frequency === "yearly") {
@@ -38,7 +38,7 @@ export default function occursOnLocalDate(repeat: Repeat, date: Date): boolean {
         if (repeat.type === "weekday") {
             const day = getLocalNthWeekdayOfMonth(date.getFullYear(), date.getMonth(), repeat.weekday, repeat.ordinal)
             if (!day) return false
-            return getDateKey(day) === getDateKey(date)
+            return Utility.getDateKey(day) === Utility.getDateKey(date)
         }
     }
     return false

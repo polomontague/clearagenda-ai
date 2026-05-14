@@ -19,31 +19,29 @@ import Toggle from "../Toggle"
 import getIntervalLabel from "./getIntervalLabel"
 import getWeekdaysLabel from "./getWeekdaysLabel"
 import getMonthsLabel from "./getMonthsLabel"
-
-export type RepeatValue = Omit<RepeatType, "starts" | "ends"> & {
-    starts: Date,
-    ends?: Date
-}
+import DEFAULTS from "./DEFULTS"
+import getRepeat from "./getRepeat"
 
 type RepeatProps = {
-    value: RepeatValue,
-    onChange: (value: RepeatValue) => void
+    timezone?: string,
+    value: RepeatType,
+    onChange: (value: RepeatType) => void
 }
 
-export default function Repeat(props: RepeatProps) {
-    const [frequency, setFrequency] = useState<"daily" | "weekly" | "monthly" | "yearly">("daily")
-    const [interval, setInterval] = useState(1)
-    const [weekdays, setWeekdays] = useState([ new Date().getDay() ])
-    const [monthlyType, setMonthlyType] = useState<"days" | "weekday">("days")
-    const [days, setDays] = useState([ new Date().getDate() ])
-    const [ordinal, setOrdinal] = useState<Ordinal>(1)
-    const [weekday, setWeekday] = useState(new Date().getDay())
-    const [months, setMonths] = useState([ new Date().getMonth() ])
-    const [yearlyType, setYearlyType] = useState<"day" | "weekday">("day")
-    const [day, setDay] = useState(new Date().getDate())
-    const [repeatStart, setRepeatStart] = useState(new Date())
-    const [hasRepeatEnd, setHasRepeatEnd] = useState(false)
-    const [repeatEnd, setRepeatEnd] = useState(new Date())
+export default function Repeat({ timezone, value, onChange }: RepeatProps) {
+    const [frequency, setFrequency] = useState<"daily" | "weekly" | "monthly" | "yearly">(DEFAULTS.frequency)
+    const [interval, setInterval] = useState(DEFAULTS.interval)
+    const [weekdays, setWeekdays] = useState(DEFAULTS.weekdays)
+    const [monthlyType, setMonthlyType] = useState<"days" | "weekday">(DEFAULTS.monthlyType)
+    const [days, setDays] = useState(DEFAULTS.days)
+    const [ordinal, setOrdinal] = useState<Ordinal>(DEFAULTS.ordinal)
+    const [weekday, setWeekday] = useState(DEFAULTS.weekday)
+    const [months, setMonths] = useState(DEFAULTS.months)
+    const [yearlyType, setYearlyType] = useState<"day" | "weekday">(DEFAULTS.yearlyType)
+    const [day, setDay] = useState(DEFAULTS.day)
+    const [starts, setStarts] = useState(DEFAULTS.starts)
+    const [hasEnds, setHasEnds] = useState(DEFAULTS.hasEnds)
+    const [ends, setEnds] = useState(DEFAULTS.ends)
     const [open, setOpen] = useState<"start_repeating" | "stop_repeating" | undefined>(undefined)
     const frequencyLabelMap: Record<string, string> = {
         daily: "Daily",
@@ -52,13 +50,22 @@ export default function Repeat(props: RepeatProps) {
         yearly: "Yearly"
     }
 
+    useEffect(() => {
+        onChange(getRepeat({ frequency, interval, weekdays, monthlyType, days, ordinal, weekday, months, yearlyType, day, starts, hasEnds, ends }))
+    }, [frequency, interval, weekdays, monthlyType, days, ordinal, weekday, months, yearlyType, day, starts, hasEnds, ends])
+
+    const loadLocalDate = (date: string) => {
+        const [year, month, day] = date.split("-").map(Number)
+        return new Date(year, month - 1, day)
+    }
+
     return (
         <Collapses value={open}>
         <FieldFrame>
             <Fieldset
-                description={"ergreg"}
+                description={Utility.getRepeatLabel(value, timezone)}
             >
-                <Option fieldset label="Frequency" value={frequencyLabelMap[frequency]}>
+                <Option fieldset label="Frequency" value={frequencyLabelMap[value.frequency]}>
                     <Slide>
                         <SelectList
                             options={[
@@ -67,12 +74,12 @@ export default function Repeat(props: RepeatProps) {
                                 { value: "monthly", label: "Monthly" },
                                 { value: "yearly", label: "Yearly" }
                             ]}
-                            value={frequency}
+                            value={value.frequency}
                             onChange={setFrequency}
                         />
                     </Slide>
                 </Option>
-                <Option fieldset label="Every" value={getIntervalLabel(frequency, interval)}>
+                <Option fieldset label="Every" value={getIntervalLabel(value.frequency, value.interval)}>
                     <Slide>
                         <MultiSelect
                             options={{
@@ -81,12 +88,12 @@ export default function Repeat(props: RepeatProps) {
                                     label: `${i + 1}`
                                 }))
                             }}
-                            value={{ days: interval }}
+                            value={{ days: value.interval }}
                             onChange={(val) => setInterval(val.days)}
                         />
                     </Slide>
                 </Option>
-                {frequency === "weekly" ? (
+                {value.frequency === "weekly" ? (
                     <Option
                         fieldset
                         label="Weekdays"
@@ -99,12 +106,12 @@ export default function Repeat(props: RepeatProps) {
                                     value: i,
                                     label: weekday
                                 }))}
-                                value={weekdays}
+                                value={value.weekdays}
                                 onChange={setWeekdays}
                             />
                         </Slide>
                     </Option>
-                ) : frequency === "monthly" ? (
+                ) : value.frequency === "monthly" ? (
                     <>
                         <SelectBar
                             fieldset
@@ -112,17 +119,17 @@ export default function Repeat(props: RepeatProps) {
                                 { value: "days", label: "Each" },
                                 { value: "weekday", label: "On The" }
                             ] as const}
-                            value={monthlyType}
+                            value={value.type}
                             onChange={setMonthlyType}
                         />
-                        {monthlyType === "days" ? (
-                            <DaySelect fieldset multiple value={days} onChange={setDays} />
-                        ) : monthlyType === "weekday" ? (
+                        {value.type === "days" ? (
+                            <DaySelect fieldset multiple value={value.days} onChange={setDays} />
+                        ) : value.type === "weekday" ? (
                             <NthWeekdaySelect
                                 fieldset
                                 value={{
-                                    ordinal: ordinal,
-                                    weekday: weekday
+                                    ordinal: value.ordinal,
+                                    weekday: value.weekday
                                 }}
                                 onChange={({ ordinal, weekday }) => {
                                     setOrdinal(ordinal)
@@ -131,12 +138,12 @@ export default function Repeat(props: RepeatProps) {
                             />
                         ) : null}
                     </>
-                ) : frequency === "yearly" ? (
+                ) : value.frequency === "yearly" ? (
                     <>
                         <Option
                             fieldset
                             label="Months"
-                            value={getMonthsLabel(months)}
+                            value={getMonthsLabel(value.months)}
                         >
                             <Slide>
                                 <SelectList
@@ -145,7 +152,7 @@ export default function Repeat(props: RepeatProps) {
                                         value: i,
                                         label: month
                                     }))}
-                                    value={months}
+                                    value={value.months}
                                     onChange={(val) => setMonths(val)}
                                 />
                             </Slide>
@@ -156,17 +163,17 @@ export default function Repeat(props: RepeatProps) {
                                 { value: "day", label: "Each" },
                                 { value: "weekday", label: "On The" }
                             ] as const}
-                            value={yearlyType}
+                            value={value.type}
                             onChange={setYearlyType}
                         />
-                        {yearlyType === "day" ? (
-                            <DaySelect fieldset value={day} onChange={setDay} />
-                        ) : yearlyType === "weekday" ? (
+                        {value.type === "day" ? (
+                            <DaySelect fieldset value={value.day} onChange={setDay} />
+                        ) : value.type === "weekday" ? (
                             <NthWeekdaySelect
                                 fieldset
                                 value={{
-                                    ordinal: ordinal,
-                                    weekday: weekday
+                                    ordinal: value.ordinal,
+                                    weekday: value.weekday
                                 }}
                                 onChange={({ ordinal, weekday }) => {
                                     setOrdinal(ordinal)
@@ -180,26 +187,26 @@ export default function Repeat(props: RepeatProps) {
             <Fieldset>
                 <LabelField fieldset label="Begin">
                     <InnerButton
-                        label={Utility.formatDate(repeatStart)}
+                        label={Utility.formatDate(loadLocalDate(value.starts))}
                         onClick={() => setOpen(open === "start_repeating" ? undefined : "start_repeating")}
                     />
                 </LabelField>
                 <Collapse value="start_repeating">
-                    <DatePicker fieldset value={repeatStart} onChange={setRepeatStart} />
+                    <DatePicker fieldset value={loadLocalDate(value.starts)} onChange={setStarts} />
                 </Collapse>
                 <LabelField fieldset label="End">
-                    <Toggle on={hasRepeatEnd} onChange={setHasRepeatEnd} />
+                    <Toggle on={Boolean(value.ends)} onChange={setHasEnds} />
                 </LabelField>
-                {hasRepeatEnd ? (
+                {value.ends ? (
                     <>
                         <LabelField fieldset label="On">
                             <InnerButton
-                                label={Utility.formatDate(repeatEnd)}
+                                label={Utility.formatDate(loadLocalDate(value.ends))}
                                 onClick={() => setOpen(open === "stop_repeating" ? undefined : "stop_repeating")}
                             />
                         </LabelField>
                         <Collapse value="stop_repeating">
-                            <DatePicker fieldset min={repeatStart} value={repeatEnd} onChange={setRepeatEnd} />
+                            <DatePicker fieldset min={loadLocalDate(value.starts)} value={loadLocalDate(value.ends)} onChange={setEnds} />
                         </Collapse>
                     </>
                 ) : null}

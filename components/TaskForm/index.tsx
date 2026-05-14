@@ -6,13 +6,14 @@ import FieldFrame from "../FieldFrame"
 import { useState } from "react"
 import SelectBar from "../SelectBar"
 import { Option, Slide } from "@/components/FormModal"
-import Repeat, { RepeatValue } from "../Repeat"
+import Repeat from "../Repeat"
 import LabelField from "../LabelField"
 import Collapses, { Collapse } from "../Collapses"
 import Utility from "@/lib/Utility"
 import DatePicker from "../DatePicker"
 import Toggle from "../Toggle"
 import InnerButton from "../InnerButton"
+import RepeatType from "@/types/Repeat"
 
 export default function TaskForm() {
     const [description, setDescription] = useState("")
@@ -20,11 +21,10 @@ export default function TaskForm() {
     const [hasDeadline, setHasDeadline] = useState(false)
     const [onceDeadline, setOnceDeadline] = useState(new Date())
     const [repeatingDeadline, setRepeatingDeadline] = useState(1)
-    const [repeat, setRepeat] = useState<RepeatValue>({
+    const [repeat, setRepeat] = useState<RepeatType>({
         frequency: "daily",
         interval: 1,
-        starts: new Date(),
-        ends: new Date()
+        starts: Utility.getDateKey(new Date())
     })
     const [open, setOpen] = useState<"deadline" | undefined>(undefined)
 
@@ -45,7 +45,9 @@ export default function TaskForm() {
                     >
                         <TextArea rows={8} fieldset placeholder="Describe the task..." value={description} onChange={setDescription} />
                     </Fieldset>
-                    <Fieldset>
+                    <Fieldset
+                        description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
+                    >
                         <SelectBar
                             fieldset
                             options={[
@@ -84,8 +86,8 @@ export default function TaskForm() {
                             </LabelField>
                                 <Option 
                                     fieldset
-                                    value="repeat"
                                     label="Repeat"
+                                    value={Utility.getShortRepeatLabel(repeat)}
                                 >
                                     <Slide>
                                         <Repeat value={repeat} onChange={setRepeat} />

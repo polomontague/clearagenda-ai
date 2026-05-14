@@ -1,5 +1,5 @@
 import Reminder from "@/types/Reminder"
-import getDateKey from "./getDateKey"
+import Utility from "@/lib/Utility"
 import occursOnLocalDate from "./occursOnLocalDate"
 
 export default function getDateReminders(reminders: Reminder[], date: Date): Reminder[] {
@@ -7,7 +7,7 @@ export default function getDateReminders(reminders: Reminder[], date: Date): Rem
     for (const reminder of reminders) {
         if (reminder.occurs === "once") {
             const atKey = reminder.at.slice(0, 10)
-            const dateKey = getDateKey(date)
+            const dateKey = Utility.getDateKey(date)
             if (atKey === dateKey) {
                 result.push(reminder)
             }

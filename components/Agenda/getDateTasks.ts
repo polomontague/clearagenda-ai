@@ -1,7 +1,7 @@
 import Task from "@/types/Task"
 import Event from "@/types/Event"
 import User from "@/types/User"
-import getDateKey from "./getDateKey"
+import Utility from "@/lib/Utility"
 import getDateEvents from "./getDateEvents"
 import occursOnLocalDate from "./occursOnLocalDate"
 import getWeekdayCapacity from "./getWeekdayCapacity"
@@ -25,7 +25,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
     // Step through days from today to target date
     const current = new Date(today)
     while (current.getTime() <= target.getTime()) {
-        const dateKey = getDateKey(current)
+        const dateKey = Utility.getDateKey(current)
         const capacity = getWeekdayCapacity(user, current)
         const eventOccupancy = getDateEventOccupancy(events, current)
         const completedTaskOccupancy = getDateCompletedTaskOccupancy(tasks, current)
@@ -47,7 +47,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
         }
         current.setDate(current.getDate() + 1)
     }
-    const scheduledStepInstances = scheduledStepsByDate[getDateKey(target)] ?? []
+    const scheduledStepInstances = scheduledStepsByDate[Utility.getDateKey(target)] ?? []
     // Group scheduled steps back into tasks
     const taskMap = new Map<number, Task>()
     for (const stepInstance of scheduledStepInstances) {
@@ -75,7 +75,7 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
     start.setHours(0, 0, 0, 0)
     const end = new Date(date)
     end.setHours(0, 0, 0, 0)
-    const startKey = getDateKey(start)
+    const startKey = Utility.getDateKey(start)
     for (const task of tasks) {
         // Once tasks
         if (task.occurs === "once") {
@@ -95,7 +95,7 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
         const current = new Date(start)
         while (current.getTime() <= end.getTime()) {
             if (occursOnLocalDate(task.repeat, current)) {
-                const occurrenceKey = getDateKey(current)
+                const occurrenceKey = Utility.getDateKey(current)
                 for (const step of task.steps) {
                     const completed = step.completions.some(completion => completion.date === occurrenceKey)
                     if (completed) continue
@@ -121,14 +121,14 @@ const getDateEventOccupancy = (events: Event[], date: Date): number => {
 }
 
 const getDateCompletedTaskOccupancy = (tasks: Task[], date: Date): number => {
-    const dateKey = getDateKey(date)
+    const dateKey = Utility.getDateKey(date)
     let total = 0
     for (const task of tasks) {
         // Once tasks
         if (task.occurs === "once") {
             for (const step of task.steps) {
                 if (!step.completed) continue
-                const completedDateKey = getDateKey(new Date(step.completed))
+                const completedDateKey = Utility.getDateKey(new Date(step.completed))
                 if (completedDateKey === dateKey) {
                     total += step.duration
                 }
@@ -149,13 +149,13 @@ const getDateCompletedTaskOccupancy = (tasks: Task[], date: Date): number => {
 }
 
 const getDateCompletedTasks = (tasks: Task[], date: Date): Task[] => {
-    const dateKey = getDateKey(date)
+    const dateKey = Utility.getDateKey(date)
     const completedMap: Record<number, Task> = {}
     for (const task of tasks) {
         if (task.occurs === "once") {
             for (const step of task.steps) {
                 if (!step.completed) continue
-                const completedDateKey = getDateKey(new Date(step.completed))
+                const completedDateKey = Utility.getDateKey(new Date(step.completed))
                 if (completedDateKey === dateKey) {
                     if (!completedMap[task.id]) completedMap[task.id] = { // add task if it doesn't already exist
                         ...task,
@@ -169,7 +169,7 @@ const getDateCompletedTasks = (tasks: Task[], date: Date): Task[] => {
         if (task.occurs === "repeating") {
             for (const step of task.steps) {
                 for (const completion of step.completions) {
-                    const completedDateKey = getDateKey(new Date(completion.completed))
+                    const completedDateKey = Utility.getDateKey(new Date(completion.completed))
                         if (completedDateKey === dateKey) {
                             if (!completedMap[task.id]) completedMap[task.id] = { // add task if it doesn't already exist
                             ...task,
