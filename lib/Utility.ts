@@ -277,6 +277,20 @@ const Utility = {
         const seconds = date.getSeconds().toString().padStart(2, "0")
         const milliseconds = date.getMilliseconds().toString().padStart(3, "0")
         return `${hours}:${minutes}:${seconds}.${milliseconds}`
+    },
+    loadLocalDate: (date: string): Date => {
+        const [year, month, day] = date.split("-").map(Number)
+        return new Date(year, month - 1, day)
+    },
+    loadLocalTime: (time: string): Date => {
+        const [hours, minutes, seconds, milliseconds] = time.split(/[:.]/).map(Number)
+        const date = new Date()
+        date.setHours(hours, minutes, seconds, milliseconds)
+        return date
+    },
+    loadLocalDateTime: (date: string): Date => {
+        const [year, month, day, hours, minutes, seconds, milliseconds] = date.split(/[- :.]/).map(Number)
+        return new Date(year, month - 1, day, hours, minutes, seconds, milliseconds)
     }
 }
 

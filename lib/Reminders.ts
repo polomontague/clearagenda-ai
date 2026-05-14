@@ -3,19 +3,22 @@ import Utility from "./Utility"
 import User from "@/types/User"
 
 const Reminders = {
-    getAt: (reminder: Reminder): string => {
-        const at = new Date()
+    getAt: (reminder: Reminder): {
+        date?: string,
+        time: string
+    } => {
         if (reminder.occurs === "once") {
-            const [hours, minutes] = reminder.at.split(" ")[1].split(":").map(Number)
-            at.setHours(hours)
-            at.setMinutes(minutes)
+            const at = Utility.loadLocalDateTime(reminder.at)
+            return {
+                date: Utility.formatDate(at),
+                time: Utility.formatTime(at)
+            }
+        } else {
+            const at = Utility.loadLocalTime(reminder.at)
+            return { // Repeating
+                time: Utility.formatTime(at)
+            }
         }
-        if (reminder.occurs === "repeating") {
-            const [hours, minutes] = reminder.at.split(":").map(Number)
-            at.setHours(hours)
-            at.setMinutes(minutes)
-        }
-        return Utility.formatTime(at)
     },
     getStatus: (reminder: Reminder, user: User): {
         code: "upcoming" | "past" | "repeating",

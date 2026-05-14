@@ -54,11 +54,6 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
         onChange(getRepeat({ frequency, interval, weekdays, monthlyType, days, ordinal, weekday, months, yearlyType, day, starts, hasEnds, ends }))
     }, [frequency, interval, weekdays, monthlyType, days, ordinal, weekday, months, yearlyType, day, starts, hasEnds, ends])
 
-    const loadLocalDate = (date: string) => {
-        const [year, month, day] = date.split("-").map(Number)
-        return new Date(year, month - 1, day)
-    }
-
     return (
         <Collapses value={open}>
         <FieldFrame>
@@ -187,12 +182,12 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
             <Fieldset>
                 <LabelField fieldset label="Begin">
                     <InnerButton
-                        label={Utility.formatDate(loadLocalDate(value.starts))}
+                        label={Utility.formatDate(Utility.loadLocalDate(value.starts))}
                         onClick={() => setOpen(open === "start_repeating" ? undefined : "start_repeating")}
                     />
                 </LabelField>
                 <Collapse value="start_repeating">
-                    <DatePicker fieldset value={loadLocalDate(value.starts)} onChange={setStarts} />
+                    <DatePicker fieldset value={Utility.loadLocalDate(value.starts)} onChange={setStarts} />
                 </Collapse>
                 <LabelField fieldset label="End">
                     <Toggle on={Boolean(value.ends)} onChange={setHasEnds} />
@@ -201,12 +196,12 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
                     <>
                         <LabelField fieldset label="On">
                             <InnerButton
-                                label={Utility.formatDate(loadLocalDate(value.ends))}
+                                label={Utility.formatDate(Utility.loadLocalDate(value.ends))}
                                 onClick={() => setOpen(open === "stop_repeating" ? undefined : "stop_repeating")}
                             />
                         </LabelField>
                         <Collapse value="stop_repeating">
-                            <DatePicker fieldset min={loadLocalDate(value.starts)} value={loadLocalDate(value.ends)} onChange={setEnds} />
+                            <DatePicker fieldset min={Utility.loadLocalDate(value.starts)} value={loadLocalDate(value.ends)} onChange={setEnds} />
                         </Collapse>
                     </>
                 ) : null}
