@@ -44,6 +44,15 @@ export default function ReminderForm(props: ReminderFormProps) {
     const [alertOpen, setAlertOpen] = useState(false)
 
     useEffect(() => {
+        if (props.mode === "edit") {
+            setName(props.reminder.name)
+            setOccurs(props.reminder.occurs)
+            setAt(props.reminder.occurs === "once" ? Utility.loadLocalDateTime(props.reminder.at) : Utility.loadLocalTime(props.reminder.at))
+            if ("repeat" in props.reminder) setRepeat(props.reminder.repeat)
+        }
+    }, [props.mode === "edit" ? props.reminder : null])
+
+    useEffect(() => {
         setDoneDisabled(!validate())
     }, [name, occurs, at, repeat])
 

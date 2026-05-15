@@ -49,6 +49,18 @@ export default function EventForm(props: EventFormProps) {
     const [alertOpen, setAlertOpen] = useState(false)
 
     useEffect(() => {
+        if (props.mode === "edit") {
+            setName(props.event.name)
+            setOccurs(props.event.occurs)
+            setStarts(props.event.occurs === "once" ? new Date(props.event.starts) : Utility.loadLocalTime(props.event.starts))
+            setDuration(props.event.duration)
+            setTimezone(props.event.timezone)
+            if ("repeat" in props.event) setRepeat(props.event.repeat)
+            setNotes(props.event.notes ?? "")
+        }
+    }, [props.mode === "edit" ? props.event : null])
+
+    useEffect(() => {
         setDoneDisabled(!validate(name))
     }, [name])
 

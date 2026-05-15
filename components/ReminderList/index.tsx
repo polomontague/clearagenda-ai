@@ -10,6 +10,10 @@ import { useContext, useState } from "react"
 import UserContext from "@/contexts/UserContext"
 import ReminderModal from "../ReminderModal"
 import Button from "../Button"
+import { EditIcon, TrashCanIcon } from "../Icons"
+import FormModal from "../FormModal"
+import ReminderForm from "../ReminderForm"
+import RemindersContext from "@/contexts/RemindersContext"
 
 type ReminderListProps = {
     reminders: Reminder[]
@@ -19,6 +23,18 @@ export default function ReminderList(props: ReminderListProps) {
     const { user } = useContext(UserContext)
     const [currentReminder, setCurrentReminder] = useState<Reminder | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const { updateReminder } = useContext(RemindersContext)
+
+    const handleEditClick = (reminder: Reminder) => {
+        setCurrentReminder(reminder)
+        setEditModalOpen(true)
+    }
+
+    const handleUpdateReminder = (reminder: Reminder) => {
+        updateReminder(reminder)
+        setEditModalOpen(false)
+    }
 
     const handleReminderClick = (reminder: Reminder) => {
         setCurrentReminder(reminder)
@@ -35,7 +51,19 @@ export default function ReminderList(props: ReminderListProps) {
                     const status = Reminders.getStatus(reminder, user)
                     return (
                         <ListItem key={i}>
-                            <Card label={reminder.name}>
+                            <Card
+                                label={reminder.name}
+                                buttons={[
+                                    {
+                                        icon: <EditIcon />,
+                                        onClick: () => handleEditClick(reminder)
+                                    },
+                                    {
+                                        icon: <TrashCanIcon />,
+                                        onClick: () => {}
+                                    }
+                                ]}
+                            >
                                 <FieldFrame>
                                     <LabelField label="At">
                                         {at.date ? (
@@ -60,11 +88,24 @@ export default function ReminderList(props: ReminderListProps) {
                 })}
             </List>
             {currentReminder ? (
-                <ReminderModal
-                    reminder={currentReminder}
-                    open={modalOpen}
-                    onRequestClose={() => setModalOpen(false)}
-                />
+                <>
+                    <ReminderModal
+                        reminder={currentReminder}
+                        open={modalOpen}
+                        onRequestClose={() => setModalOpen(false)}
+                    />
+                    <FormModal
+                        label="Edit"
+                        open={editModalOpen}
+                        onRequestCancel={() => setEditModalOpen(false)}
+                    >
+                        <ReminderForm
+                            mode="edit"
+                            reminder={currentReminder}
+                            onSuccess={handleUpdateReminder}
+                        />
+                    </FormModal>
+                </>
             ) : null}
         </>
     )

@@ -1,15 +1,20 @@
 "use client"
 import List, { ListItem } from "@/components/List"
-import Event, { OnceEvent } from "@/types/Event"
+import Event from "@/types/Event"
 import Card from "@/components/Card"
 import { EditIcon, TrashCanIcon } from "@/components/Icons"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import UserContext from "@/contexts/UserContext"
-import User from "@/types/User"
 import FieldFrame from "@/components/FieldFrame"
 import LabelField from "@/components/LabelField"
 import InnerValue from "@/components/InnerValue"
 import Utility from "@/lib/Utility"
+import EventModal from "../EventModal"
+import Button from "../Button"
+import Events from "@/lib/Events"
+import FormModal from "../FormModal"
+import EventForm from "../EventForm"
+import EventsContext from "@/contexts/EventsContext"
 
 type EventListProps = {
     events: Event[]
@@ -17,6 +22,10 @@ type EventListProps = {
 
 export default function EventList(props: EventListProps) {
     const { user } = useContext(UserContext)
+    const [currentEvent, setCurrentEvent] = useState<Event | undefined>(undefined)
+    const [modalOpen, setModalOpen] = useState(false)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const { updateEvent } = useContext(EventsContext)
 
     const getFrom = (event: Event): string => {
         if (event.occurs === "once") {
@@ -29,70 +38,83 @@ export default function EventList(props: EventListProps) {
         }
     }
 
-    const getStatus = (event: Event, user: User): {
-        code: "upcoming" | "repeating" | "ended",
-        color: string,
-        label: string
-    } => {
-        const accent = user.preferences.accent
-        const COLORS = {
-            sky: accent === "sky" ? "var(--turquoise)" : "var(--sky)",
-            red: accent === "red" ? "var(--coral)" : "var(--red)",
-            yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
-            lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
-            gray: "var(--layer-4-light)"
-        }
-        if (event.occurs === "once") {
-            const ended = getEnded(event)
-            if (ended) return { code: "ended", color: COLORS.gray, label: "Ended" }
-            return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
-        } else { // Repeating event
-            return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
-        }
+    const handleEditClick = (event: Event) => {
+        setCurrentEvent(event)
+        setEditModalOpen(true)
     }
 
-    const getEnded = (event: OnceEvent) => {
-        const ends = new Date(event.starts)
-        ends.setMinutes(ends.getMinutes() + event.duration)
-        return ends.getTime() >= new Date().getTime()
+    const handleEditSuccess = (event: Event) => {
+        updateEvent(event)
+        setEditModalOpen(false)
+    }
+
+    const handleEventClick = (event: Event) => {
+        setCurrentEvent(event)
+        setModalOpen(true)
     }
 
     if (!user) return
 
     return (
-        <List>
-            {props.events.map((event, i) => {
-                const status = getStatus(event, user)
-                return (
-                    <ListItem key={i}>
-                        <Card
-                            label={event.name}
-                            buttons={[
-                                {
-                                    icon: <EditIcon />,
-                                    onClick: () => {}
-                                },
-                                {
-                                    icon: <TrashCanIcon />,
-                                    onClick: () => {}
-                                }
-                            ]}
-                        >
-                            <FieldFrame>
-                                <LabelField label="From">
-                                    <InnerValue label={getFrom(event)} />
-                                </LabelField>
-                                <LabelField label="Status">
-                                    <InnerValue
-                                        color={status.color}
-                                        label={status.label}
+        <>
+            <List>
+                {props.events.map((event, i) => {
+                    const status = Events.getStatus(event, user)
+                    return (
+                        <ListItem key={i}>
+                            <Card
+                                label={event.name}
+                                buttons={[
+                                    {
+                                        icon: <EditIcon />,
+                                        onClick: () => handleEditClick(event)
+                                    },
+                                    {
+                                        icon: <TrashCanIcon />,
+                                        onClick: () => {}
+                                    }
+                                ]}
+                            >
+                                <FieldFrame>
+                                    <LabelField label="From">
+                                        <InnerValue label={getFrom(event)} />
+                                    </LabelField>
+                                    <LabelField label="Status">
+                                        <InnerValue
+                                            color={status.color}
+                                            label={status.label}
+                                        />
+                                    </LabelField>
+                                    <Button
+                                        label="See Event"
+                                        onClick={() => handleEventClick(event)}
                                     />
-                                </LabelField>
-                            </FieldFrame>
-                        </Card>
-                    </ListItem>
-                )
-            })}
-        </List>
+                                </FieldFrame>
+                            </Card>
+                        </ListItem>
+                    )
+                })}
+            </List>
+            {currentEvent ? (
+                <>
+                    <EventModal
+                        event={currentEvent}
+                        open={modalOpen}
+                        onRequestClose={() => setModalOpen(false)}
+                    />
+                    <FormModal
+                        label="Edit"
+                        open={editModalOpen}
+                        onRequestCancel={() => setEditModalOpen(false)}
+                    >
+                        <EventForm
+                            mode="edit"
+                            event={currentEvent}
+                            onSuccess={handleEditSuccess}
+                        />
+                    </FormModal>
+                </>
+            ) : null}
+        </>
     )
 }

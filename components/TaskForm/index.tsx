@@ -50,6 +50,17 @@ export default function TaskForm(props: TaskFormProps) {
     const [alertOpen, setAlertOpen] = useState(false)
 
     useEffect(() => {
+        if (props.mode === "edit") {
+            setDescription(props.task.description)
+            setOccurs(props.task.occurs)
+            setHasDeadline(Boolean(props.task.deadline))
+            if (props.task.occurs === "once" && props.task.deadline) setOnceDeadline(Utility.loadLocalDate(props.task.deadline))
+            if (props.task.occurs === "repeating" && props.task.deadline) setRepeatingDeadline(props.task.deadline)
+            if ("repeat" in props.task) setRepeat(props.task.repeat)
+        }
+    }, [props.mode === "edit" ? props.task : null])
+
+    useEffect(() => {
         setDoneDisabled(!validate(description))
     }, [description])
 

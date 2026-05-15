@@ -1,5 +1,5 @@
 "use client"
-import { useMemo } from "react"
+import { useMemo, useContext } from "react"
 import Task from "@/types/Task"
 import Modal from "../Modal"
 import FieldFrame from "../FieldFrame"
@@ -7,10 +7,11 @@ import LabelField from "../LabelField"
 import Fieldset from "../Fieldset"
 import ValueBox from "../ValueBox"
 import SlideField from "../SlideField"
-import Tasks from "@/lib/Tasks"
 import InnerValue from "../InnerValue"
 import Range from "../Range"
 import Utility from "@/lib/Utility"
+import Tasks from "@/lib/Tasks"
+import UserContext from "@/contexts/UserContext"
 
 type TaskModalProps = {
     task: Task,
@@ -19,11 +20,17 @@ type TaskModalProps = {
 }
 
 export default function TaskModal({ task, open, onRequestClose }: TaskModalProps) {
+    const { user } = useContext(UserContext)
+    if (!user) return
     const completion = useMemo(() => task.occurs === "once" ? Tasks.getCompletion(task) : undefined, [task])
-    
+    const status = useMemo(() => Tasks.getStatus(task, user), [task, user])
+
     return (
         <Modal label={task.name} open={open} onRequestClose={onRequestClose}>
             <FieldFrame>
+                <LabelField label="Status">
+                    <InnerValue  color={status.color} label={status.label} />
+                </LabelField>
                 <SlideField label="Steps" value={task.steps.length.toString()}>
                     {task.steps.map((step, i) => {
                         return (
