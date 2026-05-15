@@ -80,7 +80,7 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
                             options={{
                                 days: Array.from({ length: 100 }).map((_, i) => ({
                                     value: i + 1,
-                                    label: `${i + 1}`
+                                    label: `${i + 1} ${i === 0 ? "Day" : "Days"}`
                                 }))
                             }}
                             value={{ days: value.interval }}
@@ -201,7 +201,7 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
                             />
                         </LabelField>
                         <Collapse value="stop_repeating">
-                            <DatePicker fieldset min={Utility.loadLocalDate(value.starts)} value={loadLocalDate(value.ends)} onChange={setEnds} />
+                            <DatePicker fieldset min={Utility.loadLocalDate(value.starts)} value={Utility.loadLocalDate(value.ends)} onChange={setEnds} />
                         </Collapse>
                     </>
                 ) : null}

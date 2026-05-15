@@ -7,12 +7,8 @@ import { useEffect, useState } from "react"
 import SelectBar from "../SelectBar"
 import { Option, Slide } from "@/components/FormModal"
 import Repeat from "../Repeat"
-import LabelField from "../LabelField"
-import Collapses, { Collapse } from "../Collapses"
 import Utility from "@/lib/Utility"
 import DatePicker from "../DatePicker"
-import Toggle from "../Toggle"
-import InnerButton from "../InnerButton"
 import RepeatType from "@/types/Repeat"
 import DEFAULTS from "./DEFAULTS"
 import Loading from "../Loading"
@@ -20,6 +16,8 @@ import Alert from "../Alert"
 import API from "@/lib/API"
 import { DoneButton } from "@/components/FormModal"
 import Task from "@/types/Task"
+import SlideField from "../SlideField"
+import MultiSelect from "../MultiSelect"
 
 type BaseProps = {
     onSuccess: (task: Task) => void
@@ -43,7 +41,6 @@ export default function TaskForm(props: TaskFormProps) {
     const [onceDeadline, setOnceDeadline] = useState(DEFAULTS.onceDeadline)
     const [repeatingDeadline, setRepeatingDeadline] = useState(DEFAULTS.repeatingDeadline)
     const [repeat, setRepeat] = useState<RepeatType>(DEFAULTS.repeat)
-    const [open, setOpen] = useState<"deadline" | undefined>(undefined)
     const [doneDisabled, setDoneDisabled] = useState(true)
     const [loading, setLoading] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
@@ -104,71 +101,90 @@ export default function TaskForm(props: TaskFormProps) {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Collapses value={open}>
-                <FieldFrame>
-                    <Fieldset
-                        description="Our AI breaks down tasks into actionable steps, and estimates importance and duration."
-                    >
-                        <TextArea rows={8} fieldset placeholder="Describe the task..." value={description} onChange={setDescription} />
-                    </Fieldset>
-                    <Fieldset
-                        description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
-                    >
-                        <SelectBar
+            <FieldFrame>
+                <Fieldset
+                    description="Our AI breaks down tasks into actionable steps, and estimates importance and duration."
+                >
+                    <TextArea rows={8} fieldset placeholder="Describe the task..." value={description} onChange={setDescription} />
+                </Fieldset>
+                <Fieldset
+                    description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
+                >
+                    <SelectBar
+                        fieldset
+                        options={[
+                            { value: "once", label: "Once" },
+                            { value: "repeating", label: "Repeating" }
+                        ] as const}
+                        value={occurs}
+                        onChange={setOccurs}
+                    />
+                    {occurs === "once" ? (
+                        <SlideField
                             fieldset
-                            options={[
-                                { value: "once", label: "Once" },
-                                { value: "repeating", label: "Repeating" }
-                            ] as const}
-                            value={occurs}
-                            onChange={setOccurs}
-                        />
-                        {occurs === "once" ? (
-                            <>
-                                <LabelField fieldset label="Deadline">
-                                    <Toggle on={hasDeadline} onChange={setHasDeadline} />
-                                </LabelField>
-                                {hasDeadline ? (
-                                    <>
-                                        <LabelField fieldset label="Date">
-                                            <InnerButton
-                                                label={Utility.formatDate(onceDeadline)}
-                                                onClick={() => setOpen(open === "deadline" ? undefined : "deadline")}
-                                            />
-                                        </LabelField>
-                                        <Collapse value="deadline">
-                                            <DatePicker fieldset value={onceDeadline} onChange={setOnceDeadline} />
-                                        </Collapse>
-                                    </>
-                                ) : null}
-                            </>
-                        ) : occurs === "repeating" ? (
-                            <>
-                                <LabelField fieldset label="Deadline">
-                                    <Toggle on={hasDeadline} onChange={setHasDeadline}/>
-                                </LabelField>
-                                {hasDeadline ? (
-                                    <LabelField fieldset label="Days Out">
-                                        <InnerButton
-                                            label={formatDays(repeatingDeadline)}
-                                            onClick={() => setOpen(open === "deadline" ? undefined : "deadline")}
-                                        />
-                                    </LabelField>
-                                ) : null}
-                                <Option 
+                            label="Deadline"
+                            value={hasDeadline ? Utility.formatDate(onceDeadline) : "None"}
+                        >
+                            <Fieldset>
+                                <SelectBar
                                     fieldset
-                                    label="Repeat"
-                                    value={Utility.getShortRepeatLabel(repeat)}
-                                >
-                                    <Slide>
-                                        <Repeat value={repeat} onChange={setRepeat} />
-                                    </Slide>
-                                </Option>
-                            </>
-                        ) : null}
-                    </Fieldset>
-                </FieldFrame>
-            </Collapses>
+                                    options={[
+                                        { value: false, label: "None" },
+                                        { value: true, label: "Date" }
+                                    ]}
+                                    value={hasDeadline}
+                                    onChange={setHasDeadline}
+                                />
+                                {hasDeadline ? (
+                                    <DatePicker fieldset value={onceDeadline} onChange={setOnceDeadline} />
+                                ) : null}
+                            </Fieldset>
+                        </SlideField>
+                    ) : occurs === "repeating" ? (
+                        <>
+                            <SlideField
+                                fieldset
+                                label="Deadline"
+                                value={hasDeadline ? `${repeatingDeadline} ${repeatingDeadline === 1 ? "Day" : "Days"}` : "None"}
+                            >
+                                <Fieldset>
+                                    <SelectBar
+                                        fieldset
+                                        options={[
+                                            { value: false, label: "None" },
+                                            { value: true, label: "Date" }
+                                        ]}
+                                        value={hasDeadline}
+                                        onChange={setHasDeadline}
+                                    />
+                                    {hasDeadline ? (
+                                        <MultiSelect
+                                            fieldset
+                                            options={{
+                                                days: Array.from({ length: 100 }).map((_, i) => ({
+                                                    value: i + 1,
+                                                    label: `${i + 1} ${i === 0 ? "Day" : "Days"}`
+                                                }))
+                                            }}
+                                            value={{ days: repeatingDeadline }}
+                                            onChange={(val) => setRepeatingDeadline(val.days)}
+                                        />
+                                    ) : null}
+                                </Fieldset>
+                            </SlideField>
+                            <Option 
+                                fieldset
+                                label="Repeat"
+                                value={Utility.getShortRepeatLabel(repeat)}
+                            >
+                                <Slide>
+                                    <Repeat value={repeat} onChange={setRepeat} />
+                                </Slide>
+                            </Option>
+                        </>
+                    ) : null}
+                </Fieldset>
+            </FieldFrame>
             <Loading loading={loading} />
             <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
             <DoneButton disabled={doneDisabled} />
