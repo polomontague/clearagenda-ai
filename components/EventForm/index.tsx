@@ -19,6 +19,9 @@ import API from "@/lib/API"
 import Event from "@/types/Event"
 import Alert from "../Alert"
 import DEFAULTS from "./DEFAULTS"
+import Collapses, { Collapse } from "../Collapses"
+import DatePicker from "../DatePicker"
+import TimePicker from "../TimePicker"
 
 type BaseProps = {
     onSuccess: (event: Event) => void
@@ -47,6 +50,7 @@ export default function EventForm(props: EventFormProps) {
     const [loading, setLoading] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
+    const [open, setOpen] = useState<"once_starts_date" | "once_starts_time" | "repeating_starts" | undefined>(undefined)
 
     useEffect(() => {
         if (props.mode === "edit") {
@@ -103,64 +107,75 @@ export default function EventForm(props: EventFormProps) {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <FieldFrame>
-                <TextInput placeholder="Name..." value={name} onChange={setName} />
-                <Fieldset
-                    description={occurs === "repeating" ? Utility.getRepeatLabel(repeat, timezone) : undefined}
-                >
-                    <SelectBar
-                        fieldset
-                        options={[
-                            { value: "once", label: "Once" },
-                            { value: "repeating", label: "Repeating" }
-                        ] as const}
-                        value={occurs}
-                        onChange={setOccurs}
-                    />
-                    {occurs === "once" ? (
-                        <>
-                            <LabelField fieldset label="Starts">
-                                <InnerButton
-                                    label={Utility.formatDate(starts)}
-                                    onClick={() => {}}
-                                />
-                                <InnerButton
-                                    label={Utility.formatTime(starts)}
-                                    onClick={() => {}}
-                                />
-                            </LabelField>
-                            <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
-                                <Slide>
-                                    <DurationSelect value={duration} onChange={setDuration} />
-                                </Slide>
-                            </Option>
-                        </>
-                    ) : occurs === "repeating" ? (
-                        <>
-                            <LabelField fieldset label="Starts">
-                                <InnerButton
-                                    label={Utility.formatTime(starts)}
-                                    onClick={() => {}}
-                                />
-                            </LabelField>
-                            <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
-                                <Slide>
-                                    <DurationSelect value={duration} onChange={setDuration} />
-                                </Slide>
-                            </Option>
-                            <Option fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
-                                <Slide>
-                                    <Repeat timezone={timezone} value={repeat} onChange={setRepeat} />
-                                </Slide>
-                            </Option>
-                        </>
-                    ) : null}
-                </Fieldset>
-                <TextArea rows={6} placeholder="Notes..." value={notes} onChange={setNotes} />
-                <Loading loading={loading} />
-                <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
-                <DoneButton disabled={doneDisabled} />
-            </FieldFrame>
+            <Collapses value={open}>
+                <FieldFrame>
+                    <TextInput placeholder="Name..." value={name} onChange={setName} />
+                    <Fieldset
+                        description={occurs === "repeating" ? Utility.getRepeatLabel(repeat, timezone) : undefined}
+                    >
+                        <SelectBar
+                            fieldset
+                            options={[
+                                { value: "once", label: "Once" },
+                                { value: "repeating", label: "Repeating" }
+                            ] as const}
+                            value={occurs}
+                            onChange={setOccurs}
+                        />
+                        {occurs === "once" ? (
+                            <>
+                                <LabelField fieldset label="Starts">
+                                    <InnerButton
+                                        label={Utility.formatDate(starts)}
+                                        onClick={() => setOpen(open === "once_starts_date" ? undefined : "once_starts_date")}
+                                    />
+                                    <InnerButton
+                                        label={Utility.formatTime(starts)}
+                                        onClick={() => setOpen(open === "once_starts_time" ? undefined : "once_starts_time")}
+                                    />
+                                </LabelField>
+                                <Collapse value="once_starts_date">
+                                    <DatePicker fieldset value={starts} onChange={setStarts} />
+                                </Collapse>
+                                <Collapse value="once_starts_time">
+                                    <TimePicker fieldset value={starts} onChange={setStarts} />
+                                </Collapse>
+                                <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
+                                    <Slide>
+                                        <DurationSelect value={duration} onChange={setDuration} />
+                                    </Slide>
+                                </Option>
+                            </>
+                        ) : occurs === "repeating" ? (
+                            <>
+                                <LabelField fieldset label="Starts">
+                                    <InnerButton
+                                        label={Utility.formatTime(starts)}
+                                        onClick={() => setOpen(open === "repeating_starts" ? undefined : "repeating_starts")}
+                                    />
+                                </LabelField>
+                                <Collapse value="repeating_starts">
+                                    <TimePicker fieldset value={starts} onChange={setStarts} />
+                                </Collapse>
+                                <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
+                                    <Slide>
+                                        <DurationSelect value={duration} onChange={setDuration} />
+                                    </Slide>
+                                </Option>
+                                <Option fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
+                                    <Slide>
+                                        <Repeat timezone={timezone} value={repeat} onChange={setRepeat} />
+                                    </Slide>
+                                </Option>
+                            </>
+                        ) : null}
+                    </Fieldset>
+                    <TextArea rows={6} placeholder="Notes..." value={notes} onChange={setNotes} />
+                    <Loading loading={loading} />
+                    <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+                    <DoneButton disabled={doneDisabled} />
+                </FieldFrame>
+            </Collapses>
         </Form>
     )
 }
