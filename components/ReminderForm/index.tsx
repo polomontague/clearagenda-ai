@@ -17,6 +17,9 @@ import Alert from "../Alert"
 import DEFAULTS from "./DEFAULTS"
 import Reminder from "@/types/Reminder"
 import Loading from "../Loading"
+import Collapses, { Collapse } from "../Collapses"
+import DatePicker from "../DatePicker"
+import TimePicker from "../TimePicker"
 
 type BaseProps = {
     onSuccess: (reminder: Reminder) => void
@@ -42,6 +45,7 @@ export default function ReminderForm(props: ReminderFormProps) {
     const [loading, setLoading] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
+    const [open, setOpen] = useState<"once_at_date" | "once_at_time" | "repeating_at" | undefined>(undefined)
 
     useEffect(() => {
         if (props.mode === "edit") {
@@ -90,53 +94,64 @@ export default function ReminderForm(props: ReminderFormProps) {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <FieldFrame>
-                <TextInput placeholder="Name..." value={name} onChange={setName} />
-                <Fieldset
-                    description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
-                >
-                    <SelectBar
-                        fieldset
-                        options={[
-                            { value: "once", label: "Once" },
-                            { value: "repeating", label: "Repeating" }
-                        ] as const}
-                        value={occurs}
-                        onChange={setOccurs}
-                    />
-                    {occurs === "once" ? (
-                        <>
-                            <LabelField fieldset label="At">
-                                <InnerButton
-                                    label={Utility.formatDate(at)}
-                                    onClick={() => {}}
-                                />
-                                <InnerButton
-                                    label={Utility.formatTime(at)}
-                                    onClick={() => {}}
-                                />
-                            </LabelField>
-                        </>
-                    ) : occurs === "repeating" ? (
-                        <>
-                            <LabelField fieldset label="At">
-                                <InnerButton
-                                    label={Utility.formatTime(at)}
-                                    onClick={() => {}}
-                                />
-                            </LabelField>
-                            <Option fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
-                                <Slide>
-                                    <Repeat value={repeat} onChange={setRepeat} />
-                                </Slide>
-                            </Option>
-                        </>
-                    ) : null}
-                </Fieldset>
-            </FieldFrame>
-            <Loading loading={loading} />
-            <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
-            <DoneButton disabled={doneDisabled} />
+            <Collapses value={open}>
+                <FieldFrame>
+                    <TextInput placeholder="Name..." value={name} onChange={setName} />
+                    <Fieldset
+                        description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
+                    >
+                        <SelectBar
+                            fieldset
+                            options={[
+                                { value: "once", label: "Once" },
+                                { value: "repeating", label: "Repeating" }
+                            ] as const}
+                            value={occurs}
+                            onChange={setOccurs}
+                        />
+                        {occurs === "once" ? (
+                            <>
+                                <LabelField fieldset label="At">
+                                    <InnerButton
+                                        label={Utility.formatDate(at)}
+                                        onClick={() => setOpen(open === "once_at_date" ? undefined : "once_at_date")}
+                                    />
+                                    <InnerButton
+                                        label={Utility.formatTime(at)}
+                                        onClick={() => setOpen(open === "once_at_time" ? undefined : "once_at_time")}
+                                    />
+                                </LabelField>
+                                <Collapse value="once_at_date">
+                                    <DatePicker fieldset value={at} onChange={setAt} />
+                                </Collapse>
+                                <Collapse value="once_at_time">
+                                    <TimePicker fieldset value={at} onChange={(setAt)} />
+                                </Collapse>
+                            </>
+                        ) : occurs === "repeating" ? (
+                            <>
+                                <LabelField fieldset label="At">
+                                    <InnerButton
+                                        label={Utility.formatTime(at)}
+                                        onClick={() => setOpen(open === "repeating_at" ? undefined : "repeating_at")}
+                                    />
+                                </LabelField>
+                                <Collapse value="repeating_at">
+                                    <TimePicker fieldset value={at} onChange={setAt} />
+                                </Collapse>
+                                <Option fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
+                                    <Slide>
+                                        <Repeat value={repeat} onChange={setRepeat} />
+                                    </Slide>
+                                </Option>
+                            </>
+                        ) : null}
+                    </Fieldset>
+                </FieldFrame>
+                <Loading loading={loading} />
+                <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+                <DoneButton disabled={doneDisabled} />
+            </Collapses>
         </Form>
     )
 }
