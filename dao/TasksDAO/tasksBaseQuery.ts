@@ -1,4 +1,5 @@
 import simpleUsersBaseQuery from "../UsersDAO/simpleUsersBaseQuery"
+import stepCompletionsBaseQuery from "./stepCompletionsBaseQuery"
 
 const tasksBaseQuery = {
     select: {
@@ -14,18 +15,14 @@ const tasksBaseQuery = {
                 notes: true,
                 duration: true,
                 completed: true,
-                completions: {
-                    select: {
-                        date: true,
-                        completed: true
-                    }
-                }
+                completions: stepCompletionsBaseQuery
             }
         },
         importance: true,
         once_deadline: true,
         repeating_deadline: true,
         repeat: true,
+        completed: true,
         created: true,
         updated: true
     }

@@ -171,11 +171,11 @@ export default function EventForm(props: EventFormProps) {
                         ) : null}
                     </Fieldset>
                     <TextArea rows={6} placeholder="Notes..." value={notes} onChange={setNotes} />
-                    <Loading loading={loading} />
-                    <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
-                    <DoneButton disabled={doneDisabled} />
                 </FieldFrame>
             </Collapses>
+            <Loading loading={loading} />
+            <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+            <DoneButton disabled={doneDisabled} />
         </Form>
     )
 }

@@ -78,6 +78,7 @@ model task_step_completions {
 	step task_steps @relation(fields: [step_id], references: [id], onDelete: Cascade)
 	date String
 	completed DateTime
+	@@unique([step_id, date])
 }
 
 model tasks {

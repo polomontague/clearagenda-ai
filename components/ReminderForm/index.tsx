@@ -148,10 +148,10 @@ export default function ReminderForm(props: ReminderFormProps) {
                         ) : null}
                     </Fieldset>
                 </FieldFrame>
-                <Loading loading={loading} />
-                <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
-                <DoneButton disabled={doneDisabled} />
             </Collapses>
+            <Loading loading={loading} />
+            <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+            <DoneButton disabled={doneDisabled} />
         </Form>
     )
 }

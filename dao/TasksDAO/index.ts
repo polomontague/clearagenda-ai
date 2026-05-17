@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma"
 import { OnceTask, OnceStep, RepeatingTask, RepeatingStep } from "@/types/Task"
 import tasksBaseQuery from "./tasksBaseQuery"
 import assembleTask from "./assembleTask"
+import stepCompletionsBaseQuery from "./stepCompletionsBaseQuery"
+import assembleStepCompletion from "./assembleStepCompletion"
 
 type BaseOnceTaskData = Pick<OnceTask, "name" | "description" | "importance" | "deadline"> & {
     occurs: "once",
@@ -23,6 +25,13 @@ type UpdateTaskData = BaseTaskData
 
 type GetTasksOptions = {
     user_id?: number
+}
+
+type CompletedData = string | undefined
+
+type CompletionData = {
+    date: string,
+    completed: string
 }
 
 const TasksDAO = {
@@ -58,6 +67,15 @@ const TasksDAO = {
         })
         return result.map(result => assembleTask(result))
     },
+    getTaskById: async (taskId: number) => {
+        const result = await prisma.tasks.findUnique({
+            where: {
+                id: taskId
+            },
+            ...tasksBaseQuery
+        })
+        return result ? assembleTask(result) : undefined
+    },
     deleteTask: async (taskId: number) => {
         const result = await prisma.tasks.delete({
             where: {
@@ -66,6 +84,37 @@ const TasksDAO = {
             ...tasksBaseQuery
         })
         return assembleTask(result)
+    },
+    updateStepCompleted: async (stepId: number, data: CompletedData) => {
+        const result = await prisma.task_steps.update({
+            where: {
+                id: stepId
+            },
+            data: {
+                completed: data
+            }
+        })
+        return result.completed ? result.completed.toISOString() : undefined
+    },
+    createStepCompletion: async (stepId: number, data: CompletionData) => {
+        const result = await prisma.task_step_completions.create({
+            data: {
+                step_id: stepId,
+                date: data.date,
+                completed: data.completed
+            },
+            ...stepCompletionsBaseQuery
+        })
+        return assembleStepCompletion(result)
+    },
+    deleteStepCompletion: async (completionId: number) => {
+        const result = await prisma.task_step_completions.delete({
+            where: {
+                id: completionId
+            },
+            ...stepCompletionsBaseQuery
+        })
+        return assembleStepCompletion(result)
     }
 }
 

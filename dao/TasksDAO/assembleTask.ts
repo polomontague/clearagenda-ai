@@ -3,6 +3,7 @@ import assembleSimpleUser from "../UsersDAO/assembleSimpleUser"
 import tasksBaseQuery from "./tasksBaseQuery"
 import Task, { OnceTask, RepeatingTask } from "@/types/Task"
 import Repeat from "@/types/Repeat"
+import assembleStepCompletion from "./assembleStepCompletion"
 
 type TaskResult = Prisma.tasksGetPayload<typeof tasksBaseQuery>
 
@@ -41,10 +42,7 @@ const assembleRepeatingTask = (result: TaskResult): RepeatingTask => {
             name: step.name,
             notes: step.notes ? step.notes : undefined,
             duration: step.duration,
-            completions: step.completions.map(completion => ({
-                date: completion.date,
-                completed: completion.completed.toISOString()
-            }))
+            completions: step.completions.map(completion => assembleStepCompletion(completion))
         })),
         importance: result.importance,
         deadline: result.repeating_deadline ? result.repeating_deadline : undefined,

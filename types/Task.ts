@@ -29,7 +29,8 @@ export type OnceTask = BaseTask & {
     deadline?: string
 }
 
-type Completion = {
+export type Completion = {
+    id: number,
     date: string,
     completed: string
 }

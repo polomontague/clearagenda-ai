@@ -24,7 +24,7 @@ export default function TaskList(props: TaskListProps) {
     const { user } = useContext(UserContext)
     const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
-    const [editModalOpen, setEditModalOpen] = useState(true)
+    const [editModalOpen, setEditModalOpen] = useState(false)
 
     const handleEditClick = (task: Task) => {
         setCurrentTask(task)
