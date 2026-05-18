@@ -1,13 +1,14 @@
 "use client"
 import { useState } from "react"
 import PageFrame from "@/components/PageFrame"
-import Agenda from "@/components/Agenda"
 import SelectBar from "@/components/SelectBar"
 import DatePicker from "@/components/DatePicker"
 import Modal from "@/components/Modal"
 import SquareButton from "@/components/SquareButton"
 import { CalendarIcon } from "@/components/Icons"
-import LabelField from "@/components/LabelField"
+import DateEvents from "@/components/DateEvents"
+import DateReminders from "@/components/DateReminders"
+import DateTasks from "@/components/DateTasks"
 
 export default function AgendaPage() {
     const [modalOpen, setModalOpen] = useState(false)
@@ -15,10 +16,7 @@ export default function AgendaPage() {
     const today = new Date()
     const tomorrow = new Date()
     tomorrow.setDate(today.getDate() + 1)
-    const tabMap = {
-        [today.toLocaleDateString("en-CA")]: "today",
-        [tomorrow.toLocaleDateString("en-CA")]: "tomorrow"
-    }
+    const [type, setType] = useState<"tasks" | "events" | "reminders">("tasks")
 
     const handleDateChange = (val: Date) => {
         setDate(val)
@@ -40,8 +38,14 @@ export default function AgendaPage() {
         <PageFrame
             header={{
                 center: (
-                    <LabelField
-                        label="May 13, 2026"
+                    <SelectBar
+                        options={[
+                            { value: "tasks", label: "Tasks" },
+                            { value: "events", label: "Events" },
+                            { value: "reminders", label: "Reminders" }
+                        ] as const}
+                        value={type}
+                        onChange={setType}
                     />
                 ),
                 right: (
@@ -52,7 +56,13 @@ export default function AgendaPage() {
                 )
             }}
         >
-            <Agenda date={date} />
+            {type === "tasks" ? (
+                <DateTasks date={date} />
+            ) : type === "events" ? (
+                <DateEvents date={date} />
+            ) : type === "reminders" ? (
+                <DateReminders date={date} />
+            ) : null}
             <Modal
                 label="Choose Date"
                 open={modalOpen}

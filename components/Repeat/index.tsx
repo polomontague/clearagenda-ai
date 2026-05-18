@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import RepeatType from "@/types/Repeat"
 import FieldFrame from "../FieldFrame"
-import { Option, Slide } from "../FormModal"
+import SlideField from "../SlideField"
 import Fieldset from "../Fieldset"
 import SelectList from "../SelectList"
 import MultiSelect from "../MultiSelect"
@@ -60,52 +60,46 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
             <Fieldset
                 description={Utility.getRepeatLabel(value, timezone)}
             >
-                <Option fieldset label="Frequency" value={frequencyLabelMap[value.frequency]}>
-                    <Slide>
-                        <SelectList
-                            options={[
-                                { value: "daily", label: "Daily" },
-                                { value: "weekly", label: "Weekly" },
-                                { value: "monthly", label: "Monthly" },
-                                { value: "yearly", label: "Yearly" }
-                            ]}
-                            value={value.frequency}
-                            onChange={setFrequency}
-                        />
-                    </Slide>
-                </Option>
-                <Option fieldset label="Every" value={getIntervalLabel(value.frequency, value.interval)}>
-                    <Slide>
-                        <MultiSelect
-                            options={{
-                                days: Array.from({ length: 100 }).map((_, i) => ({
-                                    value: i + 1,
-                                    label: `${i + 1} ${i === 0 ? "Day" : "Days"}`
-                                }))
-                            }}
-                            value={{ days: value.interval }}
-                            onChange={(val) => setInterval(val.days)}
-                        />
-                    </Slide>
-                </Option>
+                <SlideField fieldset label="Frequency" value={frequencyLabelMap[value.frequency]}>
+                    <SelectList
+                        options={[
+                            { value: "daily", label: "Daily" },
+                            { value: "weekly", label: "Weekly" },
+                            { value: "monthly", label: "Monthly" },
+                            { value: "yearly", label: "Yearly" }
+                        ]}
+                        value={value.frequency}
+                        onChange={setFrequency}
+                    />
+                </SlideField>
+                <SlideField fieldset label="Every" value={getIntervalLabel(value.frequency, value.interval)}>
+                    <MultiSelect
+                        options={{
+                            days: Array.from({ length: 100 }).map((_, i) => ({
+                                value: i + 1,
+                                label: `${i + 1} ${i === 0 ? "Day" : "Days"}`
+                            }))
+                        }}
+                        value={{ days: value.interval }}
+                        onChange={(val) => setInterval(val.days)}
+                    />
+                </SlideField>
                 {value.frequency === "weekly" ? (
-                    <Option
+                    <SlideField
                         fieldset
                         label="Weekdays"
                         value={getWeekdaysLabel(weekdays)}
                     >
-                        <Slide>
-                            <SelectList
-                                multiple
-                                options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
-                                    value: i,
-                                    label: weekday
-                                }))}
-                                value={value.weekdays}
-                                onChange={setWeekdays}
-                            />
-                        </Slide>
-                    </Option>
+                        <SelectList
+                            multiple
+                            options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
+                                value: i,
+                                label: weekday
+                            }))}
+                            value={value.weekdays}
+                            onChange={setWeekdays}
+                        />
+                    </SlideField>
                 ) : value.frequency === "monthly" ? (
                     <>
                         <SelectBar
@@ -135,23 +129,21 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
                     </>
                 ) : value.frequency === "yearly" ? (
                     <>
-                        <Option
+                        <SlideField
                             fieldset
                             label="Months"
                             value={getMonthsLabel(value.months)}
                         >
-                            <Slide>
-                                <SelectList
-                                    multiple
-                                    options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, i) => ({
-                                        value: i,
-                                        label: month
-                                    }))}
-                                    value={value.months}
-                                    onChange={(val) => setMonths(val)}
-                                />
-                            </Slide>
-                        </Option>
+                            <SelectList
+                                multiple
+                                options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((month, i) => ({
+                                    value: i,
+                                    label: month
+                                }))}
+                                value={value.months}
+                                onChange={(val) => setMonths(val)}
+                            />
+                        </SlideField>
                         <SelectBar
                             fieldset
                             options={[

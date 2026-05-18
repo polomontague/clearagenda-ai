@@ -1,7 +1,7 @@
 .overlay{
     justify-content: center;
     align-items: center;
-    padding: var(--spacing-medium);
+    padding: var(--spacing-large);
     background-color: var(--layer-1-translucent);
     backdrop-filter: blur(var(--blur));
     position: fixed;

@@ -8,7 +8,7 @@ import SelectBar from "../SelectBar"
 import LabelField from "../LabelField"
 import InnerButton from "../InnerButton"
 import Utility from "@/lib/Utility"
-import { Option, Slide } from "@/components/FormModal"
+import SlideField from "../SlideField"
 import Repeat from "../Repeat"
 import RepeatType from "@/types/Repeat"
 import API from "@/lib/API"
@@ -139,11 +139,9 @@ export default function ReminderForm(props: ReminderFormProps) {
                                 <Collapse value="repeating_at">
                                     <TimePicker fieldset value={at} onChange={setAt} />
                                 </Collapse>
-                                <Option fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
-                                    <Slide>
-                                        <Repeat value={repeat} onChange={setRepeat} />
-                                    </Slide>
-                                </Option>
+                                <SlideField fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
+                                    <Repeat value={repeat} onChange={setRepeat} />
+                                </SlideField>
                             </>
                         ) : null}
                     </Fieldset>

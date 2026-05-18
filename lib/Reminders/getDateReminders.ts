@@ -1,6 +1,6 @@
 import Reminder from "@/types/Reminder"
 import Utility from "@/lib/Utility"
-import occursOnLocalDate from "./occursOnLocalDate"
+import occursOnLocalDate from "@/lib/Tasks/occursOnLocalDate"
 
 export default function getDateReminders(reminders: Reminder[], date: Date): Reminder[] {
     const result: Reminder[] = []

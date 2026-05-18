@@ -9,7 +9,9 @@
     justify-content: center;
     align-items: center;
     height: var(--header-height);
-    padding: var(--spacing-medium);
+    --padding: calc(var(--spacing-medium) + var(--field-size) + var(--spacing-small));
+    padding-left: var(--padding);
+    padding-right: var(--padding);
     background-color: var(--layer-1-translucent);
     backdrop-filter: blur(var(--blur));
     border-bottom: var(--border-width) solid var(--layer-1-border);

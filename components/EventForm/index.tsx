@@ -8,7 +8,7 @@ import SelectBar from "../SelectBar"
 import LabelField from "../LabelField"
 import InnerButton from "../InnerButton"
 import Utility from "@/lib/Utility"
-import { Option, Slide } from "@/components/FormModal"
+import SlideField from "../SlideField"
 import DurationSelect from "../DurationSelect"
 import Repeat from "../Repeat"
 import TextArea from "../TextArea"
@@ -140,11 +140,9 @@ export default function EventForm(props: EventFormProps) {
                                 <Collapse value="once_starts_time">
                                     <TimePicker fieldset value={starts} onChange={setStarts} />
                                 </Collapse>
-                                <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
-                                    <Slide>
-                                        <DurationSelect value={duration} onChange={setDuration} />
-                                    </Slide>
-                                </Option>
+                                <SlideField fieldset label="Length" value={Utility.formatDuration(duration)}>
+                                    <DurationSelect value={duration} onChange={setDuration} />
+                                </SlideField>
                             </>
                         ) : occurs === "repeating" ? (
                             <>
@@ -157,16 +155,12 @@ export default function EventForm(props: EventFormProps) {
                                 <Collapse value="repeating_starts">
                                     <TimePicker fieldset value={starts} onChange={setStarts} />
                                 </Collapse>
-                                <Option fieldset label="Length" value={Utility.formatDuration(duration)}>
-                                    <Slide>
-                                        <DurationSelect value={duration} onChange={setDuration} />
-                                    </Slide>
-                                </Option>
-                                <Option fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
-                                    <Slide>
+                                <SlideField fieldset label="Length" value={Utility.formatDuration(duration)}>
+                                    <DurationSelect value={duration} onChange={setDuration} />
+                                </SlideField>
+                                <SlideField fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
                                         <Repeat timezone={timezone} value={repeat} onChange={setRepeat} />
-                                    </Slide>
-                                </Option>
+                                </SlideField>
                             </>
                         ) : null}
                     </Fieldset>

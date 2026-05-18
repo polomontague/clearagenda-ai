@@ -1,12 +1,12 @@
 "use client"
 import styles from "./SelectBar.module.css"
 
-export type SelectBarOption<T extends string = string> = {
+export type SelectBarOption<T = unknown> = {
     value: T,
     label: string
 }
 
-type SelectBarProps<T extends readonly SelectBarOption[]> = {
+type SelectBarProps<T extends readonly SelectBarOption<any>[]> = {
     layer?: 2 | 3,
     fieldset?: boolean,
     options: T,
@@ -14,7 +14,7 @@ type SelectBarProps<T extends readonly SelectBarOption[]> = {
     onChange: (value: T[number]["value"]) => void
 }
 
-export default function SelectBar<T extends readonly SelectBarOption[]>({ layer = 3, fieldset, options, value, onChange }: SelectBarProps<T>) {
+export default function SelectBar<T extends readonly SelectBarOption<any>[]>({ layer = 3, fieldset, options, value, onChange }: SelectBarProps<T>) {
     return (
         <div className={`${styles.background} ${styles[`layer${layer}`]} ${fieldset ? styles.fieldset : ""}`}>
             <ul className={styles.lstOptions}>

@@ -34,7 +34,7 @@ export default function TaskModal({ task, open, onRequestClose }: TaskModalProps
                 <SlideField label="Steps" value={task.steps.length.toString()}>
                     {task.steps.map((step, i) => {
                         return (
-                            <Fieldset label={step.name}>
+                            <Fieldset key={i} label={step.name}>
                                 {step.notes ? (
                                     <ValueBox fieldset value={step.notes} />
                                 ) : null}

@@ -5,7 +5,7 @@ import TextArea from "../TextArea"
 import FieldFrame from "../FieldFrame"
 import { useEffect, useState } from "react"
 import SelectBar from "../SelectBar"
-import { Option, Slide } from "@/components/FormModal"
+import SlideField from "../SlideField"
 import Repeat from "../Repeat"
 import Utility from "@/lib/Utility"
 import DatePicker from "../DatePicker"
@@ -16,7 +16,6 @@ import Alert from "../Alert"
 import API from "@/lib/API"
 import { DoneButton } from "@/components/FormModal"
 import Task from "@/types/Task"
-import SlideField from "../SlideField"
 import MultiSelect from "../MultiSelect"
 
 type BaseProps = {
@@ -153,7 +152,7 @@ export default function TaskForm(props: TaskFormProps) {
                                         options={[
                                             { value: false, label: "None" },
                                             { value: true, label: "Date" }
-                                        ]}
+                                        ] as const}
                                         value={hasDeadline}
                                         onChange={setHasDeadline}
                                     />
@@ -172,15 +171,13 @@ export default function TaskForm(props: TaskFormProps) {
                                     ) : null}
                                 </Fieldset>
                             </SlideField>
-                            <Option 
+                            <SlideField
                                 fieldset
                                 label="Repeat"
                                 value={Utility.getShortRepeatLabel(repeat)}
                             >
-                                <Slide>
-                                    <Repeat value={repeat} onChange={setRepeat} />
-                                </Slide>
-                            </Option>
+                                <Repeat value={repeat} onChange={setRepeat} />
+                            </SlideField>
                         </>
                     ) : null}
                 </Fieldset>

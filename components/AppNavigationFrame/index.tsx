@@ -6,8 +6,6 @@ import { usePathname } from "next/navigation"
 import { CalendarIcon, BrainIcon, GearIcon, PlusIcon, LogoutIcon, MenuIcon } from "@/components/Icons"
 import SettingsModal from "@/components/SettingsModal"
 import FormModal from "@/components/FormModal"
-import ItemForm from "@/components/ItemForm"
-import Item from "@/types/Item"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import Logo from "@/components/Logo"
@@ -87,11 +85,6 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     const { addTask } = useContext(TasksContext)
     const { addEvent } = useContext(EventsContext)
     const { addReminder } = useContext(RemindersContext)
-
-    const handleAddItemSuccess = (item: Item) => {
-        setAddItemModalOpen(false)
-        console.log(item)
-    }
 
     const handleCreateTaskSuccess = (task: Task) => {
         addTask(task)

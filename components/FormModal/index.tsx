@@ -1,8 +1,6 @@
 "use client"
 import styles from "./FormModal.module.css"
 import { ReactNode, useContext, SetStateAction, RefObject, Dispatch, createContext, useRef, useState, useEffect } from "react"
-export { default as Option } from "./Option"
-export { default as Slide } from "./Slide"
 
 type FormModalProps = {
     open: boolean,

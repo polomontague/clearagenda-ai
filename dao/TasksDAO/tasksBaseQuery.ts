@@ -22,7 +22,6 @@ const tasksBaseQuery = {
         once_deadline: true,
         repeating_deadline: true,
         repeat: true,
-        completed: true,
         created: true,
         updated: true
     }

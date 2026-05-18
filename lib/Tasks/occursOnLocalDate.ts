@@ -1,6 +1,5 @@
 import Repeat from "@/types/Repeat"
 import Utility from "@/lib/Utility"
-import getLocalNthWeekdayOfMonth from "./getLocalNthWeekdayOfMonth"
 
 export default function occursOnLocalDate(repeat: Repeat, date: Date): boolean {
     const { starts, ends } = repeat
@@ -59,4 +58,19 @@ const getDiffMonths = (starts: string, date: Date) => {
         (targetYear - startsYear) * 12
         + (targetMonth - startsMonth)
     )
+}
+
+const getLocalNthWeekdayOfMonth = (year: number, month: number, weekday: number, ordinal: number) => {
+    const matches: Date[] = []
+    for (let d = 1; d <= 31; d++) {
+        const date = new Date(year, month, d)
+        if (date.getMonth() !== month) break
+        if (date.getDay() === weekday) {
+            matches.push(new Date(date))
+        }
+    }
+    if (matches.length === 0) return undefined
+    if (ordinal > 0) return matches[ordinal - 1]
+    const indexFromEnd = Math.abs(ordinal)
+    return matches[matches.length - indexFromEnd]
 }

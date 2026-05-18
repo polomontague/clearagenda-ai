@@ -2,9 +2,9 @@ import Task from "@/types/Task"
 import Event from "@/types/Event"
 import User from "@/types/User"
 import Utility from "@/lib/Utility"
-import getDateEvents from "./getDateEvents"
-import occursOnLocalDate from "./occursOnLocalDate"
 import getWeekdayCapacity from "./getWeekdayCapacity"
+import Events from "../Events"
+import occursOnLocalDate from "./occursOnLocalDate"
 
 type StepInstance = {
     occurs: "once" | "repeating",
@@ -115,7 +115,7 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
 }
 
 const getDateEventOccupancy = (events: Event[], date: Date): number => {
-    const dateEvents = getDateEvents(events, date)
+    const dateEvents = Events.getDateEvents(events, date)
     const totalDuration = dateEvents.reduce((total, event) => total + event.duration, 0)
     return totalDuration
 }
