@@ -94,6 +94,7 @@
 }
 
 .containerChildren{
+    min-height: 100%;
     padding: var(--spacing-medium);
     position: relative;
     z-index: 1;

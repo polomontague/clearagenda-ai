@@ -6,7 +6,7 @@
     backdrop-filter: blur(var(--blur));
     position: absolute;
     left: 0;
-    top: var(--field-size);
+    top: 0;
     right: 0;
     bottom: 0;
 }

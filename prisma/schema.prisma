@@ -44,7 +44,7 @@ model users {
 	phone String @db.VarChar(11) @unique
 	password String @db.VarChar(255)
 	theme theme @default(light)
-	accent accent @default(yellow)
+	accent accent @default(sky)
 	sunday_hours Int @default(8)
 	monday_hours Int @default(8)
 	tuesday_hours Int @default(8)

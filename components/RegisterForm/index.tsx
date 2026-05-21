@@ -66,7 +66,7 @@ export default function RegisterForm() {
                 secure: true,
                 httpOnly: false,
             })
-            router.push("/personalize")
+            router.push("/set-up")
         }).catch(err => {
             setLoading(false)
             setAlertMessage(err.response.data.error.message)
