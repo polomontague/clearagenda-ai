@@ -7,7 +7,7 @@ type FormProps = {
 }
 
 export default function Form(props: FormProps) {
-    const handleSubmit = (evt: SubmitEvent) => {
+    const handleSubmit = (evt: SubmitEvent<HTMLFormElement>) => {
         evt.preventDefault()
         props.onSubmit()
     }
