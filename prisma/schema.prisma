@@ -34,7 +34,9 @@ enum accent {
 
 model users {
 	id Int @id @default(autoincrement())
-	items items[]
+	tasks tasks[]
+	events events[]
+	reminders reminders[]
 	generations generations[]
 	first_name String @db.VarChar(30)
 	last_name String @db.VarChar(60)
@@ -54,43 +56,74 @@ model users {
 	updated DateTime @updatedAt
 }
 
-enum item_type {
-	task
-	event
-}
-
-enum item_occurs {
+enum occurs {
 	once
 	repeating
 }
 
-model items {
+model task_steps {
 	id Int @id @default(autoincrement())
+	task_id Int
+	task tasks @relation(fields: [task_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	notes String? @db.VarChar(500)
+	duration Int
+	completed DateTime?
+	completions task_step_completions[]
+}
+
+model task_step_completions {
+	id Int @id @default(autoincrement())
+	step_id Int
+	step task_steps @relation(fields: [step_id], references: [id], onDelete: Cascade)
+	date String
+	completed DateTime
+	@@unique([step_id, date])
+}
+
+model tasks {
+	id Int @id @default(autoincrement())
+	occurs occurs
 	user_id Int
 	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
-	type item_type
 	name String @db.VarChar(100)
-	description String? @db.Text
-	steps item_steps[]
-	importance Float?
-	notes String? @db.VarChar(300)
-	starts DateTime?
-	duration Int?
-	occurs item_occurs
-	deadline DateTime?
+	description String @db.Text
+	steps task_steps[]
+	importance Float
+	once_deadline String?
+	repeating_deadline Int?
 	repeat Json?
 	created DateTime @default(now())
 	updated DateTime @updatedAt
 }
 
-model item_steps {
+model events {
 	id Int @id @default(autoincrement())
-	item_id Int
-	item items @relation(fields: [item_id], references: [id], onDelete: Cascade)
+	occurs occurs
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 	name String @db.VarChar(100)
-	notes String? @db.VarChar(500)
+	notes String? @db.VarChar(300)
 	duration Int
-	completed DateTime?
+	timezone String @db.VarChar(30)
+	once_starts DateTime?
+	repeating_starts String?
+	repeat Json?
+	created DateTime @default(now())
+	updated DateTime @updatedAt
+}
+
+model reminders {
+	id Int @id @default(autoincrement())
+	occurs occurs
+	user_id Int
+	user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+	name String @db.VarChar(100)
+	once_at String?
+	repeating_at String?
+	repeat Json?
+	created DateTime @default(now())
+	updated DateTime @updatedAt
 }
 
 model generations {

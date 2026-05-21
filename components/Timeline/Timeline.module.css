@@ -1,0 +1,102 @@
+.background{
+    width: 100%;
+    height: 1500px;
+    padding-left: var(--spacing-medium);
+    padding-top: var(--spacing-large);
+    padding-right: var(--spacing-medium);
+    padding-bottom: var(--spacing-large);
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--outer-border-radius);
+}
+
+.timeline{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.containerLines{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+.line{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--border-width);
+    background-color: var(--layer-2-border);
+}
+
+.line > .containerHour{
+    padding-right: var(--spacing-small);
+    background-color: var(--layer-2);
+}
+
+.containerHour > .hour{
+    font-size: var(--font-size);
+    font-weight: bolder;
+    color: var(--contrast);
+}
+
+.containerHour > .amOrPm{
+    font-size: var(--font-size-small);
+    color: var(--layer-2-light);
+}
+
+.containerItems{
+    height: 100%;
+    position: absolute;
+    left: 44px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.event{
+    width: 100%;
+    padding: var(--spacing-small);
+    background-color: var(--accent-translucent);
+    border: var(--border-width) solid var(--accent);
+    border-left: var(--spacing-small) solid var(--accent);
+    border-radius: var(--inner-border-radius);
+    position: absolute;
+    left: 0;
+}
+
+.event > .name{
+    font-weight: bolder;
+    color: var(--accent);
+    line-height: normal;
+}
+
+.indicator{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--border-width);
+    background-color: var(--red);
+    position: absolute;
+    left: 0;
+}
+
+.indicator > .time{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    height: var(--inner-field-size);
+    padding-left: var(--spacing-small);
+    padding-right: var(--spacing-small);
+    background-color: var(--red);
+    border-radius: var(--inner-border-radius);
+    font-size: var(--inner-font-size);
+    font-weight: bolder;
+    color: var(--white);
+}

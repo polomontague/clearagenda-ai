@@ -21,7 +21,7 @@ export default function SettingsModal(props: SettingsModalProps) {
             onRequestClose={props.onRequestClose}
         >
             <FieldFrame>
-                    <SlideModalOption label="Profile">
+                <SlideModalOption label="Profile">
                     <SlideModalSlide>
                         <FieldFrame>
                             <SlideModalOption label="Name">

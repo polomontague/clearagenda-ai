@@ -2,7 +2,7 @@
     display: flex;
     justify-content: flex-end;
     position: relative;
-    z-index: 1;
+    z-index: 0;
 }
 
 .background > .btn{
@@ -12,31 +12,21 @@
     align-items: center;
     width: var(--field-size);
     height: var(--field-size);
-    background-color: var(--layer-2);
-    border: var(--border-width) solid var(--layer-2-border);
+    background-color: var(--accent);
     border-radius: var(--border-radius);
 }
 
 .background > .btn > svg{
     width: var(--icon-size);
     height: var(--icon-size);
-    fill: var(--accent);
-}
-
-.background > .btn.selected{
-    background-color: var(--accent);
-    border: none;
-}
-
-.background > .btn.selected > svg{
     fill: var(--accent-contrast);
 }
 
 .menuAnchor{
     height: 0;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    top: 0;
+    left: 0;
 }
 
 .menuAnchor.open{
@@ -53,41 +43,69 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 2;
+    z-index: 1;
 }
 
-.lstBtns{
+.menu{
     display: -webkit-flex;
     display: flex;
     flex-direction: column;
     gap: var(--border-width);
-    background-color: var(--layer-2-border);
-    border: var(--border-width) solid var(--layer-2-border);
+    background-color: var(--layer-3-border);
+    border: var(--border-width) solid var(--layer-3-border);
     border-radius: var(--border-radius);
     overflow: hidden;
-    margin-top: var(--spacing-small);
-    position: relative;
-    z-index: 3;
+    position: absolute;
+    left: 0;
+    bottom: var(--spacing-small);
+    z-index: 2;
 }
 
-.lstBtns .btn{
-    display: -webkit-flex;
-    display: flex;
-    gap: var(--spacing-small);
-    align-items: center;
+.menu .btn{
     width: 100%;
     height: var(--field-size);
-    padding-right: var(--spacing-medium);
-    padding-left: var(--spacing-medium);
-    background-color: var(--layer-2);
+    padding: calc(calc(var(--field-size) - var(--inner-field-size)) / 2);
+    background-color: var(--layer-3);
 }
 
-.lstBtns .btn > svg{
+.menu .btn > .highlight{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    width: 100%;
+    height: var(--inner-field-size);
+    padding-left: var(--spacing-small);
+    padding-right: var(--spacing-small);
+    border-radius: var(--inner-border-radius);
+}
+
+.menu .btn > .highlight > svg{
+    flex-shrink: 0;
     width: var(--icon-size);
     height: var(--icon-size);
-    fill: var(--accent);
+    fill: var(--layer-3-light);
 }
 
-.lstBtns .btn > .label{
-    color: var(--layer-2-light);
+.menu .btn > .highlight > .label{
+    color: var(--layer-3-light);
+}
+
+.menu .btn:hover > .highlight,
+.menu .btn:active > .highlight,
+.menu .btn:focus > .highlight{
+    background-color: var(--accent);
+}
+
+.menu .btn:hover > .highlight > svg,
+.menu .btn:active > .highlight > svg,
+.menu .btn:focus > .highlight > svg{
+    fill: var(--accent-contrast);
+}
+
+.menu .btn:hover > .highlight > .label,
+.menu .btn:active > .highlight > .label,
+.menu .btn:focus > .highlight > .label{
+    font-weight: bolder;
+    color: var(--accent-contrast);
 }

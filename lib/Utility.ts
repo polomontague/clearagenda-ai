@@ -1,10 +1,11 @@
-import Item, { Task, Event, Repeat } from "@/types/Item"
 import User from "@/types/User"
+import { DateTime } from "luxon"
+import Repeat from "@/types/Repeat"
 
 const Utility = {
-    formatDate: (date: Date) => {
+    formatDate: (date: Date, noToday?: boolean) => {
         const today = new Date()
-        if (date.toLocaleDateString("en-CA") === today.toLocaleDateString("en-CA")) return "Today"
+        if (!noToday && date.toLocaleDateString("en-CA") === today.toLocaleDateString("en-CA")) return "Today"
         const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
         return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
     },
@@ -101,7 +102,7 @@ const Utility = {
         }
         return "Repeats"
     },
-    getRepeatLabel: (repeat: Repeat): string => {
+    getRepeatLabel: (repeat: Repeat, timezone?: string): string => {
         const WEEKDAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         const MONTHS = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
@@ -160,8 +161,20 @@ const Utility = {
                 message = `${base} on the ${ord} ${weekday}${monthPart}`
             }
         }
-        const startsDate = new Date(repeat.starts)
-        const endsDate = repeat.ends ? new Date(repeat.ends) : undefined
+        const [ startsYear, startsMonth, startsDay ] = repeat.starts.split("-").map(Number)
+        let startsDate = new Date(startsYear, startsMonth - 1, startsDay)
+        if (timezone) {
+            startsDate = DateTime.fromObject({ year: startsYear, month: startsMonth, day: startsDay }, { zone: timezone }).toJSDate()
+        }
+        let endsDate
+        if (repeat.ends) {
+            const [endsYear, endsMonth, endsDay] = repeat.ends.split("-").map(Number)
+            if (timezone) {
+                endsDate = DateTime.fromObject({ year: endsYear, month: endsMonth, day: endsDay }, { zone: timezone }).toJSDate()
+            } else {
+                endsDate = new Date(endsYear, endsMonth - 1, endsDay)
+            }
+        }
         const starts = `${MONTHS[startsDate.getMonth()]} ${Utility.formatOrdinal(startsDate.getDate())}, ${startsDate.getFullYear()}`
         const ends = endsDate ? `${MONTHS[endsDate.getMonth()]} ${Utility.formatOrdinal(endsDate.getDate())}, ${endsDate.getFullYear()}` : ""
         if (ends) {
@@ -171,73 +184,49 @@ const Utility = {
         }
         return message
     },
-    formatEventFrom: (item: Event) => {
-        const starts = new Date(item.starts)
-        const ends = new Date(starts)
-        ends.setMinutes(ends.getMinutes() + item.duration)
-        return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
+    roundTime: (date: Date) => {
+        const result = new Date(date)
+        const minutes = result.getMinutes()
+        const roundedMinutes = Math.ceil(minutes / 5) * 5
+        result.setMinutes(roundedMinutes, 0, 0)
+        return result
     },
-    formatTaskLength: (item: Task) => {
-        let minutes = 0
-        item.steps.forEach(step => minutes += step.duration)
-        return Utility.formatDuration(minutes)
+    getDateKey: (date: Date) => {
+        const year = date.getFullYear()
+        const months = date.getMonth()
+        const day = date.getDate()
+        return `${year}-${(months + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`
     },
-    getItemStatus: (item: Item, accent: User["preferences"]["accent"]): {
-        code: "completed" | "overdue" | "upcoming" | "in_progress" | "repeating" | "ended",
-        color: string,
-        label: string
-    } => {
-        const COLORS = {
-        sky: accent === "sky" ? "var(--turquoise)" : "var(--sky)",
-        red: accent === "red" ? "var(--coral)" : "var(--red)",
-        yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
-        lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
-        gray: "var(--layer-4-light)"
-    }
-        if (item.type === "task") {
-            if (item.occurs === "once") {
-                const completion = Utility.getTaskCompletion(item)
-                if (completion === 1) return { code: "completed", color: COLORS.gray, label: "Completed" }
-                const overdue = item.deadline ? new Date(item.deadline) < new Date() : false
-                if (overdue) return { code: "overdue", color: COLORS.red, label: "Overdue" }
-                if (completion === 0) return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
-                return { code: "in_progress", color: COLORS.yellow, label: "In Progress" }
-            } else { // repeating
-                return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
-            }
-        } else { // event
-            if (item.occurs === "once") {
-                const completed = Utility.getItemCompleted(item)
-                if (completed) return { code: "ended", color: COLORS.gray, label: "Ended" }
-                return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
-            } else { // repeating
-                return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
-            }
-        }
+    getDateTimeKey: (date: Date) => {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, "0")
+        const day = date.getDate().toString().padStart(2, "0")
+        const hours = date.getHours().toString().padStart(2, "0")
+        const minutes = date.getMinutes().toString().padStart(2, "0")
+        const seconds = date.getSeconds().toString().padStart(2, "0")
+        const milliseconds = date.getMilliseconds().toString().padStart(3, "0")
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`
     },
-    getTaskCompletion: (item: Task) => {
-        let totalMinutes = 0
-        let completedMinutes = 0
-        for (const step of item.steps) {
-            totalMinutes += step.duration
-            if (step.completed) completedMinutes += step.duration
-        }
-        return Math.round((completedMinutes / totalMinutes) * 100) / 100
+    getTimeKey: (date: Date) => {
+        const hours = date.getHours().toString().padStart(2, "0")
+        const minutes = date.getMinutes().toString().padStart(2, "0")
+        const seconds = date.getSeconds().toString().padStart(2, "0")
+        const milliseconds = date.getMilliseconds().toString().padStart(3, "0")
+        return `${hours}:${minutes}:${seconds}.${milliseconds}`
     },
-    getItemCompleted: (item: Item) => {
-        if (item.type === "task") {
-            for (let i = 0; i < item.steps.length; i++) {
-                if (!item.steps[i].completed) return false
-            }
-        } else if (item.type === "event") {
-            if (item.occurs === "once") {
-                const ends = new Date(item.starts)
-                ends.setMinutes(ends.getMinutes() + item.duration)
-                if (new Date(ends).getTime() > new Date().getTime()) return false
-            }
-            if (item.occurs === "repeating") return false // Ongoing repeat ing events are not completed
-        }
-        return true
+    loadLocalDate: (date: string): Date => {
+        const [year, month, day] = date.split("-").map(Number)
+        return new Date(year, month - 1, day)
+    },
+    loadLocalTime: (time: string): Date => {
+        const [hours, minutes, seconds, milliseconds] = time.split(/[:.]/).map(Number)
+        const date = new Date()
+        date.setHours(hours, minutes, seconds, milliseconds)
+        return date
+    },
+    loadLocalDateTime: (date: string): Date => {
+        const [year, month, day, hours, minutes, seconds, milliseconds] = date.split(/[- :.]/).map(Number)
+        return new Date(year, month - 1, day, hours, minutes, seconds, milliseconds)
     }
 }
 

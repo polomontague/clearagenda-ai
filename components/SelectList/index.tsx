@@ -13,7 +13,7 @@ type BaseProps<Value> = {
 }
 
 type SingleProps<Value> = BaseProps<Value> & {
-    multiple?: false,
+    multiple: false,
     value: Value,
     onChange: (value: Value) => void
 }

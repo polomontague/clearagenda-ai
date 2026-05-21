@@ -42,6 +42,7 @@ export default function DurationSelect(props: DurationSelectProps) {
             <Fieldset>
                 <SelectList
                     fieldset
+                    multiple={false}
                     options={[
                         ...durations.map(duration => ({
                             value: duration,

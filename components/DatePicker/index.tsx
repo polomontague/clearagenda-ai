@@ -26,10 +26,6 @@ export default function DatePicker(props: DatePickerProps) {
     }, [props.min])
     const today = new Date()
 
-    useEffect(() => {
-        console.log(min)
-    }, [min])
-
     const getDays = (date: Date) => {
         const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
         const startDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay()

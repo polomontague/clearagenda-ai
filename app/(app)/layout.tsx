@@ -1,7 +1,9 @@
 import { ReactNode } from "react"
 import AppNavigationFrame from "@/components/AppNavigationFrame"
 import PrivateRoute from "@/components/PrivateRoute"
-import ItemsProvider from "@/providers/ItemsProvider"
+import TasksProvider from "@/providers/TasksProvider"
+import EventsProvider from "@/providers/EventsProvider"
+import RemindersProvider from "@/providers/RemindersProvider"
 
 type RootLayoutProps = {
 	children: ReactNode
@@ -10,11 +12,15 @@ type RootLayoutProps = {
 export default function AppLayout(props: RootLayoutProps) {
 	return (
 		<PrivateRoute>
-			<ItemsProvider>
-				<AppNavigationFrame>
-					{props.children}
-				</AppNavigationFrame>
-			</ItemsProvider>
+			<TasksProvider>
+				<EventsProvider>
+					<RemindersProvider>
+						<AppNavigationFrame>
+							{props.children}
+						</AppNavigationFrame>
+					</RemindersProvider>
+				</EventsProvider>
+			</TasksProvider>
 		</PrivateRoute>
 	)
 }

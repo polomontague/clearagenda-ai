@@ -25,7 +25,7 @@ export default function SelectButton(props: SelectButtonProps) {
         <div className={styles.background}>
             <button
                 type="button"
-                className={`${styles.btn} ${open ? styles.selected : ""}`}
+                className={styles.btn}
                 onClick={() => setOpen(true)}
             >
                 {props.icon}
@@ -35,15 +35,17 @@ export default function SelectButton(props: SelectButtonProps) {
                     className={styles.overlay}
                     onClick={() => setOpen(false)}
                 ></button>
-                <ul className={styles.lstBtns}>
+                <ul className={styles.menu}>
                     {props.options.map((option, i) => (
                         <li key={i}>
                             <button
                                 className={styles.btn}
                                 onClick={() => handleClick(option.onClick)}
                             >
-                                {option.icon}
-                                <span className={styles.label}>{option.label}</span>
+                                <div className={styles.highlight}>
+                                    {option.icon}
+                                    <span className={styles.label}>{option.label}</span>
+                                </div>
                             </button>
                         </li>
                     ))}

@@ -1,17 +1,27 @@
 "use client"
 import styles from "./NavigationFrame.module.css"
-import { ReactElement, ReactNode, useState } from "react"
+import { ReactElement, ReactNode, useState, useContext } from "react"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
-import { CalendarIcon, BrainIcon, GearIcon, PlusIcon, LogoutIcon } from "@/components/Icons"
+import { CalendarIcon, BrainIcon, GearIcon, PlusIcon, LogoutIcon, MenuIcon } from "@/components/Icons"
 import SettingsModal from "@/components/SettingsModal"
 import FormModal from "@/components/FormModal"
-import ItemForm from "@/components/ItemForm"
-import Item from "@/types/Item"
 import { useCookies } from "react-cookie"
 import { useRouter } from "next/navigation"
 import Logo from "@/components/Logo"
 import Link from "next/link"
+import SelectButton from "@/components/SelectButton"
+import SelectBar from "../SelectBar"
+import FieldFrame from "../FieldFrame"
+import TaskForm from "../TaskForm"
+import EventForm from "../EventForm"
+import ReminderForm from "../ReminderForm"
+import TasksContext from "@/contexts/TasksContext"
+import EventsContext from "@/contexts/EventsContext"
+import RemindersContext from "@/contexts/RemindersContext"
+import Task from "@/types/Task"
+import Event from "@/types/Event"
+import Reminder from "@/types/Reminder"
 
 type Link = {
     type: "link",
@@ -43,7 +53,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
         {
             type: "button",
             icon: <PlusIcon />,
-            label: "Add Item",
+            label: "New",
             onClick: () => setAddItemModalOpen(true)
         },
         {
@@ -57,24 +67,38 @@ export default function NavigationFrame(props: NavigationFrameProps) {
             icon: <BrainIcon />,
             href: "/memory",
             label: "Memory"
-        },
+        }
+    ]
+    const moreOptions = [
         {
-            type: "button",
             icon: <GearIcon />,
             label: "Settings",
             onClick: () => setSettingsModalOpen(true)
         },
         {
-            type: "button",
             icon: <LogoutIcon />,
             label: "Logout",
             onClick: handleLogoutClick
         }
     ]
+    const [type, setType] = useState<"task" | "event" | "reminder">("task")
+    const { addTask } = useContext(TasksContext)
+    const { addEvent } = useContext(EventsContext)
+    const { addReminder } = useContext(RemindersContext)
 
-    const handleAddItemSuccess = (item: Item) => {
+    const handleCreateTaskSuccess = (task: Task) => {
+        addTask(task)
         setAddItemModalOpen(false)
-        console.log(item)
+    }
+
+    const handleCreateEventSuccess = (event: Event) => {
+        addEvent(event)
+        setAddItemModalOpen(false)
+    }
+
+    const handleCreateReminderSuccess = (reminder: Reminder) => {
+        addReminder(reminder)
+        setAddItemModalOpen(false)
     }
 
     function handleLogoutClick() {
@@ -82,7 +106,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
         router.push("/login")
         // TODO: Blacklist the token on the server
     }
-
+    
     return (
         <div className={styles.frame}>
             <aside className={styles.sidebar}>
@@ -118,6 +142,12 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                                 </li>
                             )
                         })}
+                        <li className={styles.containerBtnMore}>
+                            <SelectButton
+                                icon={<MenuIcon />}
+                                options={moreOptions}
+                            />
+                        </li>
                     </ul>
                 </nav>
             </aside>
@@ -125,13 +155,27 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                 {props.children}
                 <FormModal
                     open={addItemModalOpen}
-                    label="Add Agenda Item"
+                    label="New"
                     onRequestCancel={() => setAddItemModalOpen(false)}
                 >
-                    <ItemForm
-                        type="new"
-                        onSuccess={handleAddItemSuccess}
-                    />
+                    <FieldFrame>
+                        <SelectBar
+                            options={[
+                                { value: "task", label: "Task" },
+                                { value: "event", label: "Event" },
+                                { value: "reminder", label: "Reminder" }
+                            ]as const}
+                            value={type}
+                            onChange={setType}
+                        />
+                        {type === "task" ? (
+                            <TaskForm mode="new" onSuccess={handleCreateTaskSuccess} />
+                        ) : type === "event" ? (
+                            <EventForm mode="new" onSuccess={handleCreateEventSuccess} />
+                        ) : type === "reminder" ? (
+                            <ReminderForm mode="new" onSuccess={handleCreateReminderSuccess} />
+                        ) : <></>}
+                    </FieldFrame>
                 </FormModal>
                 <SettingsModal open={settingsModalOpen} onRequestClose={() => setSettingsModalOpen(false)} />
             </main>
