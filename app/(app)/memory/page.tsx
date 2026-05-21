@@ -1,8 +1,6 @@
 "use client"
 import { useState, useContext } from "react"
-import ItemList from "@/components/ItemList"
 import PageFrame from "@/components/PageFrame"
-import SearchInput from "@/components/SearchInput"
 import { ControlsIcon } from "@/components/Icons"
 import SquareButton from "@/components/SquareButton"
 import Modal from "@/components/Modal"

@@ -7,7 +7,7 @@ import FieldFrame from "@/components/FieldFrame"
 import UpdateThemeForm from "@/components/UpdateThemeForm"
 
 export default function PreferencesSettings() {
-    const [tab, setTab] = useState<"hours" | "appearance">("hours")
+    const [tab, setTab] = useState("hours")
 
     const elementMap = {
         hours: <UpdatePreferencesHoursForm />,
@@ -29,7 +29,7 @@ export default function PreferencesSettings() {
                 value={tab}
                 onChange={(val) => setTab(val)}
             />
-            {elementMap[tab]}
+            {elementMap[tab as "hours" | "appearance"]}
         </FieldFrame>
     )
 }

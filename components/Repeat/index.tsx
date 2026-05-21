@@ -62,6 +62,7 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
             >
                 <SlideField fieldset label="Frequency" value={frequencyLabelMap[value.frequency]}>
                     <SelectList
+                        multiple={false}
                         options={[
                             { value: "daily", label: "Daily" },
                             { value: "weekly", label: "Weekly" },
@@ -92,7 +93,7 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
                     >
                         <SelectList
                             multiple
-                            options={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((weekday, i) => ({
+                            options={(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const).map((weekday, i) => ({
                                 value: i,
                                 label: weekday
                             }))}

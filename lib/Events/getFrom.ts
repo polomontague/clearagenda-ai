@@ -8,6 +8,6 @@ export default function getFrom(event: Event): string {
         ends.setMinutes(ends.getMinutes() + event.duration)
         return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
     } else { // Repeating
-        
+        return "Time - Time"
     }
 }

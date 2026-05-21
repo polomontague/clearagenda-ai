@@ -1,7 +1,6 @@
-import Item, { Task, Event, Repeat } from "@/types/Item"
 import User from "@/types/User"
-import { timeStamp } from "console"
 import { DateTime } from "luxon"
+import Repeat from "@/types/Repeat"
 
 const Utility = {
     formatDate: (date: Date, noToday?: boolean) => {
@@ -184,69 +183,6 @@ const Utility = {
             message += ` starting on ${starts}`
         }
         return message
-    },
-    formatEventFrom: (item: Event) => {
-        const starts = new Date(item.starts)
-        const ends = new Date(starts)
-        ends.setMinutes(ends.getMinutes() + item.duration)
-        return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
-    },
-    getItemStatus: (item: Item, accent: User["preferences"]["accent"]): {
-        code: "completed" | "overdue" | "upcoming" | "in_progress" | "repeating" | "ended",
-        color: string,
-        label: string
-    } => {
-        const COLORS = {
-            sky: accent === "sky" ? "var(--turquoise)" : "var(--sky)",
-            red: accent === "red" ? "var(--coral)" : "var(--red)",
-            yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
-            lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
-            gray: "var(--layer-4-light)"
-        }
-        if (item.type === "task") {
-            if (item.occurs === "once") {
-                const completion = Utility.getTaskCompletion(item)
-                if (completion === 1) return { code: "completed", color: COLORS.gray, label: "Completed" }
-                const overdue = item.deadline ? new Date(item.deadline) < new Date() : false
-                if (overdue) return { code: "overdue", color: COLORS.red, label: "Overdue" }
-                if (completion === 0) return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
-                return { code: "in_progress", color: COLORS.yellow, label: "In Progress" }
-            } else { // repeating
-                return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
-            }
-        } else { // event
-            if (item.occurs === "once") {
-                const completed = Utility.getItemCompleted(item)
-                if (completed) return { code: "ended", color: COLORS.gray, label: "Ended" }
-                return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
-            } else { // repeating
-                return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
-            }
-        }
-    },
-    getTaskCompletion: (item: Task) => {
-        let totalMinutes = 0
-        let completedMinutes = 0
-        for (const step of item.steps) {
-            totalMinutes += step.duration
-            if (step.completed) completedMinutes += step.duration
-        }
-        return Math.round((completedMinutes / totalMinutes) * 100) / 100
-    },
-    getItemCompleted: (item: Item) => {
-        if (item.type === "task") {
-            for (let i = 0; i < item.steps.length; i++) {
-                if (!item.steps[i].completed) return false
-            }
-        } else if (item.type === "event") {
-            if (item.occurs === "once") {
-                const ends = new Date(item.starts)
-                ends.setMinutes(ends.getMinutes() + item.duration)
-                if (new Date(ends).getTime() > new Date().getTime()) return false
-            }
-            if (item.occurs === "repeating") return false // Ongoing repeat ing events are not completed
-        }
-        return true
     },
     roundTime: (date: Date) => {
         const result = new Date(date)

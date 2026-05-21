@@ -7,7 +7,7 @@ import UpdatePhoneForm from "@/components/UpdatePhoneForm"
 import FieldFrame from "@/components/FieldFrame"
 
 export default function ProfileSettings() {
-    const [tab, setTab] = useState<"name" | "email" | "phone">("name")
+    const [tab, setTab] = useState("name")
 
     const componentMap = {
         name: <UpdateNameForm />,
@@ -26,7 +26,7 @@ export default function ProfileSettings() {
                 value={tab}
                 onChange={(val) => setTab(val)}
             />
-            {componentMap[tab]}
+            {componentMap[tab as "name" | "email" | "phone"]}
         </FieldFrame>
     )
 }

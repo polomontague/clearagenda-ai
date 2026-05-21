@@ -106,7 +106,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
         router.push("/login")
         // TODO: Blacklist the token on the server
     }
-
+    
     return (
         <div className={styles.frame}>
             <aside className={styles.sidebar}>

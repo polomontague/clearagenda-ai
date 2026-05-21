@@ -126,62 +126,6 @@ model reminders {
 	updated DateTime @updatedAt
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-enum item_type {
-	task
-	event
-}
-
-enum item_occurs {
-	once
-	repeating
-}
-
-model items {
-	id Int @id @default(autoincrement())
-	user_id Int
-	// user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
-	type item_type
-	name String @db.VarChar(100)
-	description String? @db.Text
-	steps item_steps[]
-	importance Float?
-	notes String? @db.VarChar(300)
-	starts DateTime?
-	duration Int?
-	occurs item_occurs
-	deadline DateTime?
-	repeat Json?
-	timezone String? @db.VarChar(30)
-	created DateTime @default(now())
-	updated DateTime @updatedAt
-}
-
-model item_steps {
-	id Int @id @default(autoincrement())
-	item_id Int
-	item items @relation(fields: [item_id], references: [id], onDelete: Cascade)
-	name String @db.VarChar(100)
-	notes String? @db.VarChar(500)
-	duration Int
-	completed DateTime?
-}
-
 model generations {
 	id Int @id @default(autoincrement())
 	user_id Int
