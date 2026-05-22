@@ -59,7 +59,16 @@
     bottom: 0;
 }
 
-.event{
+
+
+
+
+
+
+
+
+
+.block{
     width: 100%;
     padding: var(--spacing-small);
     background-color: var(--accent-translucent);
@@ -70,11 +79,54 @@
     left: 0;
 }
 
-.event > .name{
+.block > .label{
     font-weight: bolder;
     color: var(--accent);
     line-height: normal;
 }
+
+
+
+
+
+
+
+
+
+
+.point{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    transform: translateY(-50%);
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.point > .dot{
+    width: var(--spacing-small);
+    height: var(--spacing-small);
+    background-color: var(--accent);
+    border-radius: 50%;
+}
+
+.point > .label{
+    color: var(--accent);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 .indicator{
     display: -webkit-flex;

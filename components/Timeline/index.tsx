@@ -1,12 +1,22 @@
 "use client"
-import { useState, useEffect } from "react"
-import Event from "@/types/Event"
 import styles from "./Timeline.module.css"
+import { useState, useEffect } from "react"
 import Utility from "@/lib/Utility"
-import { DateTime } from "luxon"
+
+export type Block = {
+    starts: Date,
+    ends: Date,
+    label: string
+}
+
+export type Point = {
+    at: Date,
+    label: string
+}
 
 type TimelineProps = {
-    events: Event[]
+    blocks: Block[],
+    points: Point[]
 }
 
 export default function Timeline(props: TimelineProps) {
@@ -35,25 +45,14 @@ export default function Timeline(props: TimelineProps) {
         )
     }
 
-    const getHeight = (minutes: number) => {
-        return (minutes / MINUTES_IN_DAY) * 100
+    const getHeight = (starts: Date, ends: Date) => {
+        const duration = (ends.getTime() - starts.getTime()) / (1000 * 60) // in minutes
+        return (duration / MINUTES_IN_DAY) * 100
     }
 
     const getTop = (date: Date) => {
         const minutes = date.getHours() * 60 + date.getMinutes()
         return (minutes / MINUTES_IN_DAY) * 100
-    }
-
-    const getEventTimes = (event: Event) => {
-        if (event.occurs === "once") {
-            const starts = new Date(event.starts)
-            const ends = new Date(starts)
-            ends.setMinutes(ends.getMonth() + event.duration)
-            return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
-        }
-        if (event.occurs === "repeating") {
-
-        }
     }
 
     return (
@@ -70,22 +69,35 @@ export default function Timeline(props: TimelineProps) {
                     </div>
                 </div>
                 <div className={styles.containerItems}>
-                    {props.events.map((event, i) => {
-                        const height = getHeight(event.duration)
-                        const top = getTop(new Date(event.starts))
+                    {props.blocks.map((block, i) => {
+                        const height = getHeight(block.starts, block.ends)
+                        const top = getTop(new Date(block.starts))
                         return (
-                            (
-                                <div
-                                    key={i}
-                                    className={styles.event}
-                                    style={{
-                                        height: `${height}%`,
-                                        top: `${top}%`
-                                    }}
-                                >
-                                    <h5 className={styles.name}>{event.name}</h5>
-                                </div>
-                            )
+                            <div
+                                key={i}
+                                className={styles.block}
+                                style={{
+                                    height: `${height}%`,
+                                    top: `${top}%`
+                                }}
+                            >
+                                <h5 className={styles.label}>{block.label}</h5>
+                            </div>
+                        )
+                    })}
+                    {props.points.map((point, i) => {
+                        const top = getTop(point.at)
+                        return (
+                            <div
+                                key={i}
+                                className={styles.point}
+                                style={{
+                                    top: `${top}%`
+                                }}
+                            >
+                                <div className={styles.dot}></div>
+                                <span className={styles.label}>{point.label} @ {Utility.formatTime(point.at)}</span>
+                            </div>
                         )
                     })}
                 </div>

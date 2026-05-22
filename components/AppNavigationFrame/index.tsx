@@ -109,6 +109,34 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     
     return (
         <div className={styles.frame}>
+            <main className={styles.main}>
+                {props.children}
+                <FormModal
+                    open={addItemModalOpen}
+                    label="New"
+                    onRequestCancel={() => setAddItemModalOpen(false)}
+                >
+                    <FieldFrame>
+                        <SelectBar
+                            options={[
+                                { value: "task", label: "Task" },
+                                { value: "event", label: "Event" },
+                                { value: "reminder", label: "Reminder" }
+                            ]as const}
+                            value={type}
+                            onChange={setType}
+                        />
+                        {type === "task" ? (
+                            <TaskForm mode="new" onSuccess={handleCreateTaskSuccess} />
+                        ) : type === "event" ? (
+                            <EventForm mode="new" onSuccess={handleCreateEventSuccess} />
+                        ) : type === "reminder" ? (
+                            <ReminderForm mode="new" onSuccess={handleCreateReminderSuccess} />
+                        ) : <></>}
+                    </FieldFrame>
+                </FormModal>
+                <SettingsModal open={settingsModalOpen} onRequestClose={() => setSettingsModalOpen(false)} />
+            </main>
             <aside className={styles.sidebar}>
                 <header className={styles.header}>
                     <Link href="/agenda">
@@ -151,34 +179,6 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                     </ul>
                 </nav>
             </aside>
-            <main className={styles.main}>
-                {props.children}
-                <FormModal
-                    open={addItemModalOpen}
-                    label="New"
-                    onRequestCancel={() => setAddItemModalOpen(false)}
-                >
-                    <FieldFrame>
-                        <SelectBar
-                            options={[
-                                { value: "task", label: "Task" },
-                                { value: "event", label: "Event" },
-                                { value: "reminder", label: "Reminder" }
-                            ]as const}
-                            value={type}
-                            onChange={setType}
-                        />
-                        {type === "task" ? (
-                            <TaskForm mode="new" onSuccess={handleCreateTaskSuccess} />
-                        ) : type === "event" ? (
-                            <EventForm mode="new" onSuccess={handleCreateEventSuccess} />
-                        ) : type === "reminder" ? (
-                            <ReminderForm mode="new" onSuccess={handleCreateReminderSuccess} />
-                        ) : <></>}
-                    </FieldFrame>
-                </FormModal>
-                <SettingsModal open={settingsModalOpen} onRequestClose={() => setSettingsModalOpen(false)} />
-            </main>
         </div>
     )
 }

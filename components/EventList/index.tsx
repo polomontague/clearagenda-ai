@@ -103,7 +103,7 @@ export default function EventList(props: EventListProps) {
                         onRequestClose={() => setModalOpen(false)}
                     />
                     <FormModal
-                        label="Edit"
+                        label="Edit Event"
                         open={editModalOpen}
                         onRequestCancel={() => setEditModalOpen(false)}
                     >

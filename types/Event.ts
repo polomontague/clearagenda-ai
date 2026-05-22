@@ -26,4 +26,9 @@ export type RepeatingEvent = BaseEvent & {
 
 type Event = OnceEvent | RepeatingEvent
 
+export type EventOccurrence = {
+    event: Event,
+    starts: Date
+}
+
 export default Event

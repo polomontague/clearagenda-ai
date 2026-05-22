@@ -118,12 +118,11 @@
 
 @media screen and (max-width: 1000px){
     .frame{
-        z-index: 0;
+        
     }
 
     .sidebar{
         position: relative;
-        z-index: 2;
     }
 
     .header{
@@ -198,6 +197,5 @@
     .main{
         padding-top: var(--header-height);
         padding-bottom: var(--footer-height);
-        z-index: 1;
     }
 }

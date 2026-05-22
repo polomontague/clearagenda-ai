@@ -13,6 +13,11 @@ type PageFrameProps = {
 export default function PageFrame(props: PageFrameProps) {
     return (
         <div className={styles.frame}>
+            <div className={styles.containerScroll}>
+                <div className={styles.containerChildren}>
+                    {props.children}
+                </div>
+            </div>
             <header className={styles.header}>
                 <div className={styles.containerCenter}>
                     {props.header.center}
@@ -23,11 +28,6 @@ export default function PageFrame(props: PageFrameProps) {
                     </div>
                 ) : null}
             </header>
-            <div className={styles.containerScroll}>
-                <div className={styles.containerChildren}>
-                    {props.children}
-                </div>
-            </div>
         </div>
     )
 }

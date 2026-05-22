@@ -40,11 +40,6 @@ export default function Wizard(props: WizardProps) {
             }}
         >
             <div className={styles.background}>
-                <header className={styles.header}>
-                    <Link href="/">
-                        <Logo />
-                    </Link>
-                </header>
                 <Fieldset layer={2} label={props.label}>
                     <div className={styles.window}>
                         <ul
@@ -66,6 +61,11 @@ export default function Wizard(props: WizardProps) {
                         </ul>
                     </div>
                 </Fieldset>
+                <header className={styles.header}>
+                    <Link href="/">
+                        <Logo />
+                    </Link>
+                </header>
             </div>
         </WizardContext.Provider>
     )
@@ -76,6 +76,11 @@ export const Slide = (props: SlideProps) => {
 
     return (
         <div className={styles.slide}>
+            <div className={styles.containerScroll}>
+                <div className={styles.containerChildren}>
+                    {props.children}
+                </div>
+            </div>
             <header className={styles.header}>
                 <h6 className={styles.label}>{props.label}</h6>
                 <div className={styles.containerBtns}>
@@ -91,11 +96,6 @@ export const Slide = (props: SlideProps) => {
                     />
                 </div>
             </header>
-            <div className={styles.containerScroll}>
-                <div className={styles.containerChildren}>
-                    {props.children}
-                </div>
-            </div>
         </div>
     )
 }

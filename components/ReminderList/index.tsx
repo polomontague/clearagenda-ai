@@ -95,7 +95,7 @@ export default function ReminderList(props: ReminderListProps) {
                         onRequestClose={() => setModalOpen(false)}
                     />
                     <FormModal
-                        label="Edit"
+                        label="Edit Reminder"
                         open={editModalOpen}
                         onRequestCancel={() => setEditModalOpen(false)}
                     >

@@ -91,7 +91,7 @@ export default function TaskList(props: TaskListProps) {
                         onRequestClose={() => setModalOpen(false)}
                     />
                     <FormModal
-                        label="Edit"
+                        label="Edit Task"
                         open={editModalOpen}
                         onRequestCancel={() => setEditModalOpen(false)}
                     >

@@ -6,7 +6,7 @@ import { RightArrowIcon, LeftArrowIcon } from "../Icons"
 type SlideFieldProps = {
     fieldset?: boolean
     label: string,
-    value: string,
+    value?: string,
     children: ReactNode
 }
 
@@ -22,7 +22,7 @@ export default function SlideField(props: SlideFieldProps) {
             >
                 <span className={styles.label}>{props.label}</span>
                 <div className={styles.value}>
-                    {props.value}
+                    {props.value ?? ""}
                     <RightArrowIcon />
                 </div>
             </button>
