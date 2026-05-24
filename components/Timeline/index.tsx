@@ -15,6 +15,7 @@ export type Point = {
 }
 
 type TimelineProps = {
+    date: Date,
     blocks: Block[],
     points: Point[]
 }
@@ -50,9 +51,28 @@ export default function Timeline(props: TimelineProps) {
         return (duration / MINUTES_IN_DAY) * 100
     }
 
-    const getTop = (date: Date) => {
-        const minutes = date.getHours() * 60 + date.getMinutes()
-        return (minutes / MINUTES_IN_DAY) * 100
+    const getTop = (starts: Date, day: Date) => {
+        const dayStart = new Date(day)
+        dayStart.setHours(0, 0, 0, 0)
+        const diffMinutes = (starts.getTime() - dayStart.getTime()) / (1000 * 60)
+        return (diffMinutes / MINUTES_IN_DAY) * 100
+    }
+
+    const getFrom = (starts: Date, ends: Date, day: Date): string => {
+        let start = new Date(starts)
+        const startsBeforeDay = Utility.getDateKey(starts) < Utility.getDateKey(day)
+        if (startsBeforeDay) {
+            start = new Date(day)
+            start.setHours(0, 0, 0, 0)
+        }
+        let end = new Date(ends)
+        const endsAfterDay = Utility.getDateKey(ends) > Utility.getDateKey(day)
+        if (endsAfterDay) {
+            end = new Date(day)
+            end.setDate(end.getDate() + 1)
+            end.setHours(0, 0, 0, 0)
+        }
+        return `${Utility.formatTime(start)} - ${Utility.formatTime(end)}`
     }
 
     return (
@@ -71,7 +91,7 @@ export default function Timeline(props: TimelineProps) {
                 <div className={styles.containerItems}>
                     {props.blocks.map((block, i) => {
                         const height = getHeight(block.starts, block.ends)
-                        const top = getTop(new Date(block.starts))
+                        const top = getTop(new Date(block.starts), props.date)
                         return (
                             <div
                                 key={i}
@@ -82,11 +102,12 @@ export default function Timeline(props: TimelineProps) {
                                 }}
                             >
                                 <h5 className={styles.label}>{block.label}</h5>
+                                <h6 className={styles.from}>{getFrom(block.starts, block.ends, props.date)}</h6>
                             </div>
                         )
                     })}
                     {props.points.map((point, i) => {
-                        const top = getTop(point.at)
+                        const top = getTop(point.at, props.date)
                         return (
                             <div
                                 key={i}
@@ -96,7 +117,7 @@ export default function Timeline(props: TimelineProps) {
                                 }}
                             >
                                 <div className={styles.dot}></div>
-                                <span className={styles.label}>{point.label} @ {Utility.formatTime(point.at)}</span>
+                                <h5 className={styles.label}>{point.label} @ {Utility.formatTime(point.at)}</h5>
                             </div>
                         )
                     })}
@@ -104,7 +125,7 @@ export default function Timeline(props: TimelineProps) {
                 <div
                     className={styles.indicator}
                     style={{
-                        top: `${getTop(now)}%`
+                        top: `${getTop(now, props.date)}%`
                     }}
                 >
                     <span className={styles.time}>{now.getHours() % 12 || 12}:{now.getMinutes().toString().padStart(2, "0")}</span>

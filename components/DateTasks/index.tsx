@@ -1,5 +1,5 @@
 "use client"
-import { useContext, useMemo } from "react"
+import { useContext, useMemo, useEffect } from "react"
 import TasksContext from "@/contexts/TasksContext"
 import Tasks from "@/lib/Tasks"
 import EventsContext from "@/contexts/EventsContext"
@@ -16,8 +16,10 @@ export default function DateTasks({ date }: {
     const { tasks } = useContext(TasksContext)
     const { events } = useContext(EventsContext)
     const { user } = useContext(UserContext)
-    if (!user) return
-    const dateTasks = useMemo(() => Tasks.getDateTasks(tasks, events, user, date), [tasks, date])
+    const dateTasks = useMemo(() => {
+        if (!user) return []
+        return Tasks.getDateTasks(tasks, events, user, date)
+    }, [tasks, events, user, date])
     const currentTaskAndStep = useMemo(() => Tasks.getCurrentTaskAndStep(dateTasks, date), [dateTasks])
 
     const renderCurrentStep = (task: Task, step: Step) => {

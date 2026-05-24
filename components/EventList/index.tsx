@@ -1,6 +1,6 @@
 "use client"
 import List, { ListItem } from "@/components/List"
-import Event from "@/types/Event"
+import Event, { EventOccurrence } from "@/types/Event"
 import Card from "@/components/Card"
 import { EditIcon, TrashCanIcon } from "@/components/Icons"
 import { useContext, useState } from "react"
@@ -8,13 +8,14 @@ import UserContext from "@/contexts/UserContext"
 import FieldFrame from "@/components/FieldFrame"
 import LabelField from "@/components/LabelField"
 import InnerValue from "@/components/InnerValue"
-import Utility from "@/lib/Utility"
 import EventModal from "../EventModal"
 import Button from "../Button"
 import Events from "@/lib/Events"
 import FormModal from "../FormModal"
 import EventForm from "../EventForm"
 import EventsContext from "@/contexts/EventsContext"
+import Utility from "@/lib/Utility"
+import Fieldset from "../Fieldset"
 
 type EventListProps = {
     events: Event[]
@@ -26,17 +27,6 @@ export default function EventList(props: EventListProps) {
     const [modalOpen, setModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const { updateEvent } = useContext(EventsContext)
-
-    const getFrom = (event: Event): string => {
-        if (event.occurs === "once") {
-            const starts = new Date(event.starts)
-            const ends = new Date(starts)
-            ends.setMinutes(ends.getMinutes() + event.duration)
-            return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
-        } else { // Repeating
-            return ""
-        }
-    }
 
     const handleEditClick = (event: Event) => {
         setCurrentEvent(event)
@@ -76,9 +66,13 @@ export default function EventList(props: EventListProps) {
                                 ]}
                             >
                                 <FieldFrame>
-                                    <LabelField label="From">
-                                        <InnerValue label={getFrom(event)} />
-                                    </LabelField>
+                                    <Fieldset
+                                        description={event.occurs === "repeating" ? Utility.getRepeatLabel(event.repeat) : undefined}
+                                    >
+                                        <LabelField fieldset label="From">
+                                            <InnerValue label={Events.getFrom(event)} />
+                                        </LabelField>
+                                    </Fieldset>
                                     <LabelField label="Status">
                                         <InnerValue
                                             color={status.color}

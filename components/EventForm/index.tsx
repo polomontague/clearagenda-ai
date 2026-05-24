@@ -79,10 +79,10 @@ export default function EventForm(props: EventFormProps) {
         const body = {
             occurs,
             name,
-            starts: occurs === "once" ? starts.toISOString() : Utility.formatTime(starts),
+            starts: occurs === "once" ? starts.toISOString() : Utility.getTimeKey(starts),
             duration,
             timezone,
-            repeat: occurs === "once" ? repeat : undefined
+            repeat: occurs === "repeating" ? repeat : undefined
         }
         API[method]<{ event: Event }>("/api/v1/events", body, true).then(data => {
             setLoading(false)

@@ -32,7 +32,7 @@ export default function EventModal({ event, open, onRequestClose }: EventModalPr
                     description={event.occurs === "repeating" ? Utility.getRepeatLabel(event.repeat, event.timezone) : undefined}
                 >
                     <LabelField fieldset label="From">
-                        <InnerValue label="??" />
+                        <InnerValue label={Events.getFrom(event)} />
                     </LabelField>
                     {event.notes ? (
                         <Fieldset label="Notes">

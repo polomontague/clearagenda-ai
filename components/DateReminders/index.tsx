@@ -31,6 +31,7 @@ export default function DateReminders({ date }: {
 
     return (
         <Timeline
+            date={date}
             blocks={[]}
             points={dateReminders.map(reminder => reminderToPoint(reminder))}
         />

@@ -2,8 +2,7 @@
 import { useContext, useMemo } from "react"
 import EventsContext from "@/contexts/EventsContext"
 import Events from "@/lib/Events"
-import Timeline, { Block } from "../Timeline"
-import Event from "@/types/Event"
+import Timeline from "../Timeline"
 
 export default function DateEvents({ date }: {
     date: Date
@@ -13,6 +12,7 @@ export default function DateEvents({ date }: {
 
     return (
         <Timeline
+            date={date}
             blocks={dateEvents.map(occurrence => ({
                 starts: occurrence.starts,
                 ends: occurrence.ends,

@@ -67,7 +67,7 @@ export default function DurationSelect(props: DurationSelectProps) {
                             })),
                             minutes: Array.from({ length: 12 }).map((_, i) => ({
                                 value: i * 5,
-                                label: `${(i * 5).toString().padStart(2, "0")} ${i === 1 ? "Min" : "Mins"}`
+                                label: `${(i * 5)} ${i === 1 ? "Min" : "Mins"}`
                             }))
                         }}
                         value={{

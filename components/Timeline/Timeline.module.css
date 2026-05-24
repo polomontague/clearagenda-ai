@@ -52,6 +52,7 @@
 
 .containerItems{
     height: 100%;
+    overflow: hidden;
     position: absolute;
     left: 44px;
     top: 0;
@@ -59,14 +60,9 @@
     bottom: 0;
 }
 
-
-
-
-
-
-
-
-
+/*****************
+** Block Styles **
+*****************/
 
 .block{
     width: 100%;
@@ -85,14 +81,14 @@
     line-height: normal;
 }
 
+.block .from{
+    font-size: var(--inner-font-size);
+    color: var(--accent);
+}
 
-
-
-
-
-
-
-
+/*****************
+** Point Styles **
+*****************/
 
 .point{
     display: -webkit-flex;
@@ -116,17 +112,9 @@
     color: var(--accent);
 }
 
-
-
-
-
-
-
-
-
-
-
-
+/*********************
+** Indicator Styles **
+*********************/
 
 .indicator{
     display: -webkit-flex;

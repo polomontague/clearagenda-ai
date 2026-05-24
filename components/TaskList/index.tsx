@@ -14,6 +14,8 @@ import Tasks from "@/lib/Tasks"
 import FormModal from "../FormModal"
 import TaskForm from "../TaskForm"
 import TasksContext from "@/contexts/TasksContext"
+import Fieldset from "../Fieldset"
+import Utility from "@/lib/Utility"
 
 type TaskListProps = {
     tasks: Task[]
@@ -64,9 +66,13 @@ export default function TaskList(props: TaskListProps) {
                                 ]}
                             >
                                 <FieldFrame>
-                                    <LabelField label="Length">
-                                        <InnerValue label={Tasks.getLength(task)} />
-                                    </LabelField>
+                                    <Fieldset
+                                        description={task.occurs === "repeating" ? Utility.getRepeatLabel(task.repeat) : undefined}
+                                    >
+                                        <LabelField fieldset label="Length">
+                                            <InnerValue label={Tasks.getLength(task)} />
+                                        </LabelField>
+                                    </Fieldset>
                                     <LabelField label="Status">
                                         <InnerValue
                                             color={status.color}

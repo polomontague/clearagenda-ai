@@ -14,6 +14,8 @@ import { EditIcon, TrashCanIcon } from "../Icons"
 import FormModal from "../FormModal"
 import ReminderForm from "../ReminderForm"
 import RemindersContext from "@/contexts/RemindersContext"
+import Fieldset from "../Fieldset"
+import Utility from "@/lib/Utility"
 
 type ReminderListProps = {
     reminders: Reminder[]
@@ -65,12 +67,16 @@ export default function ReminderList(props: ReminderListProps) {
                                 ]}
                             >
                                 <FieldFrame>
-                                    <LabelField label="At">
-                                        {at.date ? (
-                                            <InnerValue label={at.date} />
-                                        ) : null}
-                                        <InnerValue label={at.time} />
-                                    </LabelField>
+                                    <Fieldset
+                                        description={reminder.occurs === "repeating" ? Utility.getRepeatLabel(reminder.repeat) : undefined}
+                                    >
+                                        <LabelField fieldset label="At">
+                                            {at.date ? (
+                                                <InnerValue label={at.date} />
+                                            ) : null}
+                                            <InnerValue label={at.time} />
+                                        </LabelField>
+                                    </Fieldset>
                                     <LabelField label="Status">
                                         <InnerValue
                                             color={status.color}

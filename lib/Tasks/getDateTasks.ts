@@ -116,7 +116,7 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
 
 const getDateEventOccupancy = (events: Event[], date: Date): number => {
     const dateEvents = Events.getDateEvents(events, date)
-    const totalDuration = dateEvents.reduce((total, event) => total + event.duration, 0)
+    const totalDuration = dateEvents.reduce((total, occurrence) => total + occurrence.event.duration, 0)
     return totalDuration
 }
 
