@@ -28,7 +28,8 @@ type Event = OnceEvent | RepeatingEvent
 
 export type EventOccurrence = {
     event: Event,
-    starts: Date
+    starts: Date,
+    ends: Date
 }
 
 export default Event

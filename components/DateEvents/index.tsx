@@ -11,27 +11,13 @@ export default function DateEvents({ date }: {
     const { events } = useContext(EventsContext)
     const dateEvents = useMemo(() => Events.getDateEvents(events, date), [events, date])
 
-    const eventToBlock = (event: Event): Block => {
-        if (event.occurs === "once") {
-            const ends = new Date(event.starts)
-            ends.setMinutes(ends.getMinutes() + event.duration)
-            return {
-                starts: new Date(event.starts),
-                ends,
-                label: event.name
-            }
-        } else { // Repeating
-            return {
-                starts: new Date(),
-                ends: new Date(),
-                label: event.name
-            }
-        }
-    }
-
     return (
         <Timeline
-            blocks={dateEvents.map(event => eventToBlock(event))}
+            blocks={dateEvents.map(occurrence => ({
+                starts: occurrence.starts,
+                ends: occurrence.ends,
+                label: occurrence.event.name
+            }))}
             points={[]}
         />
     )

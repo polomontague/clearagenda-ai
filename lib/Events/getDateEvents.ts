@@ -1,5 +1,6 @@
 import Event, { EventOccurrence, RepeatingEvent } from "@/types/Event"
 import { DateTime } from "luxon"
+import Utility from "../Utility"
 
 export default function getDateEvents(events: Event[], date: Date): EventOccurrence[] {
     const result: EventOccurrence[] = []
@@ -12,9 +13,12 @@ export default function getDateEvents(events: Event[], date: Date): EventOccurre
             const starts = new Date(event.starts)
             const ends = new Date(starts.getTime() + (event.duration * 60 * 1000)) // convert seconds to milliseconds
             if (starts < localDayEnd && ends > localDayStart) {
+                const ends = new Date(event.starts)
+                ends.setMinutes(ends.getMinutes() + event.duration)
                 result.push({
                     event,
-                    starts: new Date(event.starts)
+                    starts: new Date(event.starts),
+                    ends
                 })
             }
             continue
@@ -27,38 +31,44 @@ export default function getDateEvents(events: Event[], date: Date): EventOccurre
 }
 
 const getOccurrencesForDate = (event: RepeatingEvent, date: Date): EventOccurrence[] => {
+    const localDayStart = new Date(date)
+    localDayStart.setHours(0, 0, 0, 0)
+    const localDayEnd = new Date(localDayStart)
+    localDayEnd.setDate(localDayEnd.getDate() + 1)
+    const occurrences = getOccurrencesUntil(event, date)
+    return occurrences.filter(occurrence => {
+        return occurrence.starts < localDayEnd && occurrence.ends > localDayStart
+    })
+}
+
+const getOccurrencesUntil = (event: RepeatingEvent, date: Date): EventOccurrence[] => {
     const occurrences: EventOccurrence[] = []
-    const localDayStart = DateTime.fromJSDate(date).startOf("day")
-    const localDayEnd = localDayStart.plus({ days: 1 })
-    const zonedDayStart = localDayStart.setZone(event.timezone)
+    const localDayEnd = DateTime.fromJSDate(date).endOf("day")
     const zonedDayEnd = localDayEnd.setZone(event.timezone)
-    const days = [
-        zonedDayStart.startOf("day"),
-        zonedDayEnd.startOf("day")
-    ] // Does this include events where neither the occurrence starts or ends match the requested date, but the event still spans over the requested date?
-    for (const day of days) {
-        if (!matchesRepeatRule(event, day)) continue
-        const [hours, minutes, seconds, milliseconds] = event.starts.split(/[:.]/).map(Number)
-        const occurrenceStarts = day.set({
-            hour: hours,
-            minute: minutes,
-            second: seconds,
-            millisecond: milliseconds
-        }) // what date is this set to?
-        const occurrenceEnds = occurrenceStarts.plus({ minutes: event.duration })
-        const overlaps = occurrenceStarts.toUTC() < localDayEnd.toUTC() &&
-            occurrenceEnds.toUTC() > localDayStart.toUTC()
-        if (overlaps) {
-            occurrences.push({ // doesn't this push multiple occurrences for the same calendar day?
+    let currentDate = DateTime.fromJSDate(Utility.loadLocalDate(event.repeat.starts), { zone: event.timezone })
+    // Event time
+    const [hours, minutes, seconds, milliseconds] = event.starts.split(/[:.]/).map(Number)
+    while (currentDate <= zonedDayEnd) {
+        if (matchesRepeatRule(event, currentDate)) {
+            const starts = currentDate.set({
+                hour: hours,
+                minute: minutes,
+                second: seconds,
+                millisecond: milliseconds
+            })
+            const ends = starts.plus({ minutes: event.duration })
+            occurrences.push({
                 event,
-                starts: occurrenceStarts.toJSDate()
+                starts: starts.toJSDate(),
+                ends: ends.toJSDate()
             })
         }
+        currentDate = currentDate.plus({ days: 1 })
     }
     return occurrences
 }
 
-const matchesRepeatRule = (event: RepeatingEvent, day: any): boolean => {
+const matchesRepeatRule = (event: RepeatingEvent, day: DateTime): boolean => {
     const { repeat } = event
     const dayKey = day.toFormat("yyyy-MM-dd")
     if (dayKey < event.repeat.starts) return false
