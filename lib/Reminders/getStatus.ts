@@ -1,8 +1,9 @@
 import Reminder from "@/types/Reminder"
 import User from "@/types/User"
+import Utility from "../Utility"
 
 export default function getStatus(reminder: Reminder, user: User): {
-    code: "upcoming" | "past" | "repeating",
+    code: "upcoming" | "past" | "repeating" | "repeating_ended",
     color: string,
     label: string
 } {
@@ -14,18 +15,15 @@ export default function getStatus(reminder: Reminder, user: User): {
         lavender: accent === "lavender" ? "var(--pink)" : "var(--lavender)",
         gray: "var(--layer-4-light)"
     }
-    const now = new Date()
     if (reminder.occurs === "once") {
-        const [year, month, day, hours, minutes] = reminder.at.split(/[- :.]/).map(Number)
-        const at = new Date()
-        at.setFullYear(year)
-        at.setMonth(month)
-        at.setDate(day)
-        at.setHours(hours)
-        at.setMinutes(minutes)
-        if (at > now) return { code: "past", color: COLORS.gray, label: "Past" }
+        const now = new Date()
+        const at = Utility.loadLocalDateTime(reminder.at)
+        const past = at < now
+        if (past) return { code: "past", color: COLORS.gray, label: "Past" }
         return { code: "upcoming", color: COLORS.sky, label: "Upcoming"}
     } else { // Repeating
+        const ended = Utility.getLocalRepeatingEnded(reminder.repeat)
+        if (ended) return { code: "repeating_ended", color: COLORS.gray, label: "Repeating Ended" }
         return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
     }
 }

@@ -15,6 +15,6 @@ export default function getEnded(event: Event): boolean {
             month, 
             day
         }, { zone: event.timezone }).endOf("day").toJSDate()
-        return ends.getTime() >= now.getTime()
+        return ends.getTime() <= now.getTime()
     }
 }

@@ -1,4 +1,3 @@
-import User from "@/types/User"
 import { DateTime } from "luxon"
 import Repeat from "@/types/Repeat"
 
@@ -227,6 +226,14 @@ const Utility = {
     loadLocalDateTime: (date: string): Date => {
         const [year, month, day, hours, minutes, seconds, milliseconds] = date.split(/[- :.]/).map(Number)
         return new Date(year, month - 1, day, hours, minutes, seconds, milliseconds)
+    },
+    getLocalRepeatingEnded: (repeat: Repeat): boolean => {
+        if (!repeat.ends) return false
+        const now = new Date()
+        const ends = Utility.loadLocalDate(repeat.ends)
+        ends.setDate(ends.getDate() + 1)
+        ends.setHours(0, 0, 0, 0)
+        return ends.getTime() < now.getTime()
     }
 }
 
