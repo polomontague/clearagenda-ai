@@ -3,7 +3,7 @@ import User from "@/types/User"
 import Events from "."
 
 export default function getStatus(event: Event, user: User): {
-        code: "upcoming" | "repeating" | "ended",
+        code: "upcoming" | "repeating" | "ended" | "repeating_ended",
         color: string,
         label: string
     } {
@@ -20,6 +20,8 @@ export default function getStatus(event: Event, user: User): {
         if (ended) return { code: "ended", color: COLORS.gray, label: "Ended" }
         return { code: "upcoming", color: COLORS.sky, label: "Upcoming" }
     } else { // Repeating event
+        const ended = Events.getEnded(event)
+        if (ended) return { code: "repeating_ended", color: COLORS.gray, label: "Repeating Ended" }
         return { code: "repeating", color: COLORS.lavender, label: "Repeating" }
     }
 }
