@@ -68,13 +68,14 @@ export default function ReminderForm(props: ReminderFormProps) {
     const handleSubmit = () => {
         setLoading(true)
         const method = props.mode === "new" ? "post" : "put"
+        const route = props.mode === "new" ? "/api/v1/reminders" : `/api/v1/reminders/${props.reminder.id}`
         const body = {
             occurs,
             name,
             at: occurs === "once" ? Utility.getDateTimeKey(at) : Utility.getTimeKey(at),
             repeat: occurs === "once" ? repeat : undefined
         }
-        API[method]<{ reminder: Reminder }>("/api/v1/reminders", body, true).then(data => {
+        API[method]<{ reminder: Reminder }>(route, body, true).then(data => {
             setLoading(false)
             if (props.mode === "new") clear()
             props.onSuccess(data.reminder)

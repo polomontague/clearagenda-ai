@@ -234,6 +234,12 @@ const Utility = {
         ends.setDate(ends.getDate() + 1)
         ends.setHours(0, 0, 0, 0)
         return ends.getTime() < now.getTime()
+    },
+    formatShortDate: (date: Date) => {
+        const year = date.getFullYear()
+        const month = (date.getMonth() + 1)
+        const day = date.getDate()
+        return `${month}/${day}/${year}`
     }
 }
 

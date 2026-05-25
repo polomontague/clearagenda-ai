@@ -11,7 +11,7 @@ export default function getFrom(event: Event): string {
         if (sameDay) {
             return `${Utility.formatTime(starts)} - ${Utility.formatTime(ends)}`
         } else {
-            return `${Utility.formatDate(starts)} - ${Utility.formatDate(ends)}`
+            return `${Utility.formatShortDate(starts)} - ${Utility.formatShortDate(ends)}`
         }
     } else { // Repeating
         const [hours, minutes, seconds, milliseconds] = event.starts.split(/[:.]/).map(Number)

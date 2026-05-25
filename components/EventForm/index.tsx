@@ -76,6 +76,7 @@ export default function EventForm(props: EventFormProps) {
     const handleSubmit = () => {
         setLoading(true)
         const method = props.mode === "new" ? "post" : "put"
+        const route = props.mode === "new" ? "/api/v1/events" : `/api/v1/events/${props.event.id}`
         const body = {
             occurs,
             name,
@@ -84,7 +85,7 @@ export default function EventForm(props: EventFormProps) {
             timezone,
             repeat: occurs === "repeating" ? repeat : undefined
         }
-        API[method]<{ event: Event }>("/api/v1/events", body, true).then(data => {
+        API[method]<{ event: Event }>(route, body, true).then(data => {
             setLoading(false)
             if (props.mode === "new") clear()
             props.onSuccess(data.event)
