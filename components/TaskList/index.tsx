@@ -58,6 +58,8 @@ export default function TaskList(props: TaskListProps) {
         setDeleteConfirmOpen(false)
         API.delete<{ task: Task }>(`/api/v1/tasks/${task.id}`, true).then(data => {
             removeTask(data.task)
+            setAlertMessage(`"${data.task.name}" Deleted Successfully!`)
+            setAlertOpen(true)
         }).catch(err => {
             setAlertMessage(err.message)
             setAlertOpen(true)

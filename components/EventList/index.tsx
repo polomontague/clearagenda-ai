@@ -1,6 +1,6 @@
 "use client"
 import List, { ListItem } from "@/components/List"
-import Event, { EventOccurrence } from "@/types/Event"
+import Event from "@/types/Event"
 import Card from "@/components/Card"
 import { EditIcon, TrashCanIcon } from "@/components/Icons"
 import { useContext, useState } from "react"
@@ -16,6 +16,9 @@ import EventForm from "../EventForm"
 import EventsContext from "@/contexts/EventsContext"
 import Utility from "@/lib/Utility"
 import Fieldset from "../Fieldset"
+import Confirm from "../Confirm"
+import Alert from "../Alert"
+import API from "@/lib/API"
 
 type EventListProps = {
     events: Event[]
@@ -26,7 +29,10 @@ export default function EventList(props: EventListProps) {
     const [currentEvent, setCurrentEvent] = useState<Event | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
-    const { updateEvent } = useContext(EventsContext)
+    const { updateEvent, removeEvent } = useContext(EventsContext)
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertOpen, setAlertOpen] = useState(false)
 
     const handleEditClick = (event: Event) => {
         setCurrentEvent(event)
@@ -41,6 +47,23 @@ export default function EventList(props: EventListProps) {
     const handleEventClick = (event: Event) => {
         setCurrentEvent(event)
         setModalOpen(true)
+    }
+
+    const handleDeleteClick = (event: Event) => {
+        setCurrentEvent(event)
+        setDeleteConfirmOpen(true)
+    }
+
+    const handleDeleteConfirm = (event: Event) => {
+        setDeleteConfirmOpen(false)
+        API.delete<{ event: Event }>(`/api/v1/events/${event.id}`, true).then(data => {
+            removeEvent(data.event)
+            setAlertMessage(`"${data.event.name}" Deleted Successfully!`)
+            setAlertOpen(true)
+        }).catch(err => {
+            setAlertMessage(err.message)
+            setAlertOpen(true)
+        })
     }
 
     if (!user) return
@@ -61,7 +84,7 @@ export default function EventList(props: EventListProps) {
                                     },
                                     {
                                         icon: <TrashCanIcon />,
-                                        onClick: () => {}
+                                        onClick: () => handleDeleteClick(event)
                                     }
                                 ]}
                             >
@@ -107,8 +130,19 @@ export default function EventList(props: EventListProps) {
                             onSuccess={handleEditSuccess}
                         />
                     </FormModal>
+                    <Confirm
+                        message={`Delete "${currentEvent.name}"?`}
+                        open={deleteConfirmOpen}
+                        onRequestCancel={() => setDeleteConfirmOpen(false)}
+                        onRequestConfirm={() => handleDeleteConfirm(currentEvent)}
+                    />
                 </>
             ) : null}
+            <Alert
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
         </>
     )
 }
