@@ -16,17 +16,23 @@ import TaskForm from "../TaskForm"
 import TasksContext from "@/contexts/TasksContext"
 import Fieldset from "../Fieldset"
 import Utility from "@/lib/Utility"
+import Confirm from "../Confirm"
+import API from "@/lib/API"
+import Alert from "../Alert"
 
 type TaskListProps = {
     tasks: Task[]
 }
 
 export default function TaskList(props: TaskListProps) {
-    const { updateTask } = useContext(TasksContext)
+    const { updateTask, removeTask } = useContext(TasksContext)
     const { user } = useContext(UserContext)
     const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertOpen, setAlertOpen] = useState(false)
 
     const handleEditClick = (task: Task) => {
         setCurrentTask(task)
@@ -41,6 +47,21 @@ export default function TaskList(props: TaskListProps) {
     const handleTaskClick = (task: Task) => {
         setCurrentTask(task)
         setModalOpen(true)
+    }
+
+    const handleDeleteClick = (task: Task) => {
+        setCurrentTask(task)
+        setDeleteConfirmOpen(true)
+    }
+
+    const handleDeleteConfirm = (task: Task) => {
+        setDeleteConfirmOpen(false)
+        API.delete<{ task: Task }>(`/api/v1/tasks/${task.id}`, true).then(data => {
+            removeTask(data.task)
+        }).catch(err => {
+            setAlertMessage(err.message)
+            setAlertOpen(true)
+        })
     }
 
     if (!user) return
@@ -61,7 +82,7 @@ export default function TaskList(props: TaskListProps) {
                                     },
                                     {
                                         icon: <TrashCanIcon />,
-                                        onClick: () => {}
+                                        onClick: () => handleDeleteClick(task)
                                     }
                                 ]}
                             >
@@ -107,8 +128,19 @@ export default function TaskList(props: TaskListProps) {
                             onSuccess={handleUpdateSuccess}
                         />
                     </FormModal>
+                    <Confirm
+                        message={`Delete "${currentTask.name}"?`}
+                        open={deleteConfirmOpen}
+                        onRequestCancel={() => setDeleteConfirmOpen(false)}
+                        onRequestConfirm={() => handleDeleteConfirm(currentTask)}
+                    />
                 </>
             ) : null}
+            <Alert
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
         </>
     )
 }
