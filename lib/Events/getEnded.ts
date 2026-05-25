@@ -6,7 +6,7 @@ export default function getEnded(event: Event): boolean {
     if (event.occurs === "once") {
         const ends = new Date(event.starts)
         ends.setMinutes(ends.getMinutes() + event.duration)
-        return ends.getTime() >= now.getTime()
+        return ends.getTime() < now.getTime()
     } else { // Repeating
         if (!event.repeat.ends) return false
         const [year, month, day] = event.repeat.ends.split("-").map(Number)
