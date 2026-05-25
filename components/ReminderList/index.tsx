@@ -16,6 +16,9 @@ import ReminderForm from "../ReminderForm"
 import RemindersContext from "@/contexts/RemindersContext"
 import Fieldset from "../Fieldset"
 import Utility from "@/lib/Utility"
+import Confirm from "../Confirm"
+import Alert from "../Alert"
+import API from "@/lib/API"
 
 type ReminderListProps = {
     reminders: Reminder[]
@@ -26,7 +29,10 @@ export default function ReminderList(props: ReminderListProps) {
     const [currentReminder, setCurrentReminder] = useState<Reminder | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
-    const { updateReminder } = useContext(RemindersContext)
+    const { updateReminder, removeReminder } = useContext(RemindersContext)
+    const [deleteConfirmOpen, setDeleteConfrimOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertOpen, setAlertOpen] = useState(false)
 
     const handleEditClick = (reminder: Reminder) => {
         setCurrentReminder(reminder)
@@ -41,6 +47,23 @@ export default function ReminderList(props: ReminderListProps) {
     const handleReminderClick = (reminder: Reminder) => {
         setCurrentReminder(reminder)
         setModalOpen(true)
+    }
+
+    const handleDeleteClick = (reminder: Reminder) => {
+        setCurrentReminder(reminder)
+        setDeleteConfrimOpen(true)
+    }
+
+    const handleDeleteConfirm = (reminder: Reminder) => {
+        setDeleteConfrimOpen(false)
+        API.delete<{ reminder: Reminder }>(`/api/v1/reminders/${reminder.id}`, true).then(data => {
+            removeReminder(data.reminder)
+            setAlertMessage(`"${data.reminder.name}" Deleted Successfully!`)
+            setAlertOpen(true)
+        }).catch(err => {
+            setAlertMessage(err.message)
+            setAlertOpen(true)
+        })
     }
 
     if (!user) return
@@ -62,7 +85,7 @@ export default function ReminderList(props: ReminderListProps) {
                                     },
                                     {
                                         icon: <TrashCanIcon />,
-                                        onClick: () => {}
+                                        onClick: () => handleDeleteClick(reminder)
                                     }
                                 ]}
                             >
@@ -111,8 +134,19 @@ export default function ReminderList(props: ReminderListProps) {
                             onSuccess={handleUpdateReminder}
                         />
                     </FormModal>
+                    <Confirm
+                        message={`Delete "${currentReminder.name}"?`}
+                        open={deleteConfirmOpen}
+                        onRequestCancel={() => setDeleteConfrimOpen(false)}
+                        onRequestConfirm={() => handleDeleteConfirm(currentReminder)}
+                    />
                 </>
             ) : null}
+            <Alert
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
         </>
     )
 }
