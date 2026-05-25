@@ -51,6 +51,22 @@ const RemindersDAO = {
         })
         return result ? assembleReminder(result) : undefined
     },
+    updateReminder: async (reminderId: number, data: UpdateReminderData) => {
+        const result = await prisma.reminders.update({
+            where: {
+                id: reminderId
+            },
+            data: {
+                occurs: data.occurs,
+                name: data.name,
+                once_at: data.occurs === "once" ? data.at : undefined,
+                repeating_at: data.occurs === "repeating" ? data.at : undefined,
+                repeat: "repeat" in data ? data.repeat : undefined
+            },
+            ...remindersBaseQuery
+        })
+        return assembleReminder(result)
+    },
     deleteReminder: async (reminderId: number) => {
         const result = await prisma.reminders.delete({
             where: {
