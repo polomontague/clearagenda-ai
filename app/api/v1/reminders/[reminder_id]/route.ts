@@ -7,7 +7,7 @@ import Request from "@/lib/Request"
 import { reminderParamsSchema } from "@/schemas/reminders"
 import RemindersDAO from "@/dao/RemindersDAO"
 
-export const DELETE = async (req: NextRequest, props: { params: Promise<{ task_id: string }> }) => {
+export const DELETE = async (req: NextRequest, props: { params: Promise<{ reminder_id: string }> }) => {
     try {
         const user = await Auth.authenticate(req)
         const params = await Request.params(props, reminderParamsSchema)

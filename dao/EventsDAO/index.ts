@@ -63,6 +63,25 @@ const EventsDAO = {
             ...eventsBaseQuery
         })
         return assembleEvent(result)
+    },
+    updateEvent: async (eventId: number, data: UpdateEventData) => {
+        const result = await prisma.events.update({
+            where: {
+                id: eventId
+            },
+            data: {
+                occurs: data.occurs,
+                name: data.name,
+                notes: data.notes,
+                duration: data.duration,
+                once_starts: data.occurs === "once" ? data.starts : undefined,
+                repeating_starts: data.occurs === "repeating" ? data.starts : undefined,
+                timezone: data.timezone,
+                repeat: "repeat" in data ? data.repeat : undefined
+            },
+            ...eventsBaseQuery
+        })
+        return assembleEvent(result)
     }
 }
 

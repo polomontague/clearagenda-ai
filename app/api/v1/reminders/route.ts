@@ -30,7 +30,7 @@ export const POST = async (req: NextRequest) => {
             })
         }
 
-        return Response.ok({ reminder })
+        return Response.created({ reminder })
     } catch(err) {
         if (err instanceof HttpError) return err.response
         Error.notify(err)
