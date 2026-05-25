@@ -125,7 +125,7 @@ export default function Timeline(props: TimelineProps) {
                 <div
                     className={styles.indicator}
                     style={{
-                        top: `${getTop(now, props.date)}%`
+                        top: `${getTop(now, now)}%`
                     }}
                 >
                     <span className={styles.time}>{now.getHours() % 12 || 12}:{now.getMinutes().toString().padStart(2, "0")}</span>

@@ -20,6 +20,10 @@ export const taskBodySchema = z.discriminatedUnion("occurs", [
     repeatingTaskBodySchema
 ], 'occurs must be "once" or "repeating"')
 
+export const taskParamsSchema = z.object({
+    task_id: z.coerce.number("task_id must be a number").min(1, "task_id must be 1 or greater")
+})
+
 export const stepParamsSchema = z.object({
     task_id: z.coerce.number("task_id must be a number").min(1, "task_id must be 1 or greater"),
     step_id: z.coerce.number("step_id must be a number").min(1, "step_id must be 1 or greater")

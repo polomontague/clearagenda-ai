@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma"
-import Event, { OnceEvent, RepeatingEvent } from "@/types/Event"
+import { OnceEvent, RepeatingEvent } from "@/types/Event"
 import eventsBaseQuery from "./eventsBaseQuery"
 import assembleEvent from "./assembleEvent"
 
@@ -45,6 +45,24 @@ const EventsDAO = {
             ...eventsBaseQuery
         })
         return result.map(result => assembleEvent(result))
+    },
+    getEventById: async (eventId: number) => {
+        const result = await prisma.events.findUnique({
+            where: {
+                id: eventId
+            },
+            ...eventsBaseQuery
+        })
+        return result ? assembleEvent(result) : undefined
+    },
+    deleteEvent: async (eventId: number) => {
+        const result = await prisma.events.delete({
+            where: {
+                id: eventId
+            },
+            ...eventsBaseQuery
+        })
+        return assembleEvent(result)
     }
 }
 

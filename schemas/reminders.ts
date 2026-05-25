@@ -19,3 +19,7 @@ export const reminderBodySchema = z.discriminatedUnion("occurs", [
     onceReminderBodySchema,
     repeatingReminderBodySchema
 ], 'occurs must be "once" or "repeating"')
+
+export const reminderParamsSchema = z.object({
+    reminder_id: z.coerce.number("reminder_id must be a number").min(1, "reminder_id must be 1 or greater")
+})

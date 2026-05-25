@@ -25,3 +25,7 @@ export const eventBodySchema = z.discriminatedUnion("occurs", [
     onceEventBodySchema,
     repeatingEventBodySchema
 ], 'occurs must be "once" or "repeating"')
+
+export const eventParamsSchema = z.object({
+    event_id: z.coerce.number("event_id must be a string").min(1, "event_id must be 1 or greater")
+})

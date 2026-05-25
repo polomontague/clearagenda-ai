@@ -41,6 +41,24 @@ const RemindersDAO = {
             ...remindersBaseQuery
         })
         return result.map(result => assembleReminder(result))
+    },
+    getReminderById: async (reminderId: number) => {
+        const result = await prisma.reminders.findUnique({
+            where: {
+                id: reminderId
+            },
+            ...remindersBaseQuery
+        })
+        return result ? assembleReminder(result) : undefined
+    },
+    deleteReminder: async (reminderId: number) => {
+        const result = await prisma.reminders.delete({
+            where: {
+                id: reminderId
+            },
+            ...remindersBaseQuery
+        })
+        return assembleReminder(result)
     }
 }
 

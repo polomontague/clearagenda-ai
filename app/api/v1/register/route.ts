@@ -20,7 +20,7 @@ export const POST = async (req: NextRequest) => {
         const user = await UsersDAO.createUser({
             name: {
                 first: body.name.first,
-                last: body.name.first
+                last: body.name.last
             },
             email: body.email,
             phone: body.phone,
