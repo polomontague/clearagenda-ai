@@ -7,11 +7,10 @@ import Events from "../Events"
 import occursOnLocalDate from "./occursOnLocalDate"
 
 type StepInstance = {
-    occurs: "once" | "repeating",
-    taskId: number,
+    task: Task,
     stepId: number,
     duration: number,
-    date: string
+    dateAvailable: string
 }
 
 export default function getDateTasks(tasks: Task[], events: Event[], user: User, date: Date): Task[] {
@@ -20,6 +19,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
     const target = new Date(date)
     target.setHours(0, 0, 0, 0)
     const stepInstances = getIncompleteStepInstancesUntilDate(tasks, date)
+    stepInstances.sort((a, b) => getPriority(b) - getPriority(a))
     const queue = [ ...stepInstances ] // Remaining unscheduled steps queue
     const scheduledStepsByDate: Record<string, StepInstance[]> = {}
     // Step through days from today to target date
@@ -35,12 +35,12 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
         if (!scheduledStepsByDate[dateKey]) scheduledStepsByDate[dateKey] = [] // Add date if it doesn't already exist
         for (const stepInstance of queue) {
             const alreadyScheduled = Object.values(scheduledStepsByDate).flat().some(
-                s => s.taskId === stepInstance.taskId &&
+                s => s.task.id === stepInstance.task.id &&
                     s.stepId === stepInstance.stepId &&
-                    s.date === stepInstance.date
+                    s.dateAvailable === stepInstance.dateAvailable
             )
             if (alreadyScheduled) continue
-            if (stepInstance.date > dateKey) continue // Repeating task step hasn't occured yet
+            if (stepInstance.dateAvailable > dateKey) continue // Repeating task step hasn't occured yet
             if (stepInstance.duration > remaining) continue // Step doesn't fit in current day
             scheduledStepsByDate[dateKey].push(stepInstance) // Schedule the step
             remaining -= stepInstance.duration
@@ -51,7 +51,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
     // Group scheduled steps back into tasks
     const taskMap = new Map<number, Task>()
     for (const stepInstance of scheduledStepInstances) {
-        const task = tasks.find(task => task.id === stepInstance.taskId)
+        const task = tasks.find(task => task.id === stepInstance.task.id)
         if (!task) continue
         const step = task.steps.find(step => step.id === stepInstance.stepId)
         if (!step) continue
@@ -82,11 +82,10 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
             for (const step of task.steps) {
                 if (step.completed) continue
                 result.push({
-                    occurs: "once",
-                    taskId: task.id,
+                    task: task,
                     stepId: step.id,
                     duration: step.duration,
-                    date: startKey
+                    dateAvailable: startKey
                 })
             }
             continue
@@ -100,11 +99,10 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
                     const completed = step.completions.some(completion => completion.date === occurrenceKey)
                     if (completed) continue
                     result.push({
-                        occurs: "repeating",
-                        taskId: task.id,
+                        task: task,
                         stepId: step.id,
                         duration: step.duration,
-                        date: occurrenceKey
+                        dateAvailable: occurrenceKey
                     })
                 }
             }
@@ -183,4 +181,78 @@ const getDateCompletedTasks = (tasks: Task[], date: Date): Task[] => {
         }
     }
     return Object.values(completedMap)
+}
+
+const getPriority = (instance: StepInstance): number => {
+    let score = 0
+    // Urgency Pressure Score
+    const pressure = getUrgencyPressure(instance)
+    score += pressure
+    // Importance
+    score *= (1 + instance.task.importance * 0.5)
+    // Partially Complete
+    const completion = getCompletion(instance)
+    if (completion > 0) {
+        score *= (1 + completion * 0.1)
+    }
+    // Short Tasks - bump up
+    const incompleteDuration = getIncompleteDuration(instance)
+    const shortTaskBoost = 1 / (1 + incompleteDuration / 30)
+    score *= (1 + shortTaskBoost * 0.15)
+    return score
+}
+
+const getUrgencyPressure = (instance: StepInstance): number => {
+    if (!instance.task.deadline) return 0
+    let effectiveDeadline
+    if (instance.task.occurs === "once") {
+        effectiveDeadline = Utility.loadLocalDate(instance.task.deadline)
+        effectiveDeadline.setDate(effectiveDeadline.getDate() + 1)
+        effectiveDeadline.setHours(0, 0, 0, 0)
+    } else { // Repeating
+        effectiveDeadline = Utility.loadLocalDate(instance.dateAvailable)
+        effectiveDeadline.setDate(effectiveDeadline.getDate() + 1)
+        effectiveDeadline.setHours(0, 0, 0, 0)
+        effectiveDeadline.setDate(effectiveDeadline.getDate() + instance.task.deadline) // Add deadline days
+    }
+    const incompleteDuration = getIncompleteDuration(instance)
+    effectiveDeadline.setMinutes(effectiveDeadline.getMinutes() - incompleteDuration)
+    const now = new Date()
+    const timeRemaining = effectiveDeadline.getTime() - now.getTime()
+    const daysRemaining = timeRemaining / (1000 * 60 * 60 * 24)
+    let pressure = 0
+    if (daysRemaining <= 0) {
+        pressure = 1 + Math.abs(daysRemaining) * 2
+    } else {
+        pressure = 1 / (daysRemaining + 1)
+    }
+    return pressure
+}
+
+const getIncompleteDuration = (instance: StepInstance): number => {
+    if (instance.task.occurs === "once") {
+        return instance.task.steps.reduce((total, step) => {
+            return total + (step.completed ? 0 : step.duration)
+        }, 0)
+    } else { // Repeating
+        return instance.task.steps.reduce((total, step) => {
+            const completion = step.completions.find(completion => completion.date === instance.dateAvailable)
+            return total + (completion ? 0 : step.duration)
+        }, 0)
+    }
+}
+
+const getCompletion = (instance: StepInstance): number => {
+    const totalDuration = instance.task.steps.reduce((total, step) => {
+        return total + step.duration
+    }, 0)
+    const completedDuration = instance.task.occurs === "once" ? (
+        instance.task.steps.reduce((total, step) => {
+            return total + (step.completed ? step.duration : 0)
+        }, 0)
+    ) :  instance.task.steps.reduce((total, step) => {
+        const completion = step.completions.find(completion => completion.date === instance.dateAvailable)
+        return total + (completion ? step.duration : 0)
+    }, 0)
+    return Math.round((completedDuration / totalDuration) * 100) / 100
 }

@@ -1,7 +1,7 @@
 import getCurrentTaskAndStep from "./getCurrentTaskAndStep"
 import getLength from "./getLength"
 import getDeadline from "./getDeadline"
-import getCompletion from "./getCompletions"
+import getCompletion from "./getCompletion"
 import getStatus from "./getStatus"
 import getDateTasks from "./getDateTasks"
 
