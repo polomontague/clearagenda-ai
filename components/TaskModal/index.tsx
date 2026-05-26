@@ -59,8 +59,8 @@ export default function TaskModal({ task, open, onRequestClose }: TaskModalProps
                 </Fieldset>
                 {completion !== undefined ? (
                     <Fieldset>
-                        <LabelField fieldset label="Completion">
-                            <InnerValue label={`${completion * 100}%`} />
+                        <LabelField fieldset label="Progress">
+                            <InnerValue label={Tasks.formatCompletion(completion)} />
                         </LabelField>
                         <Range fieldset value={completion} />
                     </Fieldset>

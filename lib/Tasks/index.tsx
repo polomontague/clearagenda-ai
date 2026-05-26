@@ -4,6 +4,7 @@ import getDeadline from "./getDeadline"
 import getCompletion from "./getCompletion"
 import getStatus from "./getStatus"
 import getDateTasks from "./getDateTasks"
+import formatCompletion from "./formatCompletion"
 
 const Tasks = {
     getCurrentTaskAndStep,
@@ -11,7 +12,8 @@ const Tasks = {
     getDeadline,
     getCompletion,
     getStatus,
-    getDateTasks
+    getDateTasks,
+    formatCompletion
 }
 
 export default Tasks

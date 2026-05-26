@@ -4,13 +4,13 @@ import Event from "@/types/Event"
 const EventsContext = createContext<{
     events: Event[],
     addEvent: (event: Event) => void,
-    updateEvent: (event: Event) => void,
+    replaceEvent: (event: Event) => void,
     removeEvent: (event: Event) => void,
     loading: boolean
 }>({
     events: [],
     addEvent: () => {},
-    updateEvent: () => {},
+    replaceEvent: () => {},
     removeEvent: () => {},
     loading: true
 })

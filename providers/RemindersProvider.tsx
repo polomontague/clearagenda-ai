@@ -23,7 +23,7 @@ export default function RemindersProvider(props: {
         setReminders([ ...reminders, reminder ])
     }
 
-    const updateReminder = (reminder: Reminder) => {
+    const replaceReminder = (reminder: Reminder) => {
         const newReminders = [ ...reminders ]
         const index = newReminders.findIndex(reminder2 => reminder2.id === reminder.id)
         newReminders[index] = reminder
@@ -40,7 +40,7 @@ export default function RemindersProvider(props: {
             value={{
                 reminders,
                 addReminder,
-                updateReminder,
+                replaceReminder,
                 removeReminder,
                 loading
             }}

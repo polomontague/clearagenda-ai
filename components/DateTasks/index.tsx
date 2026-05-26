@@ -1,6 +1,6 @@
 "use client"
 import styles from "./DateTasks.module.css"
-import { useContext, useMemo } from "react"
+import { useContext, useMemo, useState } from "react"
 import TasksContext from "@/contexts/TasksContext"
 import Tasks from "@/lib/Tasks"
 import EventsContext from "@/contexts/EventsContext"
@@ -14,11 +14,15 @@ import Button from "../Button"
 import InnerValue from "../InnerValue"
 import Utility from "@/lib/Utility"
 import Range from "../Range"
+import Confirm from "../Confirm"
+import Alert from "../Alert"
+import Task, { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
+import API from "@/lib/API"
 
 export default function DateTasks({ date }: {
     date: Date
 }) {
-    const { tasks } = useContext(TasksContext)
+    const { tasks, updateCompleted, updateCompletion } = useContext(TasksContext)
     const { events } = useContext(EventsContext)
     const { user } = useContext(UserContext)
     const dateTasks = useMemo(() => {
@@ -26,8 +30,31 @@ export default function DateTasks({ date }: {
         return Tasks.getDateTasks(tasks, events, user, date)
     }, [tasks, events, user, date])
     const currentTaskAndStep = useMemo(() => Tasks.getCurrentTaskAndStep(dateTasks, date), [dateTasks])
+    const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertOpen, setAlertOpen] = useState(false)
 
-   
+    const handleCompleteConfirm = (task: TaskOccurrence, step: StepOccurrence) => {
+        setCompleteConfirmOpen(false)
+        const route = `/api/v1/tasks/${task.id}/steps/${step.id}/complete`
+        const body = {
+            date: task.occurs === "repeating" ? task.date : undefined
+        }
+        API.post<{ completed: string } | { completion: Completion }>(route, body, true).then(data => {
+            if ("completed" in data) {
+                updateCompleted(task.id, step.id, data.completed)
+            }
+            if ("completion" in data) {
+                updateCompletion(task.id, step.id, data.completion)
+            }
+            setAlertMessage(`"${step.name}" Marked Complete Successfully!`)
+            setAlertOpen(true)
+        }).catch(err => {
+            setAlertMessage(err.message)
+            setAlertOpen(true)
+        })
+    }
+
     return (
         <div className={styles.frame}>
             <div>
@@ -42,6 +69,7 @@ export default function DateTasks({ date }: {
                                             return (
                                                 <LabelField
                                                     fieldset
+                                                    strike={Boolean(step.completed)}
                                                     label={step.name}
                                                 />
                                             )
@@ -49,8 +77,8 @@ export default function DateTasks({ date }: {
                                     </Fieldset>
                                     {current ? (
                                         <Fieldset>
-                                            <LabelField fieldset label="Completion">
-                                                <InnerValue label={`${task.completion * 100}%`} />
+                                            <LabelField fieldset label="Progress">
+                                                <InnerValue label={Tasks.formatCompletion(task.completion)} />
                                             </LabelField>
                                             <Range fieldset value={task.completion} />
                                         </Fieldset>
@@ -63,23 +91,40 @@ export default function DateTasks({ date }: {
             </div>
             <div>
                 {currentTaskAndStep ? (
-                    <Fieldset layer={2} label={currentTaskAndStep.task.name}>
-                        <Card fieldset label={currentTaskAndStep.step.name}>
-                            <FieldFrame>
-                                {currentTaskAndStep.step.notes ? (
-                                    <Fieldset label="Notes">
-                                        <ValueBox fieldset value={currentTaskAndStep.step.notes} />
-                                    </Fieldset>
-                                ) : <></>}
-                                <LabelField label="Length">
-                                    <InnerValue label={Utility.formatDuration(currentTaskAndStep.step.duration)} />
-                                </LabelField>
-                                <Button label="Mark Complete" />
-                            </FieldFrame>
-                        </Card>
-                    </Fieldset>
+                    <>
+                        <Fieldset layer={2} label={currentTaskAndStep.task.name}>
+                            <Card fieldset label={currentTaskAndStep.step.name}>
+                                <FieldFrame>
+                                    {currentTaskAndStep.step.notes ? (
+                                        <Fieldset label="Notes">
+                                            <ValueBox fieldset value={currentTaskAndStep.step.notes} />
+                                        </Fieldset>
+                                    ) : <></>}
+                                    <LabelField label="Length">
+                                        <InnerValue label={Utility.formatDuration(currentTaskAndStep.step.duration)} />
+                                    </LabelField>
+                                    <Button
+                                        label="Mark Complete"
+                                        onClick={() => setCompleteConfirmOpen(true)}
+                                    />
+                                </FieldFrame>
+                            </Card>
+                        </Fieldset>
+                        <Confirm
+                            message={`Mark "${currentTaskAndStep.step.name}" Complete?`}
+                            open={completeConfirmOpen}
+                            onRequestCancel={() => setCompleteConfirmOpen(false)}
+                            onRequestConfirm={() => handleCompleteConfirm(currentTaskAndStep.task, currentTaskAndStep.step)}
+
+                        />
+                    </>
                 ) : null}
             </div>
+            <Alert
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
         </div>
     )
 }

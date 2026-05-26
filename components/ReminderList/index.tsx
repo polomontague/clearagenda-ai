@@ -29,7 +29,7 @@ export default function ReminderList(props: ReminderListProps) {
     const [currentReminder, setCurrentReminder] = useState<Reminder | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
-    const { updateReminder, removeReminder } = useContext(RemindersContext)
+    const { replaceReminder, removeReminder } = useContext(RemindersContext)
     const [deleteConfirmOpen, setDeleteConfrimOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
@@ -40,7 +40,7 @@ export default function ReminderList(props: ReminderListProps) {
     }
 
     const handleUpdateReminder = (reminder: Reminder) => {
-        updateReminder(reminder)
+        replaceReminder(reminder)
         setEditModalOpen(false)
     }
 

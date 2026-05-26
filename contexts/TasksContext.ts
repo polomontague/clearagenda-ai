@@ -1,17 +1,21 @@
 import { createContext } from "react"
-import Task from "@/types/Task"
+import Task, { Completion } from "@/types/Task"
 
 const TasksContext = createContext<{
     tasks: Task[],
     addTask: (task: Task) => void,
-    updateTask: (task: Task) => void,
+    replaceTask: (task: Task) => void,
     removeTask: (task: Task) => void,
+    updateCompleted: (taskId: number, stepId: number, completed: string) => void,
+    updateCompletion: (taskId: number, stepId: number, completion: Completion) => void
     loading: boolean
 }>({
     tasks: [],
     addTask: () => {},
-    updateTask: () => {},
+    replaceTask: () => {},
     removeTask: () => {},
+    updateCompleted: () => {},
+    updateCompletion: () => {},
     loading: true
 })
 

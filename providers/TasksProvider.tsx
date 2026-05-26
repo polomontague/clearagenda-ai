@@ -1,7 +1,7 @@
 "use client"
 import TasksContext from "@/contexts/TasksContext"
 import { ReactNode, useState, useEffect } from "react"
-import Task from "@/types/Task"
+import Task, { Completion } from "@/types/Task"
 import API from "@/lib/API"
 
 export default function TasksProvider(props: {
@@ -23,7 +23,7 @@ export default function TasksProvider(props: {
         setTasks([ ...tasks, task ])
     }
 
-    const updateTask = (task: Task) => {
+    const replaceTask = (task: Task) => {
         const newTasks = [ ...tasks ]
         const index = newTasks.findIndex(task2 => task2.id === task.id)
         newTasks[index] = task
@@ -35,13 +35,37 @@ export default function TasksProvider(props: {
         setTasks(newTasks)
     }
 
+    const updateCompleted = (taskId: number, stepId: number, completed: string) => {
+        const newTasks = [ ...tasks ]
+        const task = newTasks.find(task => task.id === taskId)
+        if (!task) return
+        if (task.occurs !== "once") return
+        const step = task.steps.find(step => step.id === stepId)
+        if (!step) return
+        step.completed = completed
+        setTasks(newTasks)
+    }
+
+    const updateCompletion = (taskId: number, stepId: number, completion: Completion) => {
+        const newTasks = [ ... tasks ]
+        const task = newTasks.find(task => task.id === taskId)
+        if (!task) return
+        if (task.occurs !== "repeating") return
+        const step = task.steps.find(step => step.id === stepId)
+        if (!step) return
+        step.completions.push(completion)
+        setTasks(newTasks)
+    }
+
     return (
         <TasksContext.Provider
             value={{
                 tasks,
                 addTask,
-                updateTask,
+                replaceTask,
                 removeTask,
+                updateCompleted,
+                updateCompletion,
                 loading
             }}
         >

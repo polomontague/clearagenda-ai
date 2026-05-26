@@ -25,7 +25,7 @@ type TaskListProps = {
 }
 
 export default function TaskList(props: TaskListProps) {
-    const { updateTask, removeTask } = useContext(TasksContext)
+    const { replaceTask, removeTask } = useContext(TasksContext)
     const { user } = useContext(UserContext)
     const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
@@ -40,7 +40,7 @@ export default function TaskList(props: TaskListProps) {
     }
 
     const handleUpdateSuccess = (task: Task) => {
-        updateTask(task)
+        replaceTask(task)
         setEditModalOpen(false)
     }
 

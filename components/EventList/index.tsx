@@ -29,7 +29,7 @@ export default function EventList(props: EventListProps) {
     const [currentEvent, setCurrentEvent] = useState<Event | undefined>(undefined)
     const [modalOpen, setModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
-    const { updateEvent, removeEvent } = useContext(EventsContext)
+    const { replaceEvent, removeEvent } = useContext(EventsContext)
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
@@ -40,7 +40,7 @@ export default function EventList(props: EventListProps) {
     }
 
     const handleEditSuccess = (event: Event) => {
-        updateEvent(event)
+        replaceEvent(event)
         setEditModalOpen(false)
     }
 

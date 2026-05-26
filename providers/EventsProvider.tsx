@@ -23,7 +23,7 @@ export default function EventsProvider(props: {
         setEvents([ ...events, event ])
     }
 
-    const updateEvent = (event: Event) => {
+    const replaceEvent = (event: Event) => {
         const newEvents = [ ...events ]
         const index = newEvents.findIndex(event2 => event2.id === event.id)
         newEvents[index] = event
@@ -40,7 +40,7 @@ export default function EventsProvider(props: {
             value={{
                 events,
                 addEvent,
-                updateEvent,
+                replaceEvent,
                 removeEvent,
                 loading
             }}

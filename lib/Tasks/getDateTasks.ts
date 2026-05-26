@@ -1,4 +1,4 @@
-import Task, { TaskOccurrence } from "@/types/Task"
+import Task, { Step, TaskOccurrence } from "@/types/Task"
 import Event from "@/types/Event"
 import User from "@/types/User"
 import Utility from "@/lib/Utility"
@@ -8,8 +8,7 @@ import occursOnLocalDate from "./occursOnLocalDate"
 
 type StepInstance = {
     task: Task,
-    stepId: number,
-    duration: number,
+    step: Step,
     dateAvailable: string
 }
 
@@ -29,34 +28,36 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
         const capacity = getWeekdayCapacity(user, current)
         const eventOccupancy = getDateEventOccupancy(events, current)
         const completedTaskOccupancy = getDateCompletedTaskOccupancy(tasks, current)
-        const scheduledOccupancy = (scheduledStepsByDate[dateKey] ?? []).reduce((total, stepInstance) => total + stepInstance.duration, 0)
+        const scheduledOccupancy = (scheduledStepsByDate[dateKey] ?? []).reduce((total, stepInstance) => total + stepInstance.step.duration, 0)
         const used = eventOccupancy + completedTaskOccupancy + scheduledOccupancy
         let remaining = capacity - used
         if (!scheduledStepsByDate[dateKey]) scheduledStepsByDate[dateKey] = [] // Add date if it doesn't already exist
         for (const stepInstance of queue) {
             const alreadyScheduled = Object.values(scheduledStepsByDate).flat().some(
                 s => s.task.id === stepInstance.task.id &&
-                    s.stepId === stepInstance.stepId &&
+                    s.step.id === stepInstance.step.id &&
                     s.dateAvailable === stepInstance.dateAvailable
             )
             if (alreadyScheduled) continue
             if (stepInstance.dateAvailable > dateKey) continue // Repeating task step hasn't occured yet
-            if (stepInstance.duration > remaining) continue // Step doesn't fit in current day
+            if (stepInstance.step.duration > remaining) continue // Step doesn't fit in current day
             scheduledStepsByDate[dateKey].push(stepInstance) // Schedule the step
-            remaining -= stepInstance.duration
+            remaining -= stepInstance.step.duration
         }
         current.setDate(current.getDate() + 1)
     }
+    // Get steps completed on requested date
+    const completedStepInstances = getDateCompletedStepInstances(tasks, date)
     const scheduledStepInstances = scheduledStepsByDate[Utility.getDateKey(target)] ?? []
+    const dayStepInstances = [ ...completedStepInstances, ...scheduledStepInstances ]
     // Group scheduled StepInstances into TaskOccurrences
     const taskMap = new Map<number, TaskOccurrence>()
-    for (const instance of scheduledStepInstances) {
+    for (const instance of dayStepInstances) {
         const task = instance.task
-        const step = task.steps.find(step => step.id === instance.stepId)
+        const step = task.steps.find(step => step.id === instance.step.id)
         if (!step) continue
         // Add task to map if it doesn't already exist
-        const totalDuration = task.steps.reduce((total, step) => total + step.duration, 0)
-        const completedDuration = getCompletion(instance)
+        const completion = getCompletion(instance)
         if (!taskMap.has(task.id)) taskMap.set(task.id, {
             id: task.id,
             occurs: task.occurs,
@@ -66,7 +67,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
             description: task.description,
             steps: [],
             importance: task.importance,
-            completion: Math.round((completedDuration / totalDuration) * 100) / 100,
+            completion,
             deadline: getDeadline(instance),
             created: task.created,
             updated: task.updated
@@ -74,10 +75,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
         const scheduledTask = taskMap.get(task.id)!
         scheduledTask.steps.push(step as never)
     }
-    // Get steps completed on requested date
-    const completedTasks = getDateCompletedTasks(tasks, date)
-    const scheduledTasks = Array.from(taskMap.values())
-    return [ ...completedTasks, ...scheduledTasks ]
+    return Array.from(taskMap.values())
 }
 
 const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
@@ -93,9 +91,8 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
             for (const step of task.steps) {
                 if (step.completed) continue
                 result.push({
-                    task: task,
-                    stepId: step.id,
-                    duration: step.duration,
+                    task,
+                    step,
                     dateAvailable: startKey
                 })
             }
@@ -110,9 +107,8 @@ const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
                     const completed = step.completions.some(completion => completion.date === occurrenceKey)
                     if (completed) continue
                     result.push({
-                        task: task,
-                        stepId: step.id,
-                        duration: step.duration,
+                        task,
+                        step,
                         dateAvailable: occurrenceKey
                     })
                 }
@@ -157,41 +153,41 @@ const getDateCompletedTaskOccupancy = (tasks: Task[], date: Date): number => {
     return total
 }
 
-const getDateCompletedTasks = (tasks: Task[], date: Date): Task[] => {
+const getDateCompletedStepInstances = (tasks: Task[], date: Date): StepInstance[] => {
+    const instances: StepInstance[] = []
     const dateKey = Utility.getDateKey(date)
-    const completedMap: Record<number, Task> = {}
+    const today = new Date()
+    const todayDateKey = Utility.getDateKey(today)
     for (const task of tasks) {
         if (task.occurs === "once") {
             for (const step of task.steps) {
                 if (!step.completed) continue
                 const completedDateKey = Utility.getDateKey(new Date(step.completed))
-                if (completedDateKey === dateKey) {
-                    if (!completedMap[task.id]) completedMap[task.id] = { // add task if it doesn't already exist
-                        ...task,
-                        steps: []
-                    }
-                    completedMap[step.id].steps.push(step as never)
-                    continue
-                }
+                if (completedDateKey !== dateKey) continue
+                instances.push({
+                    task,
+                    step,
+                    dateAvailable: todayDateKey
+                })
+                continue
             }
         }
         if (task.occurs === "repeating") {
             for (const step of task.steps) {
                 for (const completion of step.completions) {
+                    const occurrenceDateKey = Utility.getDateKey(Utility.loadLocalDate(completion.date))
                     const completedDateKey = Utility.getDateKey(new Date(completion.completed))
-                        if (completedDateKey === dateKey) {
-                            if (!completedMap[task.id]) completedMap[task.id] = { // add task if it doesn't already exist
-                            ...task,
-                            steps: []
-                        }
-                        completedMap[step.id].steps.push(step as never)
-                        continue
-                    }
+                    if (completedDateKey !== dateKey) continue
+                    instances.push({
+                        task,
+                        step,
+                        dateAvailable: occurrenceDateKey
+                    })
                 }
             }
         }
     }
-    return Object.values(completedMap)
+    return instances
 }
 
 const getPriority = (instance: StepInstance): number => {
