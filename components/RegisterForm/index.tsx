@@ -63,7 +63,7 @@ export default function RegisterForm() {
                 path: "/",
                 expires: new Date(new Date().getTime() + (res.data.data.expires * 1000)),
                 sameSite: "strict",
-                secure: true,
+                secure: process.env.NODE_ENV === "production",
                 httpOnly: false,
             })
             router.push("/set-up")

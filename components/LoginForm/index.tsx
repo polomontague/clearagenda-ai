@@ -50,7 +50,7 @@ export default function LoginForm() {
                 path: "/",
                 expires: new Date(new Date().getTime() + (data.expires * 1000)),
                 sameSite: "strict",
-                secure: true,
+                secure: process.env.NODE_ENV === "production",
                 httpOnly: false,
             })
             router.push("/agenda")

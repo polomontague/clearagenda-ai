@@ -3,6 +3,7 @@ import styles from "./TimezonePicker.module.css"
 import { useState, useMemo, useEffect } from "react"
 import SearchInput from "../SearchInput"
 import { MagnifyingGlassIcon } from "../Icons"
+import { TIMEZONES } from "./TIMEZONES"
 
 type Option = {
     value: string,
@@ -18,10 +19,9 @@ type TimezonePickerProps = {
 export default function TimezonePicker({ fieldset, value, onChange }: TimezonePickerProps) {
     const [search, setSearch] = useState("")
     const options = useMemo<Option[]>(() => {
-        const timezones = Intl.supportedValuesOf("timeZone")
-        return timezones.map(timezone => ({
+        return TIMEZONES.map(timezone => ({
             value: timezone,
-            label: timezone.split("/")[1].split("_").join(" ")
+            label: timezone.split("/").pop()!.split("_").join(" ")
         })).sort((a, b) => a.label.localeCompare(b.label))
     }, [])
     const [filteredOptions, setFilteredOptions] = useState<Option[]>([])
