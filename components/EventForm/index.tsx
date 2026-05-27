@@ -22,6 +22,8 @@ import DEFAULTS from "./DEFAULTS"
 import Collapses, { Collapse } from "../Collapses"
 import DatePicker from "../DatePicker"
 import TimePicker from "../TimePicker"
+import TimezonePicker from "../TimezonePicker"
+import InnerValue from "../InnerValue"
 
 type BaseProps = {
     onSuccess: (event: Event) => void
@@ -73,6 +75,8 @@ export default function EventForm(props: EventFormProps) {
         return true
     }
 
+    const getTimezoneLabel = (timezone: string) => timezone.split("/")[1].split("_").join(" ")
+
     const handleSubmit = () => {
         setLoading(true)
         const method = props.mode === "new" ? "post" : "put"
@@ -104,6 +108,23 @@ export default function EventForm(props: EventFormProps) {
         setTimezone(DEFAULTS.timezone)
         setRepeat(DEFAULTS.repeat)
         setNotes(DEFAULTS.notes)
+    }
+
+    const renderTimezone = () => {
+        return (
+            <SlideField
+                fieldset
+                label="Timezone"
+                value={getTimezoneLabel(timezone)}
+            >
+                <Fieldset>
+                    <LabelField fieldset label="Timezone">
+                        <InnerValue label={getTimezoneLabel(timezone)} />
+                    </LabelField>
+                    <TimezonePicker fieldset value={timezone} onChange={setTimezone} />
+                </Fieldset>
+            </SlideField>
+        )
     }
 
     return (
@@ -144,6 +165,7 @@ export default function EventForm(props: EventFormProps) {
                                 <SlideField fieldset label="Length" value={Utility.formatDuration(duration)}>
                                     <DurationSelect value={duration} onChange={setDuration} />
                                 </SlideField>
+                                {renderTimezone()}
                             </>
                         ) : occurs === "repeating" ? (
                             <>
@@ -159,6 +181,7 @@ export default function EventForm(props: EventFormProps) {
                                 <SlideField fieldset label="Length" value={Utility.formatDuration(duration)}>
                                     <DurationSelect value={duration} onChange={setDuration} />
                                 </SlideField>
+                                {renderTimezone()}
                                 <SlideField fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
                                         <Repeat timezone={timezone} value={repeat} onChange={setRepeat} />
                                 </SlideField>

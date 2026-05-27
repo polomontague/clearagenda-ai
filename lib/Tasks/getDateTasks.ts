@@ -27,9 +27,9 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
         const dateKey = Utility.getDateKey(current)
         const capacity = getWeekdayCapacity(user, current)
         const eventOccupancy = getDateEventOccupancy(events, current)
-        const completedTaskOccupancy = getDateCompletedTaskOccupancy(tasks, current)
+        const completedStepOccupancy = getDateCompletedTaskOccupancy(tasks, current)
         const scheduledOccupancy = (scheduledStepsByDate[dateKey] ?? []).reduce((total, stepInstance) => total + stepInstance.step.duration, 0)
-        const used = eventOccupancy + completedTaskOccupancy + scheduledOccupancy
+        const used = eventOccupancy + completedStepOccupancy + scheduledOccupancy
         let remaining = capacity - used
         if (!scheduledStepsByDate[dateKey]) scheduledStepsByDate[dateKey] = [] // Add date if it doesn't already exist
         for (const stepInstance of queue) {

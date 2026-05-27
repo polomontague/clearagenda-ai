@@ -3,8 +3,8 @@
     display: flex;
     width: 100%;
     height: var(--field-size);
-    background-color: var(--layer-2);
-    border: var(--border-width) solid var(--layer-2-border);
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
     border-radius: var(--border-radius);
 }
 
@@ -25,7 +25,7 @@
 .containerIcon > svg{
     width: var(--icon-size);
     height: var(--icon-size);
-    fill: var(--layer-2-light);
+    fill: var(--layer-3-light);
 }
 
 .containerInput{
@@ -45,11 +45,11 @@
     transform-origin: top left;
 }
 
-.input > input::placeholder {
-    color: var(--layer-2-light);
+.input input::placeholder {
+    color: var(--layer-3-light);
     opacity: 1; /* Firefox */
 }
 
-.input > input::-ms-input-placeholder { /* Edge 12 -18 */
-    color: var(--layer-2-light);
+.input input::-ms-input-placeholder { /* Edge 12 -18 */
+    color: var(--layer-3-light);
 }
