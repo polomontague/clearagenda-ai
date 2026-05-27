@@ -73,7 +73,7 @@ export default function ReminderForm(props: ReminderFormProps) {
             occurs,
             name,
             at: occurs === "once" ? Utility.getDateTimeKey(at) : Utility.getTimeKey(at),
-            repeat: occurs === "once" ? repeat : undefined
+            repeat: occurs === "repeating" ? repeat : undefined
         }
         API[method]<{ reminder: Reminder }>(route, body, true).then(data => {
             setLoading(false)
