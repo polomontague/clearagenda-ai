@@ -51,7 +51,7 @@ export type Step = OnceStep | RepeatingStep
 type Task = OnceTask | RepeatingTask
 
 export type StepOccurrence = Pick<Step, "id" | "name" | "notes" | "duration"> & {
-    completed: string
+    completed?: string
 }
 
 export type TaskOccurrence = Pick<Task, "id" | "occurs" | "user" | "name" | "description" | "importance" | "created" | "updated"> & {

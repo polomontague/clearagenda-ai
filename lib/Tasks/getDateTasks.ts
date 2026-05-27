@@ -74,7 +74,19 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
             updated: task.updated
         })
         const scheduledTask = taskMap.get(key)!
-        scheduledTask.steps.push(step as never)
+        let completed = undefined
+        if ("completed" in step) completed = step.completed
+        if ("completions" in step) {
+            const completion = step.completions.find(completion => completion.date === instance.dateAvailable)
+            if (completion) completed = completion.completed
+        }
+        scheduledTask.steps.push({
+            id: step.id,
+            name: step.name,
+            notes: step.notes,
+            duration: step.duration,
+            completed
+        })
     }
     return Array.from(taskMap.values())
 }
@@ -144,7 +156,8 @@ const getDateCompletedTaskOccupancy = (tasks: Task[], date: Date): number => {
         if (task.occurs === "repeating") {
             for (const step of task.steps) {
                 for (const completion of step.completions) {
-                    if (completion.date === dateKey) { // ??
+                    const completedDateKey = Utility.getDateKey(new Date(completion.completed))
+                    if (completedDateKey === dateKey) { // ?? [here]
                         total += step.duration
                     }
                 }
