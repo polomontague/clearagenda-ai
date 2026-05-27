@@ -11,7 +11,7 @@ cd $APP_DIR
 
 # Pull latest changes from GitHub
 echo "Pulling latest code..."
-git pull origin main
+git pull origin main --rebase
 
 # Install/update dependencies
 echo "Installing dependencies..."
