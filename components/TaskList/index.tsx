@@ -71,10 +71,10 @@ export default function TaskList(props: TaskListProps) {
     return (
         <>
             <List>
-                {props.tasks.map((task, i) => {
+                {props.tasks.map(task => {
                     const status = Tasks.getStatus(task, user)
                     return (
-                        <ListItem key={i}>
+                        <ListItem key={task.id}>
                             <Card
                                 label={task.name}
                                 buttons={[

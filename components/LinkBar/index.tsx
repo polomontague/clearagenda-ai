@@ -18,10 +18,10 @@ export default function LinkBar(props: LinkBarProps) {
     return (
         <div className={styles.background}>
             <ul className={styles.lstOptions}>
-                {props.options.map((option, i) => {
+                {props.options.map(option => {
                     const selected = option.href === pathname
                     return (
-                        <li key={i}>
+                        <li key={option.href}>
                             <NextLink
                                 className={`${styles.option} ${selected ? styles.selected : ""}`}
                                 href={option.href}

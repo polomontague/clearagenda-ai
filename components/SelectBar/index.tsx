@@ -18,10 +18,10 @@ export default function SelectBar<T extends readonly SelectBarOption<any>[]>({ l
     return (
         <div className={`${styles.background} ${styles[`layer${layer}`]} ${fieldset ? styles.fieldset : ""}`}>
             <ul className={styles.lstOptions}>
-                {options.map((option, i) => {
+                {options.map(option => {
                     const selected = option.value === value
                     return (
-                        <li key={i}>
+                        <li key={option.value}>
                             <button
                                 type="button"
                                 className={`${styles.btn} ${selected ? styles.selected : ""}`}

@@ -24,15 +24,15 @@ export default function MultiSelect<Value extends Record<string, any>>(props: Mu
 
     return (
         <div className={`${styes.background} ${props.fieldset ? styes.fieldset : ""}`}>
-            {Object.keys(props.options).map((key, i) => (
+            {Object.keys(props.options).map(key => (
                 <ul
-                    key={i}
+                    key={key}
                     className={styes.lstOptions}
                 >
-                    {props.options[key].map((option, i) => {
+                    {props.options[key].map(option => {
                         const selected = option.value === props.value[key]
                         return (
-                            <li key={i}>
+                            <li key={option.value}>
                                 <button
                                     type="button"
                                     className={`${styes.btnOption} ${selected ? styes.selected : ""}`}

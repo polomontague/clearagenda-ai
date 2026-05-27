@@ -45,7 +45,7 @@ export default function SelectList<Value>(props: SelectListProps<Value>) {
                 {props.options.map((option, i) => {
                     const selected = props.multiple ? props.value.includes(option.value) : props.value === option.value
                     return (
-                        <li key={i}>
+                        <li key={String(option.value)}>
                             <button
                                 type="button"
                                 className={`${styles.option} ${selected ? styles.selected : ""}`}

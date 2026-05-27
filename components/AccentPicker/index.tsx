@@ -34,7 +34,7 @@ export default function AccentColorPicker(props: ColorPickerProps) {
                 {colors.map((color, i) => {
                     const selected = color.value === props.value
                     return (
-                        <li key={i}>
+                        <li key={color.value}>
                             <button
                                 type="button"
                                 className={`${styles.btn} ${selected ? styles.selected : ""}`}

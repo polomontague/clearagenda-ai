@@ -59,15 +59,16 @@ export default function DateTasks({ date }: {
         <div className={styles.frame}>
             <div>
                 <FieldFrame>
-                    {dateTasks.map((task, i) => {
+                    {dateTasks.map(task => {
                         const current = currentTaskAndStep && currentTaskAndStep.task.id === task.id
                         return (
-                            <Card key={i} label={task.name}>
+                            <Card key={task.id} label={task.name}>
                                 <FieldFrame>
                                     <Fieldset label="Steps">
                                         {task.steps.map((step, i) => {
                                             return (
                                                 <LabelField
+                                                    key={step.id}
                                                     fieldset
                                                     strike={Boolean(step.completed)}
                                                     label={step.name}

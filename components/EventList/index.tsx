@@ -71,10 +71,10 @@ export default function EventList(props: EventListProps) {
     return (
         <>
             <List>
-                {props.events.map((event, i) => {
+                {props.events.map(event => {
                     const status = Events.getStatus(event, user)
                     return (
-                        <ListItem key={i}>
+                        <ListItem key={event.id}>
                             <Card
                                 label={event.name}
                                 buttons={[

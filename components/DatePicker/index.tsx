@@ -110,7 +110,7 @@ export default function DatePicker(props: DatePickerProps) {
                 <div className={styles.containerDates}>
                     <ul className={styles.lstWeekdays}>
                         {[ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ].map((weekday, i) => (
-                            <li key={i}>
+                            <li key={weekday}>
                                 <span className={styles.label}>{weekday.toUpperCase()}</span>
                             </li>
                         ))}

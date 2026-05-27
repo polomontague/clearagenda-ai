@@ -77,10 +77,10 @@ export default function InnerSelect<Value>(props: InnerSelectProps<Value>) {
                     style={position}
                 >
                     <ul className={styles.lstOptions}>
-                        {props.options.map((option, i) => {
+                        {props.options.map(option => {
                             const selected = option.value === props.value
                             return (
-                                <li key={i}>
+                                <li key={String(option.value)}>
                                     <button
                                         type="button"
                                         className={`${styles.btnOption} ${selected ? styles.selected : ""}`}

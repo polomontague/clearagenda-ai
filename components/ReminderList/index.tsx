@@ -71,11 +71,11 @@ export default function ReminderList(props: ReminderListProps) {
     return (
         <>
             <List>
-                {props.reminders.map((reminder, i) => {
+                {props.reminders.map(reminder => {
                     const at = Reminders.getAt(reminder)
                     const status = Reminders.getStatus(reminder, user)
                     return (
-                        <ListItem key={i}>
+                        <ListItem key={reminder.id}>
                             <Card
                                 label={reminder.name}
                                 buttons={[

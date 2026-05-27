@@ -24,10 +24,10 @@ export default function ThemePicker(props: ThemePickerProps) {
     return (
         <div className={`${styles.background} ${props.fieldset ? styles.fieldset : ""}`}>
             <ul className={styles.lst}>
-                {options.map((option, i) => {
+                {options.map(option => {
                     const selected = option.value === props.value
                     return (
-                        <li key={i}>
+                        <li key={option.value}>
                             <button
                                 type="button"
                                 className={`${styles.btn} ${selected ? styles.selected : ""}`}

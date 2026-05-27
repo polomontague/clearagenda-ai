@@ -32,9 +32,9 @@ export default function TaskModal({ task, open, onRequestClose }: TaskModalProps
                     <InnerValue  color={status.color} label={status.label} />
                 </LabelField>
                 <SlideField label="Steps" value={task.steps.length.toString()}>
-                    {task.steps.map((step, i) => {
+                    {task.steps.map(step => {
                         return (
-                            <Fieldset key={i} label={step.name}>
+                            <Fieldset key={step.id} label={step.name}>
                                 {step.notes ? (
                                     <ValueBox fieldset value={step.notes} />
                                 ) : null}
