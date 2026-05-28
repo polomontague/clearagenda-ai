@@ -111,3 +111,34 @@
     height: var(--field-size);
     fill: var(--layer-2-light);
 }
+
+/*****************
+** Color Styles **
+*****************/
+/* Red */
+.background.red{
+    background-color: var(--red-translucent);
+    border-color: var(--red);
+}
+
+.red .header{
+    border-color: var(--red);
+}
+
+.red .header .fade{
+    background: linear-gradient(90deg, transparent, var(--red-translucent));
+}
+
+/* Green */
+.background.green{
+    background-color: var(--green-translucent);
+    border-color: var(--green);
+}
+
+.green .header{
+    border-color: var(--green);
+}
+
+.green .header .fade{
+    background: linear-gradient(90deg, transparent, var(--green-translucent));
+}

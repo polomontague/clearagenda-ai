@@ -2,6 +2,7 @@ import styles from "./Card.module.css"
 import { ReactElement, ReactNode } from "react"
 import { CheckMarkIcon, LockIcon } from "@/components/Icons"
 import IconButton from "@/components/IconButton"
+import Accent from "@/types/Accent"
 
 type Button = {
     icon: ReactElement<SVGElement>,
@@ -11,6 +12,7 @@ type Button = {
 
 type CardProps = {
     fieldset?: boolean,
+    color?: Accent,
     locked?: boolean,
     completed?: boolean,
     label: string,
@@ -19,7 +21,7 @@ type CardProps = {
 }
 export default function Card(props: CardProps) {
     return (
-        <div className={`${styles.background} ${props.fieldset ? styles.fieldset : ""} ${props.locked ? styles.locked : styles.unlocked} ${props.completed ? styles.completed : styles.incomplete}`}>
+        <div className={`${styles.background} ${props.fieldset ? styles.fieldset : ""} ${props.color ? styles[props.color] : ""} ${props.locked ? styles.locked : styles.unlocked} ${props.completed ? styles.completed : styles.incomplete}`}>
             <header className={styles.header}>
                 <div className={styles.containerLabel}>
                     <h6

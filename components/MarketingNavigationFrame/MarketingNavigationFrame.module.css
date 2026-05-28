@@ -1,0 +1,27 @@
+.header{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--header-height);
+    padding-left: var(--field-size);
+    padding-right: var(--field-size);
+    background-color: var(--layer-2);
+    border-bottom: var(--border-width) solid var(--layer-2-border);
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+}
+
+.containerCTA{
+    display: -webkit-flex;
+    display: flex;
+    flex: 1;
+    justify-content: right;
+}
+
+.containerChildren{
+    padding: var(--spacing-large);
+    margin-top: var(--header-height);
+}
