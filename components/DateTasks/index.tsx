@@ -57,7 +57,7 @@ export default function DateTasks({ date }: {
 
     return (
         <div className={styles.frame}>
-            <div>
+            <div className={styles.column}>
                 <FieldFrame>
                     {dateTasks.map(task => {
                         const current = currentTaskAndStep && currentTaskAndStep.task.id === task.id
@@ -90,7 +90,7 @@ export default function DateTasks({ date }: {
                     })}
                 </FieldFrame>
             </div>
-            <div>
+            <div className={styles.column}>
                 {currentTaskAndStep ? (
                     <>
                         <Fieldset layer={2} label={currentTaskAndStep.task.name}>
