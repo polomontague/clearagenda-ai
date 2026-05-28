@@ -1,8 +1,8 @@
-import { ReactElement } from "react"
+import { ReactNode } from "react"
 import MarketingNavigationFrame from "@/components/MarketingNavigationFrame"
 
 export default function MarketingLayout({ children }: {
-    children: ReactElement
+    children: ReactNode
 }) {
     return (
         <MarketingNavigationFrame>

@@ -1,10 +1,10 @@
 import styles from "./MarketingNavigationFrame.module.css"
-import { ReactElement } from "react"
+import { ReactNode } from "react"
 import LinkButton from "../LinkButton"
 import Logo from "../Logo"
 import Link from "next/link"
 
-export default function MarketingNavigationFrame({ children }: { children: ReactElement }) {
+export default function MarketingNavigationFrame({ children }: { children: ReactNode }) {
     return (
         <div>
             <header className={styles.header}>
