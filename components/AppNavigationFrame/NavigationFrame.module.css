@@ -57,6 +57,12 @@
         border-radius: var(--border-radius);
         color: var(--layer-2-light);
         transition: var(--transition);
+
+
+
+        height: var(--field-size-large);
+        padding-left: var(--spacing-very-large);
+        padding-right: var(--spacing-very-large);
     }
 
     .btn > svg{
@@ -64,11 +70,16 @@
         height: var(--icon-size);
         fill: var(--layer-2-light);
         transition: var(--transition);
+
+        width: var(--icon-size-large);
+        height: var(--icon-size-large);
     }
 
     .btn .label{
         color: var(--layer-2-light);
         transition: var(--transition);
+
+        font-size: var(--font-size-large);
     }
 
     .btn:hover,

@@ -12,7 +12,10 @@ export default function LabelField({ fieldset, strike, label, children }: LabelF
     return (
         <div className={`${styles.background} ${fieldset ? styles.fieldset : ""} ${strike ? styles.strike : ""}`}>
             <div className={styles.containerLabel}>
-                <h6 className={styles.label}>{label}</h6>
+                <h6
+                    className={styles.label}
+                    title={label}
+                >{label}</h6>
                 <div className={styles.fade}></div>
             </div>
             {children ? (
