@@ -16,7 +16,7 @@ import Utility from "@/lib/Utility"
 import Range from "../Range"
 import Confirm from "../Confirm"
 import Alert from "../Alert"
-import Task, { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
+import { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
 import API from "@/lib/API"
 
 export default function DateTasks({ date }: {
@@ -76,6 +76,9 @@ export default function DateTasks({ date }: {
                                             )
                                         })}
                                     </Fieldset>
+                                    <LabelField label="Length">
+                                        <InnerValue label={Tasks.getLength(task)} />
+                                    </LabelField>
                                     {current ? (
                                         <Fieldset>
                                             <LabelField fieldset label="Progress">
