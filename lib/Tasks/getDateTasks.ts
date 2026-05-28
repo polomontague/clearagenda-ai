@@ -220,7 +220,7 @@ const getDateCompletedStepInstances = (tasks: Task[], date: Date): StepInstance[
 }
 
 const getPriority = (instance: StepInstance): number => {
-    let score = 0
+    let score = 1
     // Urgency Pressure Score
     const pressure = getUrgencyPressure(instance)
     score += pressure
