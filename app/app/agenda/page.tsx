@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import PageFrame from "@/components/PageFrame"
 import SelectBar from "@/components/SelectBar"
 import DatePicker from "@/components/DatePicker"
@@ -18,20 +18,26 @@ export default function AgendaPage() {
     tomorrow.setDate(today.getDate() + 1)
     const [type, setType] = useState<"tasks" | "events" | "reminders">("tasks")
 
+    useEffect(() => {
+        const scheduleMidnight = () => {
+            const now = new Date()
+            const nextMidnight = new Date()
+            nextMidnight.setHours(24, 0, 0, 0)
+            const millisecondsTillMidnight = nextMidnight.getTime() - now.getTime()
+            const timeout = setTimeout(() => {
+                setDate(new Date())
+                // Reschedule for next day
+                scheduleMidnight()
+            }, millisecondsTillMidnight)
+            return timeout
+        }
+        const timeout = scheduleMidnight()
+        return () => clearTimeout(timeout)
+    }, [])
+
     const handleDateChange = (val: Date) => {
         setDate(val)
         setModalOpen(false)
-    }
-
-    const handleTabChange = (val: string) => {
-        if (val === "today") {
-            setDate(new Date())
-        }
-        if (val === "tomorrow") {
-            const date = new Date()
-            date.setDate(date.getDate() + 1)
-            setDate(date)
-        }
     }
 
     return (

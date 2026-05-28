@@ -24,7 +24,7 @@ export default function SetUpPage() {
                     <p>
                         Now let's fill your agenda!
                     </p>
-                    <LinkButton href="/memory" label="Go to Memory" />
+                    <LinkButton href="/app/memory" label="Go to Memory" />
                 </Slide>
             </Wizard>
         </PrivateRoute>

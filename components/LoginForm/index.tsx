@@ -15,6 +15,7 @@ import Link from "@/components/Link"
 import Loading from "@/components/Loading"
 import API from "@/lib/API"
 import User from "@/types/User"
+import Routes from "@/constants/Routes"
 
 export default function LoginForm() {
     const [username, setUsername] = useState("")
@@ -53,7 +54,7 @@ export default function LoginForm() {
                 secure: process.env.NODE_ENV === "production",
                 httpOnly: false,
             })
-            router.push("/agenda")
+            router.push(Routes.AUTH_LANDING_PAGE)
         }).catch(err => {
             setLoading(false)
             setAlertMessage(err.message)
