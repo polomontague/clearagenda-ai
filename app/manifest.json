@@ -2,7 +2,7 @@
     "name": "ClearAgenda AI",
     "short_name": "ClearAgenda",
     "description": "",
-    "start_url": "/app/agenda",
+    "start_url": "/agenda",
     "display": "standalone",
     "background_color": "#c5c7c9",
     "theme_color": "#d6d8da",

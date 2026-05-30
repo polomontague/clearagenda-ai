@@ -59,13 +59,13 @@ export default function NavigationFrame(props: NavigationFrameProps) {
         {
             type: "link",
             icon: <CalendarIcon />,
-            href: "/app/agenda",
+            href: "/agenda",
             label: "Agenda"
         },
         {
             type: "link",
             icon: <BrainIcon />,
-            href: "/app/memory",
+            href: "/memory",
             label: "Memory"
         }
     ]
@@ -140,7 +140,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
             </main>
             <aside className={styles.sidebar}>
                 <header className={styles.header}>
-                    <Link href="/app/agenda">
+                    <Link href="/agenda">
                         <Logo />
                     </Link>
                 </header>
