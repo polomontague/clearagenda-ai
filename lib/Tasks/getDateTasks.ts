@@ -183,7 +183,9 @@ const getDateCompletedTaskOccupancy = (tasks: Task[], date: Date): number => {
 }
 
 const getDateCompletedStepInstances = (tasks: Task[], date: Date): StepInstance[] => {
-    const instances: StepInstance[] = []
+    const instances: (StepInstance & {
+        completed: string
+    })[] = []
     const dateKey = Utility.getDateKey(date)
     const today = new Date()
     const todayDateKey = Utility.getDateKey(today)
@@ -196,7 +198,8 @@ const getDateCompletedStepInstances = (tasks: Task[], date: Date): StepInstance[
                 instances.push({
                     task,
                     step,
-                    dateAvailable: todayDateKey
+                    dateAvailable: todayDateKey,
+                    completed: step.completed
                 })
                 continue
             }
@@ -210,13 +213,16 @@ const getDateCompletedStepInstances = (tasks: Task[], date: Date): StepInstance[
                     instances.push({
                         task,
                         step,
-                        dateAvailable: occurrenceDateKey
+                        dateAvailable: occurrenceDateKey,
+                        completed: completion.completed
                     })
                 }
             }
         }
     }
-    return instances
+    // Sort instances by completion date
+    instances.sort((a, b) => a.completed.localeCompare(b.completed))
+    return instances.map(({ completed, ...instance }) => instance)
 }
 
 const getPriority = (instance: StepInstance): number => {
