@@ -1,5 +1,5 @@
 "use client"
-import styles from "./NavigationFrame.module.css"
+import styles from "./AppNavigationFrame.module.css"
 import { ReactElement, ReactNode, useState, useContext } from "react"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
@@ -85,6 +85,7 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     const { addTask } = useContext(TasksContext)
     const { addEvent } = useContext(EventsContext)
     const { addReminder } = useContext(RemindersContext)
+    const [moreMenuOpen, setMoreMenuOpen] = useState(false)
 
     const handleCreateTaskSuccess = (task: Task) => {
         addTask(task)
@@ -170,11 +171,36 @@ export default function NavigationFrame(props: NavigationFrameProps) {
                                 </li>
                             )
                         })}
-                        <li className={styles.containerBtnMore}>
-                            <SelectButton
-                                icon={<MenuIcon />}
-                                options={moreOptions}
-                            />
+                        <li className={`${styles.containerBtnMore} ${moreMenuOpen ? styles.open : ""}`}>
+                            <button
+                                type="button"
+                                className={styles.btnMore}
+                                onClick={() => setMoreMenuOpen(true)}
+                            >
+                                <MenuIcon />
+                                <span className={styles.label}>More</span>
+                            </button>
+                            <button
+                                className={styles.overlayMore}
+                                onClick={() => setMoreMenuOpen(false)}
+                            ></button>
+                            <ul className={styles.menuMore}>
+                                {moreOptions.map(option => (
+                                    <li key={option.label}>
+                                        <button
+                                            type="button"
+                                            className={styles.btnMoreMenu}
+                                            onClick={() => {
+                                                setMoreMenuOpen(false)
+                                                option.onClick()
+                                            }}
+                                        >
+                                            {option.icon}
+                                            <span className={styles.label}>{option.label}</span>
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                         </li>
                     </ul>
                 </nav>

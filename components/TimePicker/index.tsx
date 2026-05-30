@@ -16,7 +16,6 @@ export default function TimePicker(props: TimePickerProps) {
         const newValue = new Date(props.value)
         newValue.setHours(val.am_or_pm === "am" ? val.hour : val.hour + 12)
         newValue.setMinutes(val.minute)
-        console.log(props.value, newValue)
         props.onChange(newValue)
     }
 

@@ -1,0 +1,365 @@
+@media screen and (min-width: 1001px) {
+    .frame{
+        
+    }
+
+    .sidebar{
+        width: var(--sidebar-width);
+        background-color: var(--layer-2);
+        border-right: var(--border-width) solid var(--layer-2-border);
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .header{
+        display: -webkit-flex;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: var(--header-height);
+        background-color: var(--layer-2);
+        border-bottom: var(--border-width) solid var(--layer-2-border);
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+    }
+
+    .nav{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        padding-left: var(--spacing-large);
+        padding-right: var(--spacing-large);
+    }
+
+    .lstMenu{
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-small);
+    }
+
+    .btn{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-small);
+        height: var(--field-size);
+        padding-left: var(--spacing-large);
+        padding-right: var(--spacing-large);
+        border: var(--border-width) solid transparent;
+        border-radius: var(--border-radius);
+        color: var(--layer-2-light);
+    }
+
+    .btn > svg{
+        width: var(--icon-size);
+        height: var(--icon-size);
+        fill: var(--layer-2-light);
+    }
+
+    .btn .label{
+        color: var(--layer-2-light);
+    }
+
+    .btn.selected{
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+
+    .btn.selected > svg{
+        fill: var(--accent-contrast);
+    }
+
+    .btn.selected > .label{
+        font-weight: bolder;
+        color: var(--accent-contrast);
+    }
+
+    .containerBtnMore{
+        position: absolute;
+        left: var(--spacing-large);
+        bottom: var(--spacing-large);
+    }
+
+    /* More Button Styles */
+    .btnMore{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-small);
+        height: var(--field-size);
+        padding-left: var(--spacing-large);
+        padding-right: var(--spacing-large);
+        background-color: var(--accent);
+        border-radius: var(--border-radius);
+    }
+
+    .btnMore > svg{
+        width: var(--icon-size);
+        height: var(--icon-size);
+        fill: var(--accent-contrast);
+    }
+
+    .btnMore{
+        font-weight: bolder;
+        color: var(--accent-contrast);
+    }
+
+    .overlayMore{
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    .open .overlayMore{
+        display: block;
+    }
+
+    .menuMore{
+        display: none;
+        flex-direction: column;
+        gap: var(--spacing-small);
+        width: max-content;
+        padding: calc(calc(var(--field-size) - var(--inner-field-size)) / 2);
+        background-color: var(--layer-3);
+        border: var(--border-width) solid var(--layer-3-border);
+        border-radius: var(--border-radius);
+        position: absolute;
+        left: 0;
+        bottom: var(--field-size);
+        margin-bottom: var(--spacing-small);
+        z-index: 1;
+    }
+
+    .open .menuMore{
+        display: -webkit-flex;
+        display: flex;
+    }
+
+    .btnMoreMenu{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-small);
+        width: 100%;
+        height: var(--inner-field-size);
+        padding-left: var(--spacing-medium);
+        padding-right: var(--spacing-medium);
+        border-radius: var(--inner-border-radius);
+    }
+
+    .btnMoreMenu > svg{
+        width: var(--inner-icon-size);
+        height: var(--inner-icon-size);
+        fill: var(--layer-3-light);
+    }
+
+    .btnMoreMenu > .label{
+        font-size: var(--inner-font-size);
+        color: var(--layer-3-light);
+    }
+
+    .btnMoreMenu:hover,
+    .btnMoreMenu:active,
+    .btnMoreMenu:focus{
+        background-color: var(--accent);
+    }
+
+    .btnMoreMenu:hover > svg,
+    .btnMoreMenu:active > svg,
+    .btnMoreMenu:focus > svg{
+        fill: var(--accent-contrast);
+    }
+
+    .btnMoreMenu:hover > .label,
+    .btnMoreMenu:active > .label,
+    .btnMoreMenu:focus > .label{
+        font-weight: bolder;
+        color: var(--accent-contrast);
+    }
+
+    .main{
+        margin-left: var(--sidebar-width);
+    }
+}
+
+@media screen and (max-width: 1000px){
+    .frame{
+        
+    }
+
+    .sidebar{
+        position: relative;
+    }
+
+    .header{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: var(--header-height);
+        padding-left: var(--spacing-large);
+        padding-right: var(--pacing-large);
+        background-color: var(--layer-2);
+        border-bottom: var(--border-width) solid var(--layer-2-border);
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+    }
+
+    .nav{
+        height: var(--footer-height);
+        background-color: var(--layer-2-translucent);
+        backdrop-filter: blur(var(--blur));
+        border-top: var(--border-width) solid var(--layer-2-border);
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .lstMenu{
+        display: -webkit-flex;
+        display: flex;
+        gap: var(--spacing-small);
+        width: 100%;
+    }
+
+    .lstMenu > li{
+        flex: 1;
+    }
+
+    .lstMenu .btn,
+    .lstMenu .btnMore{
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-small);
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding-top: var(--spacing-small);
+        padding-bottom: var(--spacing-small);
+    }
+
+    .lstMenu .btn > svg,
+    .lstMenu .btnMore > svg{
+        width: 26px;
+        height: 26px;
+        fill: var(--layer-2-light);
+    }
+
+    .lstMenu .btn > .label,
+    .lstMenu .btnMore > .label{
+        color: var(--layer-2-light);
+        line-height: normal;
+    }
+
+    .lstMenu .btn.selected > svg{
+        fill: var(--accent);
+    }
+
+    .lstMenu .btn.selected > .label{
+        color: var(--accent);
+    }
+
+    /* More Button Styles */
+    .overlayMore{
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    .open .overlayMore{
+        display: block;
+    }
+
+    .menuMore{
+        display: none;
+    }
+
+    .menuMore{
+        display: none;
+        flex-direction: column;
+        gap: var(--spacing-small);
+        width: max-content;
+        padding: calc(calc(var(--field-size) - var(--inner-field-size)) / 2);
+        background-color: var(--layer-2);
+        border: var(--border-width) solid var(--layer-2-border);
+        border-radius: var(--border-radius);
+        position: absolute;
+        right: var(--spacing-small);
+        bottom: 100%;
+        margin-bottom: var(--spacing-small);
+        z-index: 1;
+    }
+
+    .open .menuMore{
+        display: -webkit-flex;
+        display: flex;
+    }
+
+    .btnMoreMenu{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-small);
+        width: 100%;
+        height: var(--inner-field-size);
+        padding-left: var(--spacing-medium);
+        padding-right: var(--spacing-medium);
+        border-radius: var(--inner-border-radius);
+    }
+
+    .btnMoreMenu > svg{
+        width: var(--inner-icon-size);
+        height: var(--inner-icon-size);
+        fill: var(--layer-3-light);
+    }
+
+    .btnMoreMenu > .label{
+        font-size: var(--inner-font-size);
+        color: var(--layer-3-light);
+    }
+
+    .btnMoreMenu:hover,
+    .btnMoreMenu:active,
+    .btnMoreMenu:focus{
+        background-color: var(--accent);
+    }
+
+    .btnMoreMenu:hover > svg,
+    .btnMoreMenu:active > svg,
+    .btnMoreMenu:focus > svg{
+        fill: var(--accent-contrast);
+    }
+
+    .btnMoreMenu:hover > .label,
+    .btnMoreMenu:active > .label,
+    .btnMoreMenu:focus > .label{
+        font-weight: bolder;
+        color: var(--accent-contrast);
+    }
+
+    .main{
+        padding-top: var(--header-height);
+        padding-bottom: var(--footer-height);
+    }
+}

@@ -15,14 +15,11 @@
     background-color: var(--accent);
     border-radius: var(--border-radius);
 
-    width: var(--field-size-large);
-    height: var(--field-size-large);
-
 }
 
 .background > .btn > svg{
-    width: var(--icon-size-large);
-    height: var(--icon-size-large);
+    width: var(--icon-size);
+    height: var(--icon-size);
     fill: var(--accent-contrast);
 }
 

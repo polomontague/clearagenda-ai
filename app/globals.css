@@ -50,11 +50,6 @@
 	--spinner-size: 20px;
 	--header-height: 68px;
 
-	--field-size-large: 38px;
-	--spacing-very-large: 24px;
-	--icon-size-large: 15px;
-	--font-size-large: 15px;
-
 	/* Variables used for scaling inputs so they don't zoom on mobile */
 	--font-size-number: 13; /* needs to match --font-size */
 	--field-size-number: 32; /* needs to match --field-size */
