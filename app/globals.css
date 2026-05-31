@@ -10,7 +10,12 @@
 	display: none; /* Chrome, Safari, Opera */
 }
 
+html{
+	background-color: var(--layer-1);
+}
+
 body{
+	height: max-content;
 	background-color: var(--layer-1);
 	font-family: var(--font);
 	line-height: 1.5; /* TextArea scaling won't work unless line-height is set to a fixed value */
