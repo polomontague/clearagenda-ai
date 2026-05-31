@@ -10,10 +10,6 @@
 	display: none; /* Chrome, Safari, Opera */
 }
 
-html{
-	background-color: var(--layer-1);
-}
-
 body{
 	background-color: var(--layer-1);
 	font-family: var(--font);

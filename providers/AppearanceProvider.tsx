@@ -35,12 +35,9 @@ export default function AppearanceProvider(props: AppearanceProviderProps) {
     }, [systemTheme])
 
     const updateMetaThemeColor = (color: string) => {
-        // Remove existing tag/tags because SSR injects two tags when theme is "system" (one for light mode and one for dark mode)
-        document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.remove())
-        const meta = document.createElement("meta")
-        meta.name = "theme-color"
-        meta.content = color
-        document.head.appendChild(meta)
+        // SSR injects 2 meta tags for "system" theme (one for light mode and one for dark mode)
+        const metaTags = document.querySelectorAll('meta[name="theme-color"]')
+        metaTags.forEach(tag => tag.setAttribute("content", color))
     }
 
     return props.children
