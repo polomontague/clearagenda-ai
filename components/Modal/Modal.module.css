@@ -54,9 +54,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 1;
+    width: 100%;
+    min-width: max-content;
     height: 100%;
+    padding-left: var(--spacing-medium);
     font-weight: bolder;
+    white-space: nowrap;
 }
 
 .header .btnClose{
@@ -65,11 +68,21 @@
     align-items: center;
     padding-left: var(--spacing-medium);
     padding-right: var(--spacing-medium);
+    background-color: var(--layer-2);
     color: var(--accent);
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
+}
+
+.header .btnClose > .fade{
+    width: var(--field-size);
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--layer-2));
+    position: absolute;
+    top: 0;
+    left: calc(var(--field-size) * -1);
 }
 
 .containerScroll{

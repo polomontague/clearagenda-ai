@@ -29,6 +29,7 @@ export default function Modal(props: ModalProps) {
                         className={styles.btnClose}
                         onClick={() => props.onRequestClose()}
                     >
+                        <div className={styles.fade}></div>
                         Close
                     </button>
                 </header>
