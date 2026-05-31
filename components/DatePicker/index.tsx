@@ -46,19 +46,21 @@ export default function DatePicker(props: DatePickerProps) {
 
     const handleBackClick = () => {
         const newDate = new Date(date)
+        newDate.setDate(1)
         newDate.setMonth(newDate.getMonth() - 1)
         setDate(newDate)
     }
 
     const handleNextClick = () => {
         const newDate = new Date(date)
+        newDate.setDate(1)
         newDate.setMonth(newDate.getMonth() + 1)
         setDate(newDate)
     }
 
-    const handleDateClick = (date2: number) => {
+    const handleDateClick = (day: number) => {
         const newValue = new Date(date)
-        newValue.setDate(date2)
+        newValue.setDate(day)
         props.onChange(newValue)
     }
 
