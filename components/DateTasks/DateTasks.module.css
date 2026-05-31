@@ -7,3 +7,9 @@
 .frame > .column{
     min-width: 0;
 }
+
+@media screen and (max-width: 600px){
+    .frame{
+        grid-template-columns: 100%;
+    }
+}

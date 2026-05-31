@@ -1,6 +1,6 @@
 "use client"
 import styles from "./DateTasks.module.css"
-import { useContext, useMemo, useState } from "react"
+import { useContext, useMemo, useState, useEffect } from "react"
 import TasksContext from "@/contexts/TasksContext"
 import Tasks from "@/lib/Tasks"
 import EventsContext from "@/contexts/EventsContext"
@@ -18,6 +18,7 @@ import Confirm from "../Confirm"
 import Alert from "../Alert"
 import { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
 import API from "@/lib/API"
+import Stopwatch from "../Stopwatch"
 
 export default function DateTasks({ date }: {
     date: Date
@@ -33,6 +34,13 @@ export default function DateTasks({ date }: {
     const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
+    const [stopwatchSeconds, setStopwatchSeconds] = useState(0)
+    const [stopwatchRunning, setStopwatchRunning] = useState(false)
+
+    const handleCompleteClick = () => {
+        setCompleteConfirmOpen(true)
+        setStopwatchRunning(false)
+    }
 
     const handleCompleteConfirm = (task: TaskOccurrence, step: StepOccurrence) => {
         setCompleteConfirmOpen(false)
@@ -41,6 +49,7 @@ export default function DateTasks({ date }: {
             date: task.occurs === "repeating" ? task.date : undefined
         }
         API.post<{ completed: string } | { completion: Completion }>(route, body, true).then(data => {
+            setStopwatchSeconds(0)
             if ("completed" in data) {
                 updateCompleted(task.id, step.id, data.completed)
             }
@@ -107,9 +116,21 @@ export default function DateTasks({ date }: {
                                     <LabelField label="Length">
                                         <InnerValue label={Utility.formatDuration(currentTaskAndStep.step.duration)} />
                                     </LabelField>
+                                    <Fieldset
+                                        label="Stopwatch"
+                                        description="Optionally track how long this step takes."
+                                    >
+                                        <Stopwatch
+                                            fieldset
+                                            value={stopwatchSeconds}
+                                            onChange={setStopwatchSeconds}
+                                            running={stopwatchRunning}
+                                            onRunningChange={setStopwatchRunning}
+                                        />
+                                    </Fieldset>
                                     <Button
                                         label="Mark Complete"
-                                        onClick={() => setCompleteConfirmOpen(true)}
+                                        onClick={handleCompleteClick}
                                     />
                                 </FieldFrame>
                             </Card>
