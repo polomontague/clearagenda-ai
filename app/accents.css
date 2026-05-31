@@ -1,0 +1,65 @@
+:root[data-accent="red"]{
+	--accent: var(--red);
+	--accent-translucent: var(--red-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="orange"]{
+	--accent: var(--orange);
+	--accent-translucent: var(--orange-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="coral"]{
+	--accent: var(--coral);
+	--accent-translucent: var(--coral-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="yellow"]{
+	--accent: var(--yellow);
+	--accent-translucent: var(--yellow-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="lime"]{
+	--accent: var(--lime);
+	--accent-translucent: var(--lime-translucent);
+	--accent-contrast: var(--very-dark-grey);
+}
+
+:root[data-accent="green"]{
+	--accent: var(--green);
+	--accent-translucent: var(--green-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="mint"]{
+	--accent: var(--mint);
+	--accent-translucent: var(--mint-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="turquoise"]{
+	--accent: var(--turquoise);
+	--accent-translucent: var(--turquoise-translucent);
+	--accent-contrast: var(--very-dark-grey);
+}
+
+:root[data-accent="sky"]{
+	--accent: var(--sky);
+	--accent-translucent: var(--sky-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="lavender"]{
+	--accent: var(--lavender);
+	--accent-translucent: var(--lavender-translucent);
+	--accent-contrast: var(--white);
+}
+
+:root[data-accent="pink"]{
+	--accent: var(--pink);
+	--accent-translucent: var(--pink-translucent);
+	--accent-contrast: var(--white);
+}

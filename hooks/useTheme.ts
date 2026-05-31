@@ -4,7 +4,7 @@ import Theme from "@/types/Theme"
 import Appearance from "@/constants/Appearance"
 
 export default function useTheme() {
-    const [theme, setTheme] = useState<Exclude<Theme, "device">>(Appearance.DEFAULT_THEME)
+    const [theme, setTheme] = useState<Exclude<Theme, "system">>(Appearance.DEFAULT_THEME)
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")

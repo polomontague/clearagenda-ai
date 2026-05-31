@@ -1,0 +1,108 @@
+:root{
+	--red: #ff142b;
+	--red-translucent: rgba(255, 20, 43, 0.5);
+	--orange: #ff9100;
+	--orange-translucent: rgba(255, 145, 0, 0.5);
+	--coral: #fa6f3c;
+	--coral-translucent: rgba(250, 111, 60, 0.5);
+	--yellow: #ffd60a;
+	--yellow-translucent: rgba(255, 214, 10, 0.5);
+	--lime: #ccff00;
+	--lime-translucent: rgba(204, 255, 0, 0.5);
+	--green: #32d74b;
+	--green-translucent: rgba(50, 215, 75, 0.5);
+	--mint: #46d275;
+	--mint-translucent: rgba(70, 210, 117, 0.5);
+	--turquoise: #03ffff;
+	--turquoise-translucent: rgba(3, 255, 255, 0.5);
+	--sky: #0099ff;
+	--sky-translucent: rgba(0, 153, 255, 0.5);
+	--lavender: #9999ff;
+	--lavender-translucent: rgba(153, 153, 255, 0.5);
+	--pink: #ff3366;
+	--pink-translucent: rgba(255, 51, 102, 0.5);
+	--white: rgb(248, 250, 252);
+	--very-dark-grey: rgb(13, 15, 17);
+
+	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--font-size: 13px;
+	--font-size-small: 10px;
+	--sidebar-width: 250px;
+	--border-width: 1px;
+	--spacing-very-small: 4px;
+	--spacing-small: 6px;
+	--spacing-medium: 12px;
+	--spacing-large: 18px;
+	--border-radius: 7px;
+	--field-size: 32px;
+	--blur: 12px;
+	--modal-width: 360px;
+	--modal-height: 500px;
+	--transition: 0.15s ease-in-out;
+	--icon-size: 13px;
+	--alert-width: 180px;
+	--inner-field-size: 24px;
+	--inner-icon-size: 11px;
+	--inner-font-size: 11px;
+	--inner-border-radius: 4px;
+	--outer-border-radius: 13px;
+	--footer-height: 80px;
+	--spinner-size: 20px;
+	--header-height: 68px;
+
+	/* Variables used for scaling inputs so they don't zoom on mobile */
+	--font-size-number: 13; /* needs to match --font-size */
+	--field-size-number: 32; /* needs to match --field-size */
+	--spacing-small-number: 6; /* needs to match --spacing-small */
+	--spacing-medium-number: 12; /* needs to match spacing large number */
+	--scale: calc(var(--font-size-number) / 16);
+	--scaled-width-and-height: calc(calc(16 / var(--font-size-number)) * 100%);
+	--scaled-spacing-small: calc(calc(calc(16 / var(--font-size-number)) * var(--spacing-small-number)) * var(--border-width));
+	--scaled-spacing-medium: calc(calc(calc(16 / var(--font-size-number)) * var(--spacing-medium-number)) *var(--border-width));
+
+    /* Light Mode */
+    --light-layer-1: rgb(197, 199, 201);
+	--light-layer-1-translucent: rgba(197, 199, 201, 0.9);
+	--light-layer-1-border: rgb(180, 182, 184);
+	--light-layer-1-light: rgb(112, 114, 116);
+
+	--light-layer-2: rgb(214, 216, 218);
+	--light-layer-2-translucent: rgba(214, 216, 218, 0.9);
+	--light-layer-2-border: rgb(180, 182, 184);
+	--light-layer-2-light: rgb(129, 131, 133);
+
+	--light-layer-3: rgb(231, 233, 235);
+	--light-layer-3-translucent: rgba(231, 233, 235, 0.9);
+	--light-layer-3-border: rgb(197, 199, 201);
+	--light-layer-3-light: rgb(146, 148, 150);
+
+	--light-layer-4: rgb(248, 250, 252);
+	--light-layer-4-translucent: rgba(248, 250, 252, 0.9);
+	--light-layer-4-border: rgb(214, 216, 218);
+	--light-layer-4-light: rgb(163, 165, 167);
+
+	--light-contrast: var(--very-dark-grey);
+
+    /* Dark Mode */
+    --dark-layer-1: rgb(13, 15, 17);
+	--dark-layer-1-translucent: rgba(13, 15, 17, 0.9);
+	--dark-layer-1-border: rgb(30, 32, 34);
+	--dark-layer-1-light: rgb(98, 100, 102);
+
+	--dark-layer-2: rgb(30, 32, 34);
+	--dark-layer-2-translucent: rgba(30, 32, 34, 0.9);
+	--dark-layer-2-border: rgb(47, 49, 51);
+	--dark-layer-2-light: rgb(115, 117, 119);
+
+	--dark-layer-3: rgb(47, 49, 51);
+	--dark-layer-3-translucent: rgba(47, 49, 51, 0.9);
+	--dark-layer-3-border: rgb(64, 66, 68);
+	--dark-layer-3-light: rgb(132, 134, 136);
+
+	--dark-layer-4: rgb(64, 66, 68);
+	--dark-layer-4-translucent: rgba(64, 66, 68, 0.9);
+	--dark-layer-4-border: rgb(81, 83, 85);
+	--dark-layer-4-light: rgb(149, 151, 153);
+
+	--dark-contrast: var(--white);
+}

@@ -1,0 +1,101 @@
+/* Light Theme */
+:root[data-theme="light"]{
+	--layer-1: var(--light-layer-1);
+	--layer-1-translucent: var(--light-layer-1-translucent);
+	--layer-1-border: var(--light-layer-1-border);
+	--layer-1-light: var(--light-layer-1-light);
+
+	--layer-2: var(--light-layer-2);
+	--layer-2-translucent: var(--light-layer-2-translucent);
+	--layer-2-border: var(--light-layer-2-border);
+	--layer-2-light: var(--light-layer-2-light);
+
+	--layer-3: var(--light-layer-3);
+	--layer-3-translucent: var(--light-layer-3-translucent);
+	--layer-3-border: var(--light-layer-3-border);
+	--layer-3-light: var(--light-layer-3-light);
+
+	--layer-4: var(--light-layer-4);
+	--layer-4-translucent: var(--light-layer-4-translucent);
+	--layer-4-border: var(--light-layer-4-border);
+	--layer-4-light: var(--light-layer-4-light);
+
+	--contrast: var(--light-contrast);
+}
+
+@media (prefers-color-scheme: light){
+	:root{
+		--layer-1: var(--light-layer-1);
+		--layer-1-translucent: var(--light-layer-1-translucent);
+		--layer-1-border: var(--light-layer-1-border);
+		--layer-1-light: var(--light-layer-1-light);
+
+		--layer-2: var(--light-layer-2);
+		--layer-2-translucent: var(--light-layer-2-translucent);
+		--layer-2-border: var(--light-layer-2-border);
+		--layer-2-light: var(--light-layer-2-light);
+
+		--layer-3: var(--light-layer-3);
+		--layer-3-translucent: var(--light-layer-3-translucent);
+		--layer-3-border: var(--light-layer-3-border);
+		--layer-3-light: var(--light-layer-3-light);
+
+		--layer-4: var(--light-layer-4);
+		--layer-4-translucent: var(--light-layer-4-translucent);
+		--layer-4-border: var(--light-layer-4-border);
+		--layer-4-light: var(--light-layer-4-light);
+
+		--contrast: var(--light-contrast);
+	}
+}
+
+/* Dark Theme */
+:root[data-theme="dark"]{
+	--layer-1: var(--dark-layer-1);
+	--layer-1-translucent: var(--dark-layer-1-translucent);
+	--layer-1-border: var(--dark-layer-1-border);
+	--layer-1-light: var(--dark-layer-1-light);
+
+	--layer-2: var(--dark-layer-2);
+	--layer-2-translucent: var(--dark-layer-2-translucent);
+	--layer-2-border: var(--dark-layer-2-border);
+	--layer-2-light: var(--dark-layer-2-light);
+
+	--layer-3: var(--dark-layer-3);
+	--layer-3-translucent: var(--dark-layer-3-translucent);
+	--layer-3-border: var(--dark-layer-3-border);
+	--layer-3-light: var(--dark-layer-3-light);
+
+	--layer-4: var(--dark-layer-4);
+	--layer-4-translucent: var(--dark-layer-4-translucent);
+	--layer-4-border: var(--dark-layer-4-border);
+	--layer-4-light: var(--dark-layer-4-light);
+
+	--contrast: var(--dark-contrast);
+}
+
+@media (prefers-color-scheme: dark){
+	:root{
+		--layer-1: var(--dark-layer-1);
+		--layer-1-translucent: var(--dark-layer-1-translucent);
+		--layer-1-border: var(--dark-layer-1-border);
+		--layer-1-light: var(--dark-layer-1-light);
+
+		--layer-2: var(--dark-layer-2);
+		--layer-2-translucent: var(--dark-layer-2-translucent);
+		--layer-2-border: var(--dark-layer-2-border);
+		--layer-2-light: var(--dark-layer-2-light);
+
+		--layer-3: var(--dark-layer-3);
+		--layer-3-translucent: var(--dark-layer-3-translucent);
+		--layer-3-border: var(--dark-layer-3-border);
+		--layer-3-light: var(--dark-layer-3-light);
+
+		--layer-4: var(--dark-layer-4);
+		--layer-4-translucent: var(--dark-layer-4-translucent);
+		--layer-4-border: var(--dark-layer-4-border);
+		--layer-4-light: var(--dark-layer-4-light);
+
+		--contrast: var(--dark-contrast);
+	}
+}

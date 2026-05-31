@@ -1,12 +1,11 @@
 import { NextRequest } from "next/server"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import UsersDAO from "@/dao/UsersDAO"
-import Validation from "@/lib/Validation"
 import bcrypt from "bcrypt"
 import User from "@/types/User"
 import HttpError from "./HttpError"
 import Response from "./Response"
-import JWT from "@/constants/JWT"
+import { cookies } from "next/headers"
 
 const Auth = {
     signToken: (user: User, expires: number) => {
@@ -45,6 +44,14 @@ const Auth = {
     },
     authorize: (user: User | null) => {
         if (!user) throw new HttpError(Response.unauthorized())
+    },
+    getUser: async () => {
+        const cookiesStore = await cookies()
+        const token = cookiesStore.get("token")
+        if (!token) return undefined
+        const decode = jwt.verify(token.value, process.env.JWT_SECRET ?? "") as JwtPayload
+        const user = await UsersDAO.getUserById(decode.id)
+        return user
     }
 }
 
