@@ -49,6 +49,12 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
         monthly: "Monthly",
         yearly: "Yearly"
     }
+    const frequencyMap: Record<string, string> = {
+        daily: "Day",
+        weekly: "Week",
+        monthly: "Month",
+        yearly: "Year"
+    }
 
     useEffect(() => {
         onChange(getRepeat({ frequency, interval, weekdays, monthlyType, days, ordinal, weekday, months, yearlyType, day, starts, hasEnds, ends }))
@@ -78,7 +84,7 @@ export default function Repeat({ timezone, value, onChange }: RepeatProps) {
                         options={{
                             days: Array.from({ length: 100 }).map((_, i) => ({
                                 value: i + 1,
-                                label: `${i + 1} ${i === 0 ? "Day" : "Days"}`
+                                label: `${i + 1} ${frequencyMap[frequency]}${i > 0 ? "s" : ""}`
                             }))
                         }}
                         value={{ days: value.interval }}
