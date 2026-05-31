@@ -14,7 +14,7 @@ type RootLayoutProps = {
     children: ReactNode
 }
 
-export const generateViewport = async () => {
+export async function generateViewport() {
     const user = await Auth.getUser()
     const theme = user?.preferences.theme ?? Appearance.DEFAULT_THEME
     if (theme === "light") return {

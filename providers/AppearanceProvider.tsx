@@ -13,32 +13,17 @@ export default function AppearanceProvider(props: AppearanceProviderProps) {
     const systemTheme = useTheme()
 
     useEffect(() => {
-        if (user) {
-            const theme = user.preferences.theme
-            const accent = user.preferences.accent
-            window.localStorage.setItem("theme", theme)
-            window.localStorage.setItem("accent", accent)
-
-            document.documentElement.dataset.theme = theme
-            document.documentElement.dataset.accent = accent
-            // Update meta theme color
-            const color = theme === "light" ? Appearance.LIGHT : theme === "dark" ? Appearance.DARK : ( // appearance is "system"
-                systemTheme === "light" ? Appearance.LIGHT : Appearance.DARK
-            )
-            updateMetaThemeColor(color)
-        }
-    }, [user])
-
-    useEffect(() => {
-        const color = systemTheme === "light" ? Appearance.LIGHT : Appearance.DARK
-        updateMetaThemeColor(color)
-    }, [systemTheme])
-
-    const updateMetaThemeColor = (color: string) => {
+        const theme = user?.preferences.theme ?? Appearance.DEFAULT_THEME
+        const accent = user?.preferences.accent ?? Appearance.DEFAULT_ACCENT
+        document.documentElement.dataset.theme = theme
+        document.documentElement.dataset.accent = accent
+        // Update meta theme color
+        const effectiveTheme = theme === "system" ? systemTheme : theme
+        const color = effectiveTheme === "light" ? Appearance.LIGHT : Appearance.DARK
         // SSR injects 2 meta tags for "system" theme (one for light mode and one for dark mode)
         const metaTags = document.querySelectorAll('meta[name="theme-color"]')
         metaTags.forEach(tag => tag.setAttribute("content", color))
-    }
+    }, [user, systemTheme])
 
     return props.children
 }
