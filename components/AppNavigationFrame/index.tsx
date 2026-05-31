@@ -95,11 +95,13 @@ export default function NavigationFrame(props: NavigationFrameProps) {
     const handleCreateEventSuccess = (event: Event) => {
         addEvent(event)
         setAddItemModalOpen(false)
+        setType("task")
     }
 
     const handleCreateReminderSuccess = (reminder: Reminder) => {
         addReminder(reminder)
         setAddItemModalOpen(false)
+        setType("task")
     }
 
     function handleLogoutClick() {
