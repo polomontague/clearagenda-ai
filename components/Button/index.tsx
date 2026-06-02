@@ -3,6 +3,7 @@ import Spinner from "@/components/Spinner"
 import { MouseEvent, ReactElement } from "react"
 
 type ButtonProps = {
+    narrow?: boolean,
     label: string,
     description?: string | ReactElement,
     disabled?: boolean
@@ -15,7 +16,7 @@ const Button = (props: ButtonProps) => {
         <div>
             <button
                 type="submit"
-                className={styles.btn}
+                className={`${styles.btn} ${props.narrow ? styles.narrow : styles.wide}`}
                 disabled={(props.disabled || props.loading) ? true : false}
                 onClick={props.onClick}
             >

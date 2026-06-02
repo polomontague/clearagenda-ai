@@ -1,0 +1,10 @@
+.center{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-small);
+}
+
+.containerPlatform{
+    width: 200px;
+}

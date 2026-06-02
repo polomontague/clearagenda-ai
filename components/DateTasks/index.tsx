@@ -19,6 +19,8 @@ import Alert from "../Alert"
 import { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
 import API from "@/lib/API"
 import Stopwatch from "../Stopwatch"
+import EmptyState from "../EmptyState"
+import { CheckMarkIcon } from "../Icons"
 
 export default function DateTasks({ date }: {
     date: Date
@@ -36,7 +38,8 @@ export default function DateTasks({ date }: {
     const [alertOpen, setAlertOpen] = useState(false)
     const [stopwatchSeconds, setStopwatchSeconds] = useState(0)
     const [stopwatchRunning, setStopwatchRunning] = useState(false)
-
+    const allCompleted = dateTasks.every(task => task.steps.every(step => step.completed))
+  
     const handleCompleteClick = () => {
         setCompleteConfirmOpen(true)
         setStopwatchRunning(false)
@@ -143,6 +146,17 @@ export default function DateTasks({ date }: {
 
                         />
                     </>
+                ) : null}
+                {dateTasks.length && allCompleted ? (
+                    <EmptyState
+                        icon={<CheckMarkIcon />}
+                        message="All Done For Today!"
+                        button={{
+                            type: "button",
+                            label: "Next Task",
+                            onClick: () => {}
+                        }}
+                    />
                 ) : null}
             </div>
             <Alert

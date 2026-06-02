@@ -91,7 +91,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
     return Array.from(taskMap.values())
 }
 
-const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
+export const getIncompleteStepInstancesUntilDate = (tasks: Task[], date: Date) => {
     const result: StepInstance[] = []
     const start = new Date()
     start.setHours(0, 0, 0, 0)

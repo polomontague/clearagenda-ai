@@ -1,4 +1,5 @@
 import CardGroup from "@/components/CardGroup"
+import Preview from "@/components/Preview"
 
 export default function HomePage() {
     return (
@@ -31,6 +32,7 @@ export default function HomePage() {
                     }
                 ]}
             />
+            <Preview />
         </div>
     )
 }

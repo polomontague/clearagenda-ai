@@ -5,6 +5,7 @@ import getCompletion from "./getCompletion"
 import getStatus from "./getStatus"
 import getDateTasks from "./getDateTasks"
 import formatCompletion from "./formatCompletion"
+import { getNextTask } from "./getNextTask"
 
 const Tasks = {
     getCurrentTaskAndStep,
@@ -13,7 +14,8 @@ const Tasks = {
     getCompletion,
     getStatus,
     getDateTasks,
-    formatCompletion
+    formatCompletion,
+    getNextTask
 }
 
 export default Tasks

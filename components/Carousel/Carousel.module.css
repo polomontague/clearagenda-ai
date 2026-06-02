@@ -1,0 +1,50 @@
+.carousel{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    width: 100%;
+    overflow: scroll;
+    scroll-snap-type: x mandatory;
+}
+
+.carousel > li{
+    flex-shrink: 0;
+    scroll-snap-align: start;
+}
+
+.card{
+    padding: var(--spacing-medium);
+    background-color: var(--layer-2);
+    border-radius: var(--outer-border-radius);
+    border: var(--border-width) solid var(--layer-2-border);
+}
+
+.containerLabel{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-small);
+}
+
+.label{
+    text-align: center;
+}
+
+.label .segment{
+    font-size: 18px;
+    font-weight: bolder;
+    color: var(--contrast)
+}
+
+.label .segment.accent{
+    color: var(--accent);
+}
+
+.img{
+    display: block;
+    width: auto;
+    height: 500px;
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
