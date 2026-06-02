@@ -17,8 +17,9 @@ type SendRequestOptions = {
 const sendRequest = async <Data>({ method, endpoint, body, authorize }: SendRequestOptions): Promise<Data> => {
     try {
         const query = new URLSearchParams(window.location.search)
-        if (authorize && !cookies.get("token") || authorize && !query.get("token")) {
-            // TODO: implement token refresh
+        const token = cookies.get("token") || query.get("token")
+        if (authorize && !token) {
+            window.location.href = "/login"
         }
         const url = `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`
         const config = {
