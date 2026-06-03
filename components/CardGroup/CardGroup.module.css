@@ -1,9 +1,0 @@
-.lst{
-    display: -webkit-flex;
-    display: flex;
-    gap: var(--spacing-small);
-}
-
-.lst > li{
-    flex: 1;
-}

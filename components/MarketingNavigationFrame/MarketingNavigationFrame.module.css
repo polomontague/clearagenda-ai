@@ -12,6 +12,7 @@
     left: 0;
     top: 0;
     right: 0;
+    z-index: 1;
 }
 
 .containerCTA{
@@ -22,6 +23,5 @@
 }
 
 .containerChildren{
-    padding: var(--spacing-large);
     margin-top: var(--header-height);
 }

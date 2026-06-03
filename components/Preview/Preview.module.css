@@ -1,3 +1,11 @@
+.background{
+    width: 100%;
+    padding: var(--spacing-large);
+    background-color: var(--layer-2);
+    border-top: var(--border-width) solid var(--layer-2-border);
+    border-bottom: var(--border-width) solid var(--layer-2-border);
+}
+
 .center{
     display: -webkit-flex;
     display: flex;

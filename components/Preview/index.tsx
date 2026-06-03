@@ -4,20 +4,22 @@ import { useState } from "react"
 import SelectBar from "../SelectBar"
 import Carousel from "@/components/Carousel"
 
+type DeviceType = "mobile" | "desktop"
+
 export default function Preview() {
-    const [platform, setPlatform] = useState("mobile")
+    const [deviceType, setDeviceType] = useState<DeviceType>(window.innerWidth <= 768 ? "mobile" : "desktop")
 
     return (
-        <section>
+        <section className={styles.background}>
             <div className={styles.center}>
                 <div className={styles.containerPlatform}>
                     <SelectBar
                         options={[
                             { value: "mobile", label: "Mobile" },
-                            { value: "computer", label: "Desktop" }
-                        ]}
-                        value={platform}
-                        onChange={setPlatform}
+                            { value: "desktop", label: "Desktop" }
+                        ] as const}
+                        value={deviceType}
+                        onChange={setDeviceType}
                     />
                 </div>
             </div>
@@ -25,60 +27,58 @@ export default function Preview() {
                 items={[
                     {
                         label: [
-                            { type: "normal", text: "Clear Your " },
+                            { type: "normal", text: "Clear Your" },
                             { type: "emphasis", text: "Mind" }
                         ],
                         image: {
-                            width: 2064,
-                            height: 1738,
-                            url: "/desktop.png"
+                            width: 1888,
+                            height: 1312,
+                            url: `/add-task-${deviceType}.png`
                         }
                     },
                     {
                         label: [
-                            { type: "normal", text: "Complex Tasks Are Broken Down Into " },
+                            { type: "normal", text: "Complex Tasks Are Split Into " },
                             { type: "emphasis", text: "Actionable Steps" }
                         ],
                         image: {
-                            width: 2064,
-                            height: 1738,
-                            url: "/desktop.png"
+                            width: 1888,
+                            height: 1312,
+                            url: `/step-modal-${deviceType}.png`
                         }
                     },
                     {
                         label: [
-                            { type: "normal", text: "Don't Forget With " },
-                            { type: "emphasis", text: "Memory Bank" }
+                            { type: "emphasis", text: "Memory Bank" },
+                            { type: "normal", text: "Remembers Everything" }
                         ],
                         image: {
-                            width: 2064,
-                            height: 1738,
-                            url: "/desktop.png"
+                            width: 1888,
+                            height: 1312,
+                            url: `/memory-${deviceType}.png`
                         }
                     },
                     {
                         label: [
-                            { type: "normal", text: "Tasks Are " },
-                            { type: "emphasis", text: "Automatically" },
-                            { type: "normal", text: " Scheduled In Order Of " },
-                            { type: "emphasis", text: "Priority" }
+                            { type: "normal", text: "Tasks Are" },
+                            { type: "emphasis", text: "Automatically Scheduled" },
+                            { type: "normal", text: "By Priority" }
                         ],
                         image: {
-                            width: 2064,
-                            height: 1738,
-                            url: "/desktop.png"
+                            width: 1888,
+                            height: 1312,
+                            url: `/tasks-agenda-${deviceType}.png`
                         }
                     },
                     {
                         label: [
-                            { type: "normal", text: "Set How Many " },
-                            { type: "emphasis", text: "Hours To Fill" },
-                            { type: "normal", text: " Each Weekday" }
+                            { type: "emphasis", text: "Single Focus" },
+                            { type: "normal", text: "Workflow" }
                         ],
                         image: {
-                            width: 2064,
-                            height: 1738,
-                            url: "/desktop.png"
+                            width: 1888,
+                            height: 1312,
+                            url: `/tasks-agenda-${deviceType}.png`
                         }
                     }
                 ]}

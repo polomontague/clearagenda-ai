@@ -1,0 +1,30 @@
+.background{
+    padding: var(--spacing-large);
+}
+
+.containerCards{
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+.lstBefore > li{
+    font-weight: bolder;
+    color: var(--red);
+}
+
+.lstAfter > li{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    font-weight: bolder;
+    color: var(--green);
+}
+
+.lstAfter > li > svg{
+    flex-shrink: 0;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--green);
+}
