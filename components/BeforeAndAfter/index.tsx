@@ -1,6 +1,5 @@
 import styles from "./BaforeAndAfter.module.css"
 import { Fragment, ReactElement } from "react"
-import CardGroup from "../CardGroup"
 import { CheckMarkIcon } from "../Icons"
 
 type Item = {
@@ -18,15 +17,10 @@ export default function BeforeAndAfter() {
                 <div className={styles.containerLst}>
                     <ul className={`${styles.lst} ${className}`}>
                         {items.map((item, i) => (
-                            <Fragment key={i}>
-                                <li>
-                                    {item.icon}
-                                    {item.label}
-                                </li>
-                                {i < items.length - 1 ? (
-                                    <div className={styles.divider}></div>
-                                ) : null}
-                            </Fragment>
+                            <li key={i}>
+                                {item.icon}
+                                {item.label}
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -45,6 +39,8 @@ export default function BeforeAndAfter() {
                         { icon: <CheckMarkIcon />, label: "You underestimate how much time things take" },
                         { icon: <CheckMarkIcon />, label: "Your calendar doesn't reflect your real life" }
                     ], styles.lstBefore)}
+                </li>
+                <li>
                     {renderCard("After ClearAgenda AI", [
                         { icon: <CheckMarkIcon />, label: "Everything is captured instantly in one place" },
                         { icon: <CheckMarkIcon />, label: "Your day is already structured when you wake up" },

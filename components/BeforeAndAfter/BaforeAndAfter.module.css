@@ -2,29 +2,81 @@
     padding: var(--spacing-large);
 }
 
-.containerCards{
+.lstCards{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
     width: 100%;
     max-width: 600px;
     margin: auto;
 }
 
-.lstBefore > li{
-    font-weight: bolder;
-    color: var(--red);
+.lstCards > li{
+    flex: 1;
 }
 
-.lstAfter > li{
+.card{
+    width: 100%;
+    height: 100%;
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--outer-border-radius);
+}
+
+.header{
     display: -webkit-flex;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: var(--spacing-small);
-    font-weight: bolder;
-    color: var(--green);
+    width: 100%;
+    height: var(--field-size);
+    border-bottom: var(--border-width) solid var(--layer-2-border);
 }
 
-.lstAfter > li > svg{
+.header > .label{
+    font-weight: bolder;
+}
+
+.containerLst{
+    padding: var(--spacing-medium);
+}
+
+.lst{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--border-width);
+    background-color: var(--layer-2-border);
+}
+
+.lst > li{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    height: var(--field-size);
+    background-color: var(--layer-2);
+    font-weight: bolder;
+}
+
+.lst > li > svg{
     flex-shrink: 0;
     width: var(--icon-size);
     height: var(--icon-size);
-    fill: var(--green);
+}
+
+.lstBefore > li{
+    color: var(--pink);
+}
+
+.lstBefore > li > svg{
+    fill: var(--pink);
+}
+
+.lstAfter > li{
+    color: var(--mint);
+}
+
+.lstAfter > li > svg{
+    fill: var(--mint);
 }

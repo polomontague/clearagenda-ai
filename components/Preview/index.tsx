@@ -11,6 +11,7 @@ export default function Preview() {
 
     return (
         <section className={styles.background}>
+            <h3>How It Works</h3>
             <div className={styles.center}>
                 <div className={styles.containerPlatform}>
                     <SelectBar

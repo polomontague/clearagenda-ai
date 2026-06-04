@@ -1,24 +1,13 @@
 "use client"
-import CardGroup from "@/components/CardGroup"
 import LinkButton from "@/components/LinkButton"
 import Preview from "@/components/Preview"
-import SecondaryButton from "@/components/SecondaryButton"
 import BeforeAndAfter from "@/components/BeforeAndAfter"
+import Hero from "@/components/Hero"
 
 export default function HomePage() {
     return (
         <div>
-            <section>
-                {/* Hero Section */}
-                <h1>ClearAgenda AI</h1>
-                <h2>Your life, automatically organized.</h2>
-                <p>Stop managing your calendar. Start living it.</p>
-                <p>ClearAgenda AI turns your tasks, goals, and reminders into structured, realistic plan-automatically scheduled across your week based on your availability and energy.</p>
-                <p>No planning sessions. No mental juggling. No overwhelm.</p>
-                <p>Just describe what you need to do. ClearAgenda AI handles the rest.</p>
-                <LinkButton narrow href="/get-started" label="Clear Your Mind Today" />
-                <SecondaryButton narrow label="See How It Works" onClick={() => {}} />
-            </section>
+            <Hero />
             <section>
                 {/* Value Proposition */}
                 <h3>The simplest way to stay on track without thinking about staying on track.</h3>
@@ -48,11 +37,7 @@ export default function HomePage() {
                 <p>You don't organize your life.</p>
                 <p>You describe it.</p>
             </section>
-            <section>
-                {/* How It Works */}
-                <h3>How It Works</h3>
-                <Preview />
-            </section>
+            <Preview />
             <section>
                 {/* Core Features */}
                 <h3>Designed to remove mental load, not add features.</h3>
