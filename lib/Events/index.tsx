@@ -5,12 +5,16 @@ import getDateEvents from "./getDateEvents"
 import getFrom from "./getFrom"
 import getEnded from "./getEnded"
 import getStatus from "./getStatus"
+import { getTotalDuration } from "./getTotalDuration"
+import { getNextEvent } from "./getNextEvent"
 
 const Events = {
     getFrom,
     getEnded,
     getStatus,
-    getDateEvents
+    getDateEvents,
+    getTotalDuration,
+    getNextEvent
 }
 
 export default Events

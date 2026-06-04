@@ -1,10 +1,8 @@
 "use client"
 import styles from "./DateTasks.module.css"
-import { useContext, useMemo, useState, useEffect } from "react"
+import { useContext, useMemo, useState } from "react"
 import TasksContext from "@/contexts/TasksContext"
 import Tasks from "@/lib/Tasks"
-import EventsContext from "@/contexts/EventsContext"
-import UserContext from "@/contexts/UserContext"
 import FieldFrame from "../FieldFrame"
 import Card from "../Card"
 import Fieldset from "../Fieldset"
@@ -22,23 +20,18 @@ import Stopwatch from "../Stopwatch"
 import EmptyState from "../EmptyState"
 import { CheckMarkIcon } from "../Icons"
 
-export default function DateTasks({ date }: {
-    date: Date
+export default function DateTasks({ tasks, day }: {
+    tasks: TaskOccurrence[],
+    day: Date
 }) {
-    const { tasks, updateCompleted, updateCompletion } = useContext(TasksContext)
-    const { events } = useContext(EventsContext)
-    const { user } = useContext(UserContext)
-    const dateTasks = useMemo(() => {
-        if (!user) return []
-        return Tasks.getDateTasks(tasks, events, user, date)
-    }, [tasks, events, user, date])
-    const currentTaskAndStep = useMemo(() => Tasks.getCurrentTaskAndStep(dateTasks, date), [dateTasks])
+    const { updateCompleted, updateCompletion } = useContext(TasksContext)
+    const currentTaskAndStep = useMemo(() => Tasks.getCurrentTaskAndStep(tasks, day), [tasks, day])
     const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const [stopwatchSeconds, setStopwatchSeconds] = useState(0)
     const [stopwatchRunning, setStopwatchRunning] = useState(false)
-    const allCompleted = dateTasks.every(task => task.steps.every(step => step.completed))
+    const allCompleted = tasks.every(task => task.steps.every(step => step.completed))
   
     const handleCompleteClick = () => {
         setCompleteConfirmOpen(true)
@@ -71,7 +64,7 @@ export default function DateTasks({ date }: {
         <div className={styles.frame}>
             <div className={styles.column}>
                 <FieldFrame>
-                    {dateTasks.map(task => {
+                    {tasks.map(task => {
                         const current = currentTaskAndStep && currentTaskAndStep.task.id === task.id
                         return (
                             <Card key={task.id} label={task.name}>
@@ -147,7 +140,7 @@ export default function DateTasks({ date }: {
                         />
                     </>
                 ) : null}
-                {dateTasks.length && allCompleted ? (
+                {tasks.length && allCompleted ? (
                     <EmptyState
                         icon={<CheckMarkIcon />}
                         message="All Done For Today!"

@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react"
 import SearchInput from "../SearchInput"
 import { MagnifyingGlassIcon } from "../Icons"
 import { TIMEZONES } from "./TIMEZONES"
+import Placeholder from "../Placeholder"
 
 type Option = {
     value: string,
@@ -55,10 +56,7 @@ export default function TimezonePicker({ fieldset, value, onChange }: TimezonePi
                         })}
                     </ul>
                 ) : (
-                    <div className={styles.containerPlaceholder}>
-                        <MagnifyingGlassIcon />
-                        <span className={styles.label}>No Results</span>
-                    </div>
+                    <Placeholder icon={<MagnifyingGlassIcon />} label="No Results" />
                 )}
             </div>
         </div>

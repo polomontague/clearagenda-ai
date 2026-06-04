@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState, useMemo } from "react"
 import PageFrame from "@/components/PageFrame"
 import SelectBar from "@/components/SelectBar"
 import DatePicker from "@/components/DatePicker"
@@ -9,14 +9,30 @@ import { CalendarIcon } from "@/components/Icons"
 import DateEvents from "@/components/DateEvents"
 import DateReminders from "@/components/DateReminders"
 import DateTasks from "@/components/DateTasks"
+import AgendaOverview from "@/components/AgendaOverview"
+import FieldFrame from "@/components/FieldFrame"
+import TasksContext from "@/contexts/TasksContext"
+import EventsContext from "@/contexts/EventsContext"
+import UserContext from "@/contexts/UserContext"
+import Tasks from "@/lib/Tasks"
+import Events from "@/lib/Events"
+import RemindersContext from "@/contexts/RemindersContext"
+import Reminders from "@/lib/Reminders"
 
 export default function AgendaPage() {
+    const { tasks } = useContext(TasksContext)
+    const { events } = useContext(EventsContext)
+    const { reminders } = useContext(RemindersContext)
+    const { user } = useContext(UserContext)
     const [modalOpen, setModalOpen] = useState(false)
-    const [date, setDate] = useState(new Date())
-    const today = new Date()
-    const tomorrow = new Date()
-    tomorrow.setDate(today.getDate() + 1)
+    const [day, setDay] = useState(new Date())
     const [type, setType] = useState<"tasks" | "events" | "reminders">("tasks")
+    const dateTasks = useMemo(() => {
+        if (!user) return []
+        return Tasks.getDateTasks(tasks, events, user, day)
+    }, [tasks, events, user, day])
+    const dateEvents = useMemo(() => Events.getDateEvents(events, day), [events, day])
+    const dateReminders = useMemo(() => Reminders.getDateReminders(reminders, day), [reminders, day])
 
     useEffect(() => {
         const scheduleMidnight = () => {
@@ -25,7 +41,7 @@ export default function AgendaPage() {
             nextMidnight.setHours(24, 0, 0, 0)
             const millisecondsTillMidnight = nextMidnight.getTime() - now.getTime()
             const timeout = setTimeout(() => {
-                setDate(new Date())
+                setDay(new Date())
                 // Reschedule for next day
                 scheduleMidnight()
             }, millisecondsTillMidnight)
@@ -35,8 +51,8 @@ export default function AgendaPage() {
         return () => clearTimeout(timeout)
     }, [])
 
-    const handleDateChange = (val: Date) => {
-        setDate(val)
+    const handleDayChange = (val: Date) => {
+        setDay(val)
         setModalOpen(false)
     }
 
@@ -62,19 +78,27 @@ export default function AgendaPage() {
                 )
             }}
         >
-            {type === "tasks" ? (
-                <DateTasks date={date} />
-            ) : type === "events" ? (
-                <DateEvents date={date} />
-            ) : type === "reminders" ? (
-                <DateReminders date={date} />
-            ) : null}
+            <FieldFrame>
+                <AgendaOverview
+                    tasks={dateTasks}
+                    events={dateEvents}
+                    reminders={dateReminders}
+                    day={day}
+                />
+                {type === "tasks" ? (
+                    <DateTasks tasks={dateTasks} day={day} />
+                ) : type === "events" ? (
+                    <DateEvents events={dateEvents} day={day} />
+                ) : type === "reminders" ? (
+                    <DateReminders reminders={dateReminders} day={day} />
+                ) : <></>}
+            </FieldFrame>
             <Modal
                 label="Choose Date"
                 open={modalOpen}
                 onRequestClose={() => setModalOpen(false)}
             >
-                <DatePicker value={date} onChange={handleDateChange} />
+                <DatePicker value={day} onChange={handleDayChange} />
             </Modal>
         </PageFrame>
     )

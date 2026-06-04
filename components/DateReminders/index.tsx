@@ -1,17 +1,12 @@
 "use client"
-import { useContext, useMemo } from "react"
-import RemindersContext from "@/contexts/RemindersContext"
-import Reminders from "@/lib/Reminders"
 import Timeline, { Point } from "../Timeline"
 import Reminder from "@/types/Reminder"
 import Utility from "@/lib/Utility"
 
-export default function DateReminders({ date }: {
-    date: Date
+export default function DateReminders({ reminders, day }: {
+    reminders: Reminder[],
+    day: Date
 }) {
-    const { reminders } = useContext(RemindersContext)
-    const dateReminders = useMemo(() => Reminders.getDateReminders(reminders, date), [reminders, date])
-
     const at = new Date()
     at.setHours(10, 0, 0, 0)
 
@@ -31,9 +26,9 @@ export default function DateReminders({ date }: {
 
     return (
         <Timeline
-            date={date}
+            date={day}
             blocks={[]}
-            points={dateReminders.map(reminder => reminderToPoint(reminder))}
+            points={reminders.map(reminder => reminderToPoint(reminder))}
         />
     )
 }

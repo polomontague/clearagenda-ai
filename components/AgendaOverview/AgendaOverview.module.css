@@ -1,0 +1,68 @@
+.background{
+    width: 100%;
+    padding-top: var(--spacing-medium);
+    padding-bottom: var(--spacing-medium);
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--outer-border-radius);
+}
+
+.frame{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--border-width);
+    background-color: var(--layer-2-border);
+}
+
+.frame > .column{
+    flex: 1;
+    padding-left: var(--spacing-medium);
+    padding-right: var(--spacing-medium);
+    background-color: var(--layer-2);
+}
+
+.date{
+    font-size: 24px;
+    font-weight: bolder;
+    margin-bottom: var(--spacing-medium);
+}
+
+.innerFrame{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--border-width);
+    height: 100%;
+    background-color: var(--layer-2-border);
+}
+
+.innerFrame > .row{
+    flex: 1;
+    background-color: var(--layer-2);
+}
+
+.innerFrame > .rowFirst{
+    padding-bottom: var(--spacing-medium);
+}
+
+.innerFrame > .rowLast{
+    padding-top: var(--spacing-medium);
+}
+
+@media screen and (max-width: 600px){
+    .background{
+        padding: 0;
+        padding-left: var(--spacing-medium);
+        padding-right: var(--spacing-medium);
+    }
+
+    .frame{
+        flex-direction: column;
+    }
+
+    .frame > .column{
+        padding: 0;
+        padding-top: var(--spacing-medium);
+        padding-bottom: var(--spacing-medium);
+    }
+}

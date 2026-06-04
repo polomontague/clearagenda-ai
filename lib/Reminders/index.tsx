@@ -1,14 +1,13 @@
-import Reminder from "@/types/Reminder"
-import Utility from "../Utility"
-import User from "@/types/User"
 import getAt from "./getAt"
 import getDateReminders from "./getDateReminders"
 import getStatus from "./getStatus"
+import { getNextReminder } from "./getNextReminder"
 
 const Reminders = {
     getAt,
     getDateReminders,
-    getStatus
+    getStatus,
+    getNextReminder
 }
 
 export default Reminders

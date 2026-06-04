@@ -219,6 +219,10 @@ const Utility = {
         const month = (date.getMonth() + 1)
         const day = date.getDate()
         return `${month}/${day}/${year}`
+    },
+    formatCount: (count: number): string => {
+        if (count === 0) return "None"
+        return count.toString()
     }
 }
 

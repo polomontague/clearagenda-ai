@@ -1,0 +1,34 @@
+.container{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-small);
+    width: 100%;
+    height: 100%;
+    min-height: var(--field-size);
+    padding: var(--spacing-medium);
+}
+
+.container > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
+/* Layer 2 Styles */
+.container.layer2 > svg{
+    fill: var(--layer-2-light);
+}
+
+.container.layer2 > .label{
+    color: var(--layer-2-light);
+}
+
+/* Layer 3 Styles */
+.container.layer3 > svg{
+    fill: var(--layer-3-light);
+}
+
+.container.layer3 > .label{
+    color: var(--layer-3-light);
+}
