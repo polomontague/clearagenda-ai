@@ -18,7 +18,7 @@ export default function DateReminders({ reminders, day }: {
             }
         } else { // Repeating
             return {
-                at: Utility.loadLocalTime(reminder.at),
+                at: Utility.loadLocalTime(reminder.at, day),
                 label: reminder.name
             }
         }
