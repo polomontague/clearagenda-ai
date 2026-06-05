@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server"
 import Response from "@/lib/Response"
 
-export const middleware = (req: NextRequest): Response => {
+export const proxy = (req: NextRequest): Response => {
     if (req.method === "OPTIONS") {
         return Response.ok()
     }
