@@ -1,4 +1,4 @@
-const DEFAULTS = {
+export const DEFAULTS = {
     frequency: "daily" as const,
     interval: 1,
     weekdays: [ new Date().getDay() ],
@@ -13,5 +13,3 @@ const DEFAULTS = {
     hasEnds: false,
     ends: new Date()
 }
-
-export default DEFAULTS

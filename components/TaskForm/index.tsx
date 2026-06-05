@@ -6,7 +6,7 @@ import FieldFrame from "../FieldFrame"
 import { useEffect, useState } from "react"
 import SelectBar from "../SelectBar"
 import SlideField from "../SlideField"
-import Repeat from "../Repeat"
+import RepeatPicker from "../RepeatPicker"
 import Utility from "@/lib/Utility"
 import DatePicker from "../DatePicker"
 import RepeatType from "@/types/Repeat"
@@ -63,10 +63,6 @@ export default function TaskForm(props: TaskFormProps) {
     const validate = (description: string): boolean => {
         if (!description) return false
         return true
-    }
-
-    const formatDays = (days: number) => {
-        return `${days} ${days === 1 ? "Day" : "Days"}`
     }
 
     const handleSubmit = () => {
@@ -176,7 +172,7 @@ export default function TaskForm(props: TaskFormProps) {
                                 label="Repeat"
                                 value={Utility.getShortRepeatLabel(repeat)}
                             >
-                                <Repeat value={repeat} onChange={setRepeat} />
+                                <RepeatPicker value={repeat} onChange={setRepeat} />
                             </SlideField>
                         </>
                     ) : null}

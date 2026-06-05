@@ -10,7 +10,7 @@ import InnerButton from "../InnerButton"
 import Utility from "@/lib/Utility"
 import SlideField from "../SlideField"
 import DurationSelect from "../DurationSelect"
-import Repeat from "../Repeat"
+import RepeatPicker from "../RepeatPicker"
 import TextArea from "../TextArea"
 import RepeatType from "@/types/Repeat"
 import Loading from "../Loading"
@@ -183,7 +183,7 @@ export default function EventForm(props: EventFormProps) {
                                 </SlideField>
                                 {renderTimezone()}
                                 <SlideField fieldset label="Repeat" value={Utility.getShortRepeatLabel(repeat)}>
-                                        <Repeat timezone={timezone} value={repeat} onChange={setRepeat} />
+                                    <RepeatPicker timezone={timezone} value={repeat} onChange={setRepeat} />
                                 </SlideField>
                             </>
                         ) : null}
