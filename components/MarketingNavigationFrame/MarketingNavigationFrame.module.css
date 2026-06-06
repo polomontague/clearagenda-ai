@@ -6,9 +6,9 @@
     height: var(--header-height);
     padding-left: var(--field-size);
     padding-right: var(--field-size);
-    background-color: var(--layer-1-translucent);
+    background-color: var(--layer-2-translucent);
     backdrop-filter: blur(var(--blur));
-    border-bottom: var(--border-width) solid var(--layer-1-border);
+    border-bottom: var(--border-width) solid var(--layer-2-border);
     position: fixed;
     left: 0;
     top: 0;

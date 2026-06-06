@@ -3,6 +3,7 @@ import styles from "./Preview.module.css"
 import { useState } from "react"
 import SelectBar from "../SelectBar"
 import Carousel from "@/components/Carousel"
+import Eyebrow from "../Eyebrow"
 
 type DeviceType = "mobile" | "desktop"
 
@@ -11,7 +12,7 @@ export default function Preview() {
 
     return (
         <section className={styles.background}>
-            <h3>How It Works</h3>
+            <Eyebrow>How it works</Eyebrow>
             <div className={styles.center}>
                 <div className={styles.containerPlatform}>
                     <SelectBar

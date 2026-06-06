@@ -1,0 +1,70 @@
+.background{
+    padding-top: var(--spacing-huge);
+    padding-right: var(--spacing-large);
+    padding-bottom: var(--spacing-huge);
+    padding-left: var(--spacing-large);
+    background-color: var(--layer-2);
+    border-top: var(--border-width) solid var(--layer-2-border);
+    border-bottom: var(--border-width) solid var(--layer-2-border);
+}
+
+.center{
+    max-width: 800px;
+    margin: auto;
+}
+
+.intro {
+    font-size: 1.125rem;
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+}
+
+.pain-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 4rem;
+    display: grid;
+    gap: 1rem;
+}
+
+.pain-list li {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--surface);
+}
+
+.reframe {
+    text-align: center;
+    margin: 4rem 0;
+}
+
+.reframe p:first-child {
+    font-size: 1.5rem;
+    opacity: 0.6;
+    margin: 0;
+}
+
+.reframe p:last-child {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    margin: 0;
+}
+
+.explanation,
+.outcome {
+    max-width: 60ch;
+    font-size: 1.25rem;
+    line-height: 1.7;
+}
+
+.explanation {
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.outcome {
+    font-weight: 500;
+}

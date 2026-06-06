@@ -49,6 +49,10 @@
 	--footer-height: 80px;
 	--spinner-size: 20px;
 	--header-height: 68px;
+	--spacing-very-large: 32px;
+	--spacing-huge: 90px;
+	--font-size-large: 15px;
+	--font-size-huge: 56px;
 
 	/* Variables used for scaling inputs so they don't zoom on mobile */
 	--font-size-number: 13; /* needs to match --font-size */

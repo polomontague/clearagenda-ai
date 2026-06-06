@@ -10,12 +10,7 @@
 }
 
 .center{
-    
-}
-
-.headline{
-    font-size: 24px;
-    font-weight: bolder;
+    max-width: 800px;
 }
 
 .subheadline{

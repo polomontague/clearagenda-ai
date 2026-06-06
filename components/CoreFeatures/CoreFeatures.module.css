@@ -1,0 +1,66 @@
+.background{
+    padding-top: var(--spacing-huge);
+    padding-right: var(--spacing-large);
+    padding-bottom: var(--spacing-huge);
+    padding-left: var(--spacing-large);
+}
+
+.center{
+    max-width: 800px;
+    margin: auto;
+}
+
+.header {
+    max-width: 700px;
+    margin-bottom: 5rem;
+}
+
+.lead {
+    margin-top: 2rem;
+
+    font-size: 1.3rem;
+    line-height: 1.7;
+
+    opacity: 0.75;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    padding: 2rem;
+
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+
+    background: var(--surface);
+}
+
+.card h3 {
+    margin: 0 0 1rem;
+
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+.card p {
+    margin: 0;
+
+    font-size: 1.05rem;
+    line-height: 1.7;
+
+    opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+    .features {
+        padding: 6rem 1.5rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,41 @@
+.background{
+    padding-top: var(--spacing-huge);
+    padding-right: var(--spacing-large);
+    padding-bottom: var(--spacing-huge);
+    padding-left: var(--spacing-large);
+}
+
+.center{
+    max-width: 800px;
+    margin: auto;
+}
+
+.lead {
+    margin: 2rem auto 0;
+    max-width: 30ch;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.statements {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.statements p {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    font-weight: 600;
+}
+
+.statements p:first-child {
+    opacity: 0.45;
+}
+
+.statements p:last-child {
+    opacity: 1;
+}

@@ -1,0 +1,8 @@
+.heading{
+    font-size: var(--font-size-huge);
+    font-weight: bolder;
+    color: var(--contrast);
+    text-transform: capitalize;
+    line-height: normal;
+    margin-bottom: var(--spacing-large);
+}

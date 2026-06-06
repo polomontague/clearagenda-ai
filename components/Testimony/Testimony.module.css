@@ -1,0 +1,60 @@
+.background{
+    padding-top: var(--spacing-huge);
+    padding-right: var(--spacing-large);
+    padding-bottom: var(--spacing-huge);
+    padding-left: var(--spacing-large);
+}
+
+.center{
+    max-width: 800px;
+    margin: auto;
+}
+
+.header {
+    max-width: 700px;
+    margin-bottom: 5rem;
+}
+
+.lead {
+    margin-top: 2rem;
+
+    font-size: 1.3rem;
+    line-height: 1.7;
+
+    opacity: 0.75;
+}
+
+.quotes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+.quote {
+    margin: 0;
+    padding: 2rem;
+
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+
+    background: var(--surface);
+}
+
+.quote p {
+    margin: 0;
+
+    font-size: 1.25rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 1100px) {
+    .quotes {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .experience {
+        padding: 6rem 1.5rem;
+    }
+}

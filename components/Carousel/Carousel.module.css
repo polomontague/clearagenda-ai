@@ -14,9 +14,9 @@
 
 .card{
     padding: var(--spacing-medium);
-    background-color: var(--layer-2);
+    background-color: var(--layer-3);
     border-radius: var(--outer-border-radius);
-    border: var(--border-width) solid var(--layer-2-border);
+    border: var(--border-width) solid var(--layer-3-border);
 }
 
 .containerLabel{
@@ -43,7 +43,7 @@
 .img{
     display: block;
     width: auto;
-    height: 500px;
+    height: 450px;
     background-color: var(--layer-3);
     border: var(--border-width) solid var(--layer-3-border);
     border-radius: var(--border-radius);
