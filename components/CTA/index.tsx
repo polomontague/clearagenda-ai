@@ -3,31 +3,22 @@ import LinkButton from "../LinkButton"
 import Eyebrow from "../Eyebrow"
 import Heading from "../Heading"
 import Emphasis from "../Emphasis"
+import Paragraph from "../Paragraph"
+import Subheading from "../Subheading"
 
 export default function CTA() {
     return (
         <section className={styles.background}>
             <div className={styles.center}>
                 <Eyebrow>Ready to simplify your day?</Eyebrow>
-                <Heading>
+                <Heading margin>
                     Stop planning.<br />
                     <Emphasis>Start doing.</Emphasis>
                 </Heading>
-
-                <p className={styles.lead}>
-                    Your life doesn't need more organization tools.
-                </p>
-
-                <p className={styles.emphasis}>
-                    It needs clarity.
-                </p>
-
-                <p className={styles.description}>
-                    ClearAgenda AI turns everything you need to do into a plan
-                    you can actually follow.
-                </p>
-
-                <div className={styles.actions}>
+                <Subheading margin>Your life doesn't need more organization tools.</Subheading>
+                <Heading margin>It needs clarity.</Heading>
+                <Paragraph>ClearAgenda AI turns everything you need to do into a plan you can actually follow.</Paragraph>
+                <div className={styles.containerBtn}>
                     <LinkButton
                         narrow
                         href="/get-started"

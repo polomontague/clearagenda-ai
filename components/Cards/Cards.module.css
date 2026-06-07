@@ -28,8 +28,8 @@
 }
 
 .containerIcon > svg{
-    width: 32px;
-    height: 32px;
+    width: var(--icon-size-very-large);
+    height: var(--icon-size-very-large);
     fill: var(--accent);
 }
 

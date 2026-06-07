@@ -12,17 +12,3 @@
     max-width: 800px;
     margin: auto;
 }
-
-.header {
-    max-width: 700px;
-    margin-bottom: 5rem;
-}
-
-.lead {
-    margin-top: 2rem;
-
-    font-size: 1.3rem;
-    line-height: 1.7;
-
-    opacity: 0.75;
-}

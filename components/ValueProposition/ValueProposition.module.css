@@ -10,22 +10,10 @@
     margin: auto;
 }
 
-.problem {
-    font-size: 1.25rem;
-    opacity: 0.75;
-}
-
-.solution {
-    font-size: 1.4rem;
-    font-weight: 500;
-    margin-top: 1rem;
-}
-
 .mantra {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    margin-top: 3rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    gap: var(--spacing-large);
+    font-weight: var(--bold);
+    margin-top: var(--spacing-very-large);
 }

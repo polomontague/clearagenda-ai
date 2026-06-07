@@ -1,7 +1,9 @@
 import styles from "./BaforeAndAfter.module.css"
-import { Fragment, ReactElement } from "react"
+import { ReactElement } from "react"
 import { CheckMarkIcon } from "../Icons"
 import Eyebrow from "../Eyebrow"
+import Emphasis from "../Emphasis"
+import Heading from "../Heading"
 
 type Item = {
     icon: ReactElement<SVGElement>,
@@ -12,19 +14,15 @@ export default function BeforeAndAfter() {
     const renderCard = (label: string, items: Item[], className: string) => {
         return (
             <div className={styles.card}>
-                <header className={styles.header}>
-                    <h5 className={styles.label}>{label}</h5>
-                </header>
-                <div className={styles.containerLst}>
-                    <ul className={`${styles.lst} ${className}`}>
-                        {items.map((item, i) => (
-                            <li key={i}>
-                                {item.icon}
-                                {item.label}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <h5 className={styles.label}>{label}</h5>
+                <ul className={`${styles.lst} ${className}`}>
+                    {items.map((item, i) => (
+                        <li key={i}>
+                            {item.icon}
+                            {item.label}
+                        </li>
+                    ))}
+                </ul>
             </div>
         )
     }
@@ -33,6 +31,7 @@ export default function BeforeAndAfter() {
         <section className={styles.background}>
             <div className={styles.center}>
                 <Eyebrow>Before and After</Eyebrow>
+                <Heading margin>From managing your plan to <Emphasis>following it</Emphasis></Heading>
                 <ul className={styles.lstCards}>
                     <li>
                         {renderCard("Before ClearAgenda AI", [

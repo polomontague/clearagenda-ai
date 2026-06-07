@@ -1,5 +1,6 @@
 .emphasis{
     font-size: inherit;
     font-weight: inherit;
+    font-weight: var(--bold);
     color: var(--accent);
 }

@@ -4,21 +4,15 @@ import Heading from "../Heading"
 import Emphasis from "../Emphasis"
 import Cards from "../Cards"
 import { ArrowCircleIcon, ThreePeopleIcon, CodeIcon, DownChartIcon, GraduationCap, WindIcon } from "../Icons"
+import Paragraph from "../Paragraph"
 
 export default function UseCases() {
     return (
         <section className={styles.background}>
             <div className={styles.center}>
-                <div className={styles.header}>
-                    <Eyebrow>Who it's for</Eyebrow>
-                    <Heading>Built for <Emphasis>real-life overwhelm</Emphasis></Heading>
-
-                    <p className={styles.lead}>
-                        ClearAgenda AI is designed for people with too much to think
-                        about and too little time to organize it.
-                    </p>
-                </div>
-
+                <Eyebrow>Who it's for</Eyebrow>
+                <Heading margin>Built for <Emphasis>real-life overwhelm</Emphasis></Heading>
+                <Paragraph margin>ClearAgenda AI is designed for people with too much to think about and too little time to organize it.</Paragraph>
                 <Cards
                     layer={3}
                     cards={[

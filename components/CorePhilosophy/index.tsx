@@ -2,35 +2,23 @@ import styles from "./CorePhilosophy.module.css"
 import Eyebrow from "../Eyebrow"
 import Heading from "../Heading"
 import Emphasis from "../Emphasis"
+import Paragraph from "../Paragraph"
+import Subheading from "../Subheading"
 
 export default function CorePhilosophy() {
     return (
         <section className={styles.background}>
             <div className={styles.center}>
-                <div className={styles.left}>
+                <div>
                     <Eyebrow>Core Philosophy</Eyebrow>
-                    <Heading>A calendar shouldn't <Emphasis>require maintenance</Emphasis></Heading>
-
-                    <p className={styles.lead}>
-                        Traditional productivity tools assume you want to manage your
-                        life like a project.
-                    </p>
+                    <Heading margin>A calendar shouldn't <Emphasis>require maintenance</Emphasis></Heading>
+                    <Paragraph>Traditional productivity tools assume you want to manage your life like a project.</Paragraph>
                 </div>
-
-                <div className={styles.right}>
-                    <p className={styles.intro}>
-                        ClearAgenda AI assumes something different.
-                    </p>
-
-                    <div className={styles.reframe}>
-                        <p>You don't need more control.</p>
-                        <p>You need less friction.</p>
-                    </div>
-
-                    <p className={styles.conclusion}>
-                        Instead of giving you more things to organize,
-                        it organizes them for you.
-                    </p>
+                <div>
+                    <Paragraph margin>ClearAgenda AI assumes something different.</Paragraph>
+                    <Subheading margin>You don't need more control.</Subheading>
+                    <Heading margin>You need less friction.</Heading>
+                    <Paragraph>Instead of giving you more things to organize, it organizes them for you.</Paragraph>
                 </div>
             </div>
         </section>

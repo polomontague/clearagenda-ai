@@ -1,0 +1,5 @@
+.bold{
+    font-size: inherit;
+    font-weight: var(--bold);
+    color: var(--contrast);
+}

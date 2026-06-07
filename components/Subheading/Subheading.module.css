@@ -1,0 +1,10 @@
+.subheading{
+    font-size: var(--font-size-very-large);
+    font-weight: var(--bold);
+    color: var(--layer-1-light);
+    line-height: normal;
+}
+
+.subheading.margin{
+    margin-bottom: var(--spacing-medium);
+}

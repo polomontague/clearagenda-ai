@@ -4,21 +4,15 @@ import Heading from "../Heading"
 import Cards from "../Cards"
 import Emphasis from "../Emphasis"
 import { AlphabetBookIcon, BrainIcon, CalendarIcon, CheckMarkIcon, ControlsIcon, SplitArrowsIcon } from "../Icons"
+import Paragraph from "../Paragraph"
 
 export default function CoreFeatures() {
     return (
         <section className={styles.background}>
             <div className={styles.center}>
-                <div className={styles.header}>
-                    <Eyebrow>Core features</Eyebrow>
-                    <Heading>Designed to <Emphasis>remove mental load</Emphasis>, not add features</Heading>
-
-                    <p className={styles.lead}>
-                        Every feature exists to eliminate planning, reduce decisions,
-                        and keep you moving forward.
-                    </p>
-                </div>
-
+                <Eyebrow>Core features</Eyebrow>
+                <Heading margin>Designed to <Emphasis>remove mental load</Emphasis>, not add features</Heading>
+                <Paragraph margin>Every feature exists to eliminate planning, reduce decisions, and keep you moving forward.</Paragraph>
                 <Cards
                     cards={[
                         {

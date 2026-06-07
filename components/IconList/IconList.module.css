@@ -1,0 +1,27 @@
+.lst{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-large);
+    padding-left: var(--spacing-large);
+}
+
+.lst.margin{
+    margin-bottom: var(--spacing-large);
+}
+
+.lst > li{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    font-size: var(--font-size-large);
+    font-weight: var(--bold);
+    color: var(--contrast);
+}
+
+.lst > li > svg{
+    width: var(--icon-size-large);
+    height: var(--icon-size-large);
+    fill: var(--accent);
+}
