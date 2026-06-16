@@ -1,5 +1,5 @@
 ## About
-ClearAgenda AI is a productivity app that removes the overwhelm of planning and maintaining a calender.
+ClearAgenda AI is an AI-powered productivity platform that automatically transforms tasks, events, reminders, and goals into a structured daily agenda. Rather than requiring users to manually plan their week, the system continuously organizes work based on availability, deadlines, and scheduling constraints.
 
 Live Link: [ClearAgenda.ai](https://clearagenda.ai)<br />
 > Check out the "How it Works" section on the landing page to see the app interface
