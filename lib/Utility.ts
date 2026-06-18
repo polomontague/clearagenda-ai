@@ -194,7 +194,7 @@ const Utility = {
     },
     loadLocalDate: (date: string): Date => {
         const [year, month, day] = date.split("-").map(Number)
-        return new Date(year, month - 1, day)
+        return new Date(year, month - 1, day, 0, 0, 0, 0)
     },
     loadLocalTime: (time: string, date: Date = new Date()): Date => {
         const [hours, minutes, seconds, milliseconds] = time.split(/[:.]/).map(Number)

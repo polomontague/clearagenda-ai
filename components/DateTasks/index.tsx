@@ -23,6 +23,8 @@ import Task from "@/types/Task"
 import TaskModal from "../TaskModal"
 import FormModal from "../FormModal"
 import TaskForm from "../TaskForm"
+import User from "@/types/User"
+import UserContext from "@/contexts/UserContext"
 
 export default function DateTasks({ tasks, day }: {
     tasks: TaskOccurrence[],
@@ -40,6 +42,12 @@ export default function DateTasks({ tasks, day }: {
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [taskModalOpen, setTaskModalOpen] = useState(false)
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+    const { user } = useContext(UserContext)
+    const currentOccurrenceDeadline = useMemo(() => {
+        if (!currentOccurrenceAndStep || !user) return undefined
+        const deadline = currentOccurrenceAndStep.occurrence.effective_deadline
+        return deadline ? getDeadline(deadline, user) : undefined
+    }, [currentOccurrenceAndStep, user])
   
     const handleEditClick = (task: Task) => {
         setCurrentTask(task)
@@ -100,12 +108,47 @@ export default function DateTasks({ tasks, day }: {
         })
     }
 
+    function getDeadline(deadline: string, user: User): {
+        color: string,
+        label: string
+    } {
+        const accent = user.preferences.accent
+        const COLORS = {
+            red: accent === "red" ? "var(--coral)" : "var(--red)",
+            yellow: accent === "yellow" ? "var(--orange)" : "var(--yellow)",
+            green: accent === "green" ? "var(--mint)" : "var(--green)",
+        }
+        const deadlineDate = Utility.loadLocalDate(deadline)
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000
+        const todayKey = Utility.getDateKey(today)
+        if (deadline === todayKey) return {
+            color: COLORS.yellow,
+            label: "Due Today"
+        }
+        if (todayKey < deadline) { // deadline is in the future
+            const daysInFuture = Math.ceil((deadlineDate.getTime() - today.getTime()) / MILLISECONDS_PER_DAY)
+            return {
+                color: COLORS.green,
+                label: `In ${daysInFuture} ${daysInFuture === 1 ? "Day" : "Days"}`
+            }
+        } else { // deadline is in the past
+            const daysOverdue = Math.max(0, Math.floor((today.getTime() - deadlineDate.getTime()) / MILLISECONDS_PER_DAY))
+            return {
+                color: COLORS.red,
+                label: `${daysOverdue} ${daysOverdue === 1 ? "Day" : "Days"} Overdue`
+            }
+        }
+    }
+
     return (
         <div className={styles.frame}>
             <div className={styles.column}>
                 <FieldFrame>
                     {tasks.map(occurrence => {
                         const current = currentOccurrenceAndStep && currentOccurrenceAndStep.occurrence.task.id === occurrence.task.id
+                        const deadline = occurrence.effective_deadline && user ? getDeadline(occurrence.effective_deadline, user) : undefined
                         return (
                             <Card
                                 key={`${occurrence.task.id}:${occurrence.date_available}`}
@@ -134,9 +177,16 @@ export default function DateTasks({ tasks, day }: {
                                             )
                                         })}
                                     </Fieldset>
-                                    <LabelField label="Length">
-                                        <InnerValue label={Tasks.getLength(occurrence.task)} />
-                                    </LabelField>
+                                    <Fieldset>
+                                        <LabelField fieldset label="Length">
+                                            <InnerValue label={Tasks.getLength(occurrence.task)} />
+                                        </LabelField>
+                                        {deadline ? (
+                                            <LabelField fieldset label="Deadline">
+                                                <InnerValue color={deadline.color} label={deadline.label} />
+                                            </LabelField>
+                                        ) : <></>}
+                                    </Fieldset>
                                     {current ? (
                                         <Fieldset>
                                             <LabelField fieldset label="Progress">
@@ -166,9 +216,19 @@ export default function DateTasks({ tasks, day }: {
                                             <ValueBox fieldset value={currentOccurrenceAndStep.step.notes} />
                                         </Fieldset>
                                     ) : <></>}
-                                    <LabelField label="Length">
-                                        <InnerValue label={Utility.formatDuration(currentOccurrenceAndStep.step.duration)} />
-                                    </LabelField>
+                                    <Fieldset>
+                                        <LabelField fieldset label="Length">
+                                            <InnerValue label={Utility.formatDuration(currentOccurrenceAndStep.step.duration)} />
+                                        </LabelField>
+                                        {currentOccurrenceDeadline ? (
+                                            <LabelField fieldset label="Deadline">
+                                                <InnerValue
+                                                    color={currentOccurrenceDeadline.color}
+                                                    label={currentOccurrenceDeadline.label}
+                                                />
+                                            </LabelField>
+                                        ) : <></>}
+                                    </Fieldset>
                                     <Fieldset
                                         label="Stopwatch"
                                         description="Optionally track how long this step takes."
