@@ -301,7 +301,7 @@ const getDeadline = (instance: StepInstance): string | undefined => {
     } else { // Repeating
         deadline = Utility.loadLocalDate(instance.dateAvailable)
         deadline.setHours(0, 0, 0, 0) // just to be safe about DST shifts
-        deadline.setDate(deadline.getDate() + instance.task.deadline)
+        deadline.setDate(deadline.getDate() + (instance.task.deadline - 1)) // Subtract 1 because the first day of the deadline window is the current day
     }
     return Utility.getDateKey(deadline)
 }

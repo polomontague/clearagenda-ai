@@ -1,4 +1,5 @@
 "use client"
+import styles from "./AgendaPage.module.css"
 import { useContext, useEffect, useState, useMemo } from "react"
 import PageFrame from "@/components/PageFrame"
 import SelectBar from "@/components/SelectBar"
@@ -18,6 +19,7 @@ import Tasks from "@/lib/Tasks"
 import Events from "@/lib/Events"
 import RemindersContext from "@/contexts/RemindersContext"
 import Reminders from "@/lib/Reminders"
+import { styleText } from "util"
 
 export default function AgendaPage() {
     const { tasks } = useContext(TasksContext)
@@ -78,7 +80,7 @@ export default function AgendaPage() {
                 )
             }}
         >
-            <FieldFrame>
+            <div className={styles.frame}>
                 <AgendaOverview
                     tasks={dateTasks}
                     events={dateEvents}
@@ -92,7 +94,7 @@ export default function AgendaPage() {
                 ) : type === "reminders" ? (
                     <DateReminders reminders={dateReminders} day={day} />
                 ) : <></>}
-            </FieldFrame>
+            </div>
             <Modal
                 label="Choose Date"
                 open={modalOpen}
