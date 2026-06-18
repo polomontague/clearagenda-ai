@@ -125,7 +125,7 @@ export default function DateTasks({ tasks, day }: {
         const todayKey = Utility.getDateKey(today)
         if (deadline === todayKey) return {
             color: COLORS.yellow,
-            label: "Due Today"
+            label: "Today"
         }
         if (todayKey < deadline) { // deadline is in the future
             const daysInFuture = Math.ceil((deadlineDate.getTime() - today.getTime()) / MILLISECONDS_PER_DAY)
@@ -182,7 +182,7 @@ export default function DateTasks({ tasks, day }: {
                                             <InnerValue label={Tasks.getLength(occurrence.task)} />
                                         </LabelField>
                                         {deadline ? (
-                                            <LabelField fieldset label="Deadline">
+                                            <LabelField fieldset label="Due">
                                                 <InnerValue color={deadline.color} label={deadline.label} />
                                             </LabelField>
                                         ) : <></>}
@@ -221,7 +221,7 @@ export default function DateTasks({ tasks, day }: {
                                             <InnerValue label={Utility.formatDuration(currentOccurrenceAndStep.step.duration)} />
                                         </LabelField>
                                         {currentOccurrenceDeadline ? (
-                                            <LabelField fieldset label="Deadline">
+                                            <LabelField fieldset label="Due">
                                                 <InnerValue
                                                     color={currentOccurrenceDeadline.color}
                                                     label={currentOccurrenceDeadline.label}
