@@ -147,7 +147,7 @@ export default function TaskForm(props: TaskFormProps) {
                                         fieldset
                                         options={[
                                             { value: false, label: "None" },
-                                            { value: true, label: "Date" }
+                                            { value: true, label: "Days" }
                                         ] as const}
                                         value={hasDeadline}
                                         onChange={setHasDeadline}
@@ -158,7 +158,7 @@ export default function TaskForm(props: TaskFormProps) {
                                             options={{
                                                 days: Array.from({ length: 100 }).map((_, i) => ({
                                                     value: i + 1,
-                                                    label: `${i + 1} ${i === 0 ? "Day" : "Days"}`
+                                                    label: i === 0 ? "Same Day" : `${i + 1} ${i === 0 ? "Day" : "Days"}`
                                                 }))
                                             }}
                                             value={{ days: repeatingDeadline }}

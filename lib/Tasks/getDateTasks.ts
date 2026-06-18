@@ -59,19 +59,13 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
         // Add task to map if it doesn't already exist
         const completion = getCompletion(instance)
         const key = `${task.id}:${instance.dateAvailable}`
+        const effectiveDeadline = getDeadline(instance)
         if (!taskMap.has(key)) taskMap.set(key, {
-            id: task.id,
-            occurs: task.occurs,
-            user: task.user,
-            date: instance.dateAvailable,
-            name: task.name,
-            description: task.description,
+            task,
+            date_available: instance.dateAvailable,
             steps: [],
-            importance: task.importance,
             completion,
-            deadline: getDeadline(instance),
-            created: task.created,
-            updated: task.updated
+            effective_deadline: effectiveDeadline
         })
         const scheduledTask = taskMap.get(key)!
         let completed = undefined

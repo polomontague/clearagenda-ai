@@ -18,39 +18,79 @@ import { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
 import API from "@/lib/API"
 import Stopwatch from "../Stopwatch"
 import EmptyState from "../EmptyState"
-import { CheckMarkIcon } from "../Icons"
+import { CheckMarkIcon, EditIcon, TrashCanIcon } from "../Icons"
+import Task from "@/types/Task"
+import TaskModal from "../TaskModal"
+import FormModal from "../FormModal"
+import TaskForm from "../TaskForm"
 
 export default function DateTasks({ tasks, day }: {
     tasks: TaskOccurrence[],
     day: Date
 }) {
-    const { updateCompleted, updateCompletion } = useContext(TasksContext)
-    const currentTaskAndStep = useMemo(() => Tasks.getCurrentTaskAndStep(tasks, day), [tasks, day])
+    const { updateCompleted, updateCompletion, replaceTask, removeTask } = useContext(TasksContext)
+    const currentOccurrenceAndStep = useMemo(() => Tasks.getCurrentOccurrenceAndStep(tasks), [tasks])
     const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
     const [stopwatchSeconds, setStopwatchSeconds] = useState(0)
     const [stopwatchRunning, setStopwatchRunning] = useState(false)
     const allCompleted = tasks.every(task => task.steps.every(step => step.completed))
+    const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const [taskModalOpen, setTaskModalOpen] = useState(false)
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   
+    const handleEditClick = (task: Task) => {
+        setCurrentTask(task)
+        setEditModalOpen(true)
+    }
+
+    const handleUpdateSuccess = (task: Task) => {
+        replaceTask(task)
+        setEditModalOpen(false)
+    }
+
+    const handleDeleteClick = (task: Task) => {
+        setCurrentTask(task)
+        setDeleteConfirmOpen(true)
+    }
+
+    const handleDeleteConfirm = (task: Task) => {
+        setDeleteConfirmOpen(false)
+        API.delete<{ task: Task }>(`/api/v1/tasks/${task.id}`, true).then(data => {
+            removeTask(data.task)
+            setAlertMessage(`"${data.task.name}" Deleted Successfully!`)
+            setAlertOpen(true)
+        }).catch(err => {
+            setAlertMessage(err.message)
+            setAlertOpen(true)
+        })
+    }
+
+    const handleTaskClick = (task: Task) => {
+        setCurrentTask(task)
+        setTaskModalOpen(true)
+    }
+
     const handleCompleteClick = () => {
         setCompleteConfirmOpen(true)
         setStopwatchRunning(false)
     }
 
-    const handleCompleteConfirm = (task: TaskOccurrence, step: StepOccurrence) => {
+    const handleCompleteConfirm = (occurrence: TaskOccurrence, step: StepOccurrence) => {
         setCompleteConfirmOpen(false)
-        const route = `/api/v1/tasks/${task.id}/steps/${step.id}/complete`
+        const route = `/api/v1/tasks/${occurrence.task.id}/steps/${step.id}/complete`
         const body = {
-            date: task.occurs === "repeating" ? task.date : undefined
+            date: occurrence.task.occurs === "repeating" ? occurrence.date_available : undefined
         }
         API.post<{ completed: string } | { completion: Completion }>(route, body, true).then(data => {
             setStopwatchSeconds(0)
             if ("completed" in data) {
-                updateCompleted(task.id, step.id, data.completed)
+                updateCompleted(occurrence.task.id, step.id, data.completed)
             }
             if ("completion" in data) {
-                updateCompletion(task.id, step.id, data.completion)
+                updateCompletion(occurrence.task.id, step.id, data.completion)
             }
             setAlertMessage(`"${step.name}" Marked Complete Successfully!`)
             setAlertOpen(true)
@@ -64,13 +104,26 @@ export default function DateTasks({ tasks, day }: {
         <div className={styles.frame}>
             <div className={styles.column}>
                 <FieldFrame>
-                    {tasks.map(task => {
-                        const current = currentTaskAndStep && currentTaskAndStep.task.id === task.id
+                    {tasks.map(occurrence => {
+                        const current = currentOccurrenceAndStep && currentOccurrenceAndStep.occurrence.task.id === occurrence.task.id
                         return (
-                            <Card key={task.id} label={task.name}>
+                            <Card
+                                key={`${occurrence.task.id}:${occurrence.date_available}`}
+                                label={occurrence.task.name}
+                                buttons={[
+                                    {
+                                        icon: <EditIcon />,
+                                        onClick: () => handleEditClick(occurrence.task)
+                                    },
+                                    {
+                                        icon: <TrashCanIcon />,
+                                        onClick: () => handleDeleteClick(occurrence.task)
+                                    }
+                                ]}
+                            >
                                 <FieldFrame>
                                     <Fieldset label="Steps">
-                                        {task.steps.map((step, i) => {
+                                        {occurrence.steps.map(step => {
                                             return (
                                                 <LabelField
                                                     key={step.id}
@@ -82,16 +135,20 @@ export default function DateTasks({ tasks, day }: {
                                         })}
                                     </Fieldset>
                                     <LabelField label="Length">
-                                        <InnerValue label={Tasks.getLength(task)} />
+                                        <InnerValue label={Tasks.getLength(occurrence.task)} />
                                     </LabelField>
                                     {current ? (
                                         <Fieldset>
                                             <LabelField fieldset label="Progress">
-                                                <InnerValue label={Tasks.formatCompletion(task.completion)} />
+                                                <InnerValue label={Tasks.formatCompletion(occurrence.completion)} />
                                             </LabelField>
-                                            <Range fieldset value={task.completion} />
+                                            <Range fieldset value={occurrence.completion} />
                                         </Fieldset>
                                     ) : <></>}
+                                    <Button
+                                        label="See Task"
+                                        onClick={() => handleTaskClick(occurrence.task)}
+                                    />
                                 </FieldFrame>
                             </Card>
                         )
@@ -99,18 +156,18 @@ export default function DateTasks({ tasks, day }: {
                 </FieldFrame>
             </div>
             <div className={styles.column}>
-                {currentTaskAndStep ? (
+                {currentOccurrenceAndStep ? (
                     <>
-                        <Fieldset layer={2} label={currentTaskAndStep.task.name}>
-                            <Card fieldset label={currentTaskAndStep.step.name}>
+                        <Fieldset layer={2} label={currentOccurrenceAndStep.occurrence.task.name}>
+                            <Card fieldset label={currentOccurrenceAndStep.step.name}>
                                 <FieldFrame>
-                                    {currentTaskAndStep.step.notes ? (
+                                    {currentOccurrenceAndStep.step.notes ? (
                                         <Fieldset label="Notes">
-                                            <ValueBox fieldset value={currentTaskAndStep.step.notes} />
+                                            <ValueBox fieldset value={currentOccurrenceAndStep.step.notes} />
                                         </Fieldset>
                                     ) : <></>}
                                     <LabelField label="Length">
-                                        <InnerValue label={Utility.formatDuration(currentTaskAndStep.step.duration)} />
+                                        <InnerValue label={Utility.formatDuration(currentOccurrenceAndStep.step.duration)} />
                                     </LabelField>
                                     <Fieldset
                                         label="Stopwatch"
@@ -132,10 +189,10 @@ export default function DateTasks({ tasks, day }: {
                             </Card>
                         </Fieldset>
                         <Confirm
-                            message={`Mark "${currentTaskAndStep.step.name}" Complete?`}
+                            message={`Mark "${currentOccurrenceAndStep.step.name}" Complete?`}
                             open={completeConfirmOpen}
                             onRequestCancel={() => setCompleteConfirmOpen(false)}
-                            onRequestConfirm={() => handleCompleteConfirm(currentTaskAndStep.task, currentTaskAndStep.step)}
+                            onRequestConfirm={() => handleCompleteConfirm(currentOccurrenceAndStep.occurrence, currentOccurrenceAndStep.step)}
 
                         />
                     </>
@@ -152,6 +209,32 @@ export default function DateTasks({ tasks, day }: {
                     />
                 ) : null}
             </div>
+            {currentTask ? (
+                <>
+                    <TaskModal
+                        task={currentTask}
+                        open={taskModalOpen}
+                        onRequestClose={() => setTaskModalOpen(false)}
+                    />
+                    <FormModal
+                        label="Edit Task"
+                        open={editModalOpen}
+                        onRequestCancel={() => setEditModalOpen(false)}
+                    >
+                        <TaskForm
+                            mode="edit"
+                            task={currentTask}
+                            onSuccess={handleUpdateSuccess}
+                        />
+                    </FormModal>
+                    <Confirm
+                        message={`Delete "${currentTask.name}"?`}
+                        open={deleteConfirmOpen}
+                        onRequestCancel={() => setDeleteConfirmOpen(false)}
+                        onRequestConfirm={() => handleDeleteConfirm(currentTask)}
+                    />
+                </>
+            ) : null}
             <Alert
                 message={alertMessage}
                 open={alertOpen}

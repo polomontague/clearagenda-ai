@@ -54,11 +54,12 @@ export type StepOccurrence = Pick<Step, "id" | "name" | "notes" | "duration"> & 
     completed?: string
 }
 
-export type TaskOccurrence = Pick<Task, "id" | "occurs" | "user" | "name" | "description" | "importance" | "created" | "updated"> & {
-    date: string,
+export type TaskOccurrence = {
+    task: Task,
+    date_available: string,
     steps: StepOccurrence[],
     completion: number,
-    deadline?: string
+    effective_deadline?: string
 }
 
 export default Task

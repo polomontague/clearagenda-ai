@@ -1,4 +1,4 @@
-import getCurrentTaskAndStep from "./getCurrentTaskAndStep"
+import { getCurrentOccurrenceAndStep } from "./getCurrentOccurrenceAndStep"
 import getLength from "./getLength"
 import getDeadline from "./getDeadline"
 import getCompletion from "./getCompletion"
@@ -9,7 +9,7 @@ import { getNextTask } from "./getNextTask"
 import { getTotalDuration } from "./getTotalDuration"
 
 const Tasks = {
-    getCurrentTaskAndStep,
+    getCurrentOccurrenceAndStep,
     getLength,
     getDeadline,
     getCompletion,
