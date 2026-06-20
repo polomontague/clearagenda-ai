@@ -14,6 +14,7 @@ type BaseTask = {
     user: SimpleUser,
     name: string,
     description: string,
+    experience: 0 | 1 | 2,
     importance: number,
     created: string,
     updated: string

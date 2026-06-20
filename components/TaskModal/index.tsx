@@ -32,18 +32,20 @@ export default function TaskModal({ task, open, onRequestClose }: TaskModalProps
                     <InnerValue  color={status.color} label={status.label} />
                 </LabelField>
                 <SlideField label="Steps" value={task.steps.length.toString()}>
-                    {task.steps.map(step => {
-                        return (
-                            <Fieldset key={step.id} label={step.name}>
-                                {step.notes ? (
-                                    <ValueBox fieldset value={step.notes} />
-                                ) : null}
-                                <LabelField fieldset label="Length">
-                                    <InnerValue label={Utility.formatDuration(step.duration)} />
-                                </LabelField>
-                            </Fieldset>
-                        )
-                    })}
+                    <FieldFrame>
+                        {task.steps.map(step => {
+                            return (
+                                <Fieldset key={step.id} label={step.name}>
+                                    {step.notes ? (
+                                        <ValueBox fieldset value={step.notes} />
+                                    ) : null}
+                                    <LabelField fieldset label="Length">
+                                        <InnerValue label={Utility.formatDuration(step.duration)} />
+                                    </LabelField>
+                                </Fieldset>
+                            )
+                        })}
+                    </FieldFrame>
                 </SlideField>
                 <Fieldset
                     description={task.occurs === "repeating" ? Utility.getRepeatLabel(task.repeat) : undefined}

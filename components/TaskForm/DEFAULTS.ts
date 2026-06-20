@@ -10,7 +10,8 @@ const DEFAULTS = {
         frequency: "daily",
         interval: 1,
         starts: Utility.getDateKey(new Date())
-    } as const
+    } as const,
+    experience: 0
 }
 
 export default DEFAULTS

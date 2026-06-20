@@ -5,12 +5,22 @@ import { floatingRepeat } from "./floatingRepeat"
 const onceTaskBodySchema = z.object({
     occurs: z.literal("once", 'occurs must be "once" or "repeating"'),
     description: z.string("description must be a string").trim().min(1, "description must be 1 or more characters"),
+    experience: z.union([
+        z.literal(0),
+        z.literal(1),
+        z.literal(2)
+    ], "experience must be 0, 1, or 2"),
     deadline: z.string("deadline must be a string").trim().refine(value => Validation.date(value), "deadline must be a valid date").optional()
 })
 
 const repeatingTaskBodySchema = z.object({
     occurs: z.literal("repeating", 'occurs must be "once" or "repeating"'),
     description: z.string("description must be a string").trim().min(1, "description must be 1 or more characters"),
+    experience: z.union([
+        z.literal(0),
+        z.literal(1),
+        z.literal(2)
+    ], "experience must be 0, 1, or 2"),
     deadline: z.number("deadline must be a number").min(1, "deadline must be 1 or greater").optional(),
     repeat: floatingRepeat
 })

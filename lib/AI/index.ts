@@ -3,7 +3,7 @@ import { planSystemMessage, planUserMessage } from "./messages/plan"
 import GenerationsDAO from "@/dao/GenerationsDAO"
 
 const AI = {
-    plan: async (userId: number, description: string): Promise<{
+    plan: async (userId: number, description: string, experience: 0 | 1 | 2): Promise<{
         name: string,
         importance: number,
         steps: {
@@ -22,7 +22,7 @@ const AI = {
                 },
                 {
                     role: "user",
-                    content: planUserMessage(description)
+                    content: planUserMessage(description, experience)
                 }
             ]
         })

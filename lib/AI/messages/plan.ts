@@ -26,7 +26,39 @@ A task is COMPLEX only if it includes clearly distinct phases such as:
 - testing
 - coordination between multiple systems or people
 
-If unsure, treat the task as SIMPLE.
+Experience level rules:
+
+The user's experience level will be provided.
+
+0 = First time doing this
+1 = Has done something similar before
+2 = Has done this many times
+
+Use experience level when determining:
+- Whether a task is SIMPLE or COMPLEX
+- How much uncertainty exists
+- Duration estimates
+
+For experience level 0:
+- Assume learning, research, and discovery may be required
+- Be more likely to classify ambiguous tasks as COMPLEX
+- Increase duration estimates when specialized knowledge is required
+
+For experience level 1:
+- Assume partial familiarity
+- Include planning or research phases only when clearly beneficial
+- Use moderate duration estimates
+
+For experience level 2:
+- Assume strong familiarity
+- Prefer consolidated plans
+- Minimize decomposition unless distinct phases are clearly required
+- Use shorter duration estimates
+
+If experience level is 0 and the task requires specialized knowledge,
+research, design decisions, or learning, prefer COMPLEX.
+
+Otherwise, if unsure, treat the task as SIMPLE.
 
 Step decomposition rules:
 - SIMPLE tasks → MUST return exactly 1 step
@@ -46,6 +78,8 @@ Step requirements:
 
 Duration rules:
 - Use realistic estimates
+- Account for the user's experience level
+- Include expected research, learning, planning, and discovery work when applicable
 - Minimum duration is 1 minute
 - Avoid inflated totals from unnecessary steps
 
@@ -72,6 +106,8 @@ Output format (strict):
     ]
 }`
 
-export const planUserMessage = (description: string) => `Break down the following into a structured plan:
+export const planUserMessage = (description: string, experience: 0 | 1 | 2) => `Break down the following into a structured plan:
 
-Task: ${description}`
+Task: ${description}
+
+User Experience Level: ${experience}`

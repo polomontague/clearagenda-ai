@@ -17,6 +17,7 @@ import API from "@/lib/API"
 import { DoneButton } from "@/components/FormModal"
 import Task from "@/types/Task"
 import MultiSelect from "../MultiSelect"
+import RangeInput from "../RangeInput"
 
 type BaseProps = {
     onSuccess: (task: Task) => void
@@ -35,6 +36,7 @@ type TaskFormProps = NewProps | EditProps
 
 export default function TaskForm(props: TaskFormProps) {
     const [description, setDescription] = useState(DEFAULTS.description)
+    const [experience, setExperience] = useState(DEFAULTS.experience)
     const [occurs, setOccurs] = useState<"once" | "repeating">(DEFAULTS.occurs)
     const [hasDeadline, setHasDeadline] = useState(DEFAULTS.hasDeadline)
     const [onceDeadline, setOnceDeadline] = useState(DEFAULTS.onceDeadline)
@@ -44,10 +46,12 @@ export default function TaskForm(props: TaskFormProps) {
     const [loading, setLoading] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
+    const experienceLabels = [ "First time doing this", "I've done something similar before", "I've done this many times" ]
 
     useEffect(() => {
         if (props.mode === "edit") {
             setDescription(props.task.description)
+            setExperience(props.task.experience)
             setOccurs(props.task.occurs)
             setHasDeadline(Boolean(props.task.deadline))
             if (props.task.occurs === "once" && props.task.deadline) setOnceDeadline(Utility.loadLocalDate(props.task.deadline))
@@ -71,6 +75,7 @@ export default function TaskForm(props: TaskFormProps) {
         const body = {
             occurs,
             description,
+            experience,
             deadline: hasDeadline ? (occurs === "once" ? Utility.getDateKey(onceDeadline) : repeatingDeadline) : undefined,
             repeat: occurs === "repeating" ? repeat : undefined
         }
@@ -87,6 +92,7 @@ export default function TaskForm(props: TaskFormProps) {
 
     const clear = () => {
         setDescription(DEFAULTS.description)
+        setExperience(0)
         setOccurs(DEFAULTS.occurs)
         setHasDeadline(DEFAULTS.hasDeadline)
         setOnceDeadline(DEFAULTS.onceDeadline)
@@ -176,6 +182,12 @@ export default function TaskForm(props: TaskFormProps) {
                             </SlideField>
                         </>
                     ) : null}
+                </Fieldset>
+                <Fieldset
+                    label="Experience"
+                    description={experienceLabels[experience]}
+                >
+                    <RangeInput fieldset min={0} max={2} step={1} value={experience} onChange={setExperience} />
                 </Fieldset>
             </FieldFrame>
             <Loading loading={loading} />

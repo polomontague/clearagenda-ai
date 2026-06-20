@@ -5,12 +5,12 @@ import assembleTask from "./assembleTask"
 import stepCompletionsBaseQuery from "./stepCompletionsBaseQuery"
 import assembleStepCompletion from "./assembleStepCompletion"
 
-type BaseOnceTaskData = Pick<OnceTask, "name" | "description" | "importance" | "deadline"> & {
+type BaseOnceTaskData = Pick<OnceTask, "name" | "description" | "experience" | "importance" | "deadline"> & {
     occurs: "once",
     steps: Pick<OnceStep, "name" | "notes" | "duration">[]
 }
 
-type BaseRepeatingTaskData = Pick<RepeatingTask, "name" | "description" | "importance" | "deadline" | "repeat"> & {
+type BaseRepeatingTaskData = Pick<RepeatingTask, "name" | "description" | "experience" | "importance" | "deadline" | "repeat"> & {
     occurs: "repeating",
     steps: Pick<RepeatingStep, "name" | "notes" | "duration">[]
 }
@@ -42,6 +42,7 @@ const TasksDAO = {
                 user_id: data.user_id,
                 name: data.name,
                 description: data.description,
+                experience: data.experience,
                 steps: {
                     create: data.steps.map(step => ({
                         name: step.name,
