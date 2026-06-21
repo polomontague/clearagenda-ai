@@ -8,6 +8,9 @@ const tasksBaseQuery = {
         user: simpleUsersBaseQuery,
         name: true,
         description: true,
+        clarity: true,
+        friction: true,
+        specifications: true,
         steps: {
             select: {
                 id: true,

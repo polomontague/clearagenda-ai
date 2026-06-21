@@ -11,7 +11,9 @@ const DEFAULTS = {
         interval: 1,
         starts: Utility.getDateKey(new Date())
     } as const,
-    experience: 0
+    clarity: "low",
+    friction: [],
+    specifications: []
 }
 
 export default DEFAULTS

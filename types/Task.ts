@@ -1,6 +1,10 @@
 import SimpleUser from "./SimpleUser"
 import Repeat from "./Repeat"
 
+export type Clarity = "low" | "medium" | "high"
+export type Friction = "starting" | "steps" | "learning" | "scope" | "approach" | "duration"
+export type Specification = string
+
 type BaseStep = {
     id: number,
     name: string,
@@ -14,7 +18,9 @@ type BaseTask = {
     user: SimpleUser,
     name: string,
     description: string,
-    experience: 0 | 1 | 2,
+    clarity: Clarity,
+    friction: Friction[],
+    specifications: Specification[],
     importance: number,
     created: string,
     updated: string

@@ -1,0 +1,82 @@
+.background{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    gap: var(--border-width);
+    background-color: var(--layer-3-border);
+    border: var(--border-width) solid var(--layer-3-border);
+    border-radius: var(--border-radius);
+}
+
+.background.fieldset{
+    border: none;
+    border-radius: 0;
+}
+
+.header{
+    display: -webkit-flex;
+    display: flex;
+    background-color: var(--layer-3);
+}
+
+.btnAdd{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    width: var(--field-size);
+    height: var(--field-size);
+}
+
+.btnAdd > svg{
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--accent);
+}
+
+.btnAdd:disabled > svg{
+    fill: var(--layer-3-light);
+}
+
+.lstItems{
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-small);
+    padding: var(--spacing-small);
+    background-color: var(--layer-3);
+}
+
+.item{
+    display: -webkit-flex;
+    display: flex;
+    height: var(--inner-field-size);
+    background-color: var(--layer-4);
+    border: var(--border-width) solid var(--layer-4-border);
+    border-radius: var(--inner-border-radius);
+}
+
+.item > .label{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    padding-left: var(--spacing-small);
+    font-size: var(--inner-font-size);
+    color: var(--contrast);
+}
+
+.btnRemove{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--inner-field-size);
+    height: 100%;
+}
+
+.btnRemove > svg{
+    width: var(--inner-icon-size);
+    height: var(--inner-icon-size);
+    fill: var(--accent);
+}

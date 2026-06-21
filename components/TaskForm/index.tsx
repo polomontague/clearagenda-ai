@@ -17,7 +17,8 @@ import API from "@/lib/API"
 import { DoneButton } from "@/components/FormModal"
 import Task from "@/types/Task"
 import MultiSelect from "../MultiSelect"
-import RangeInput from "../RangeInput"
+import SelectList from "../SelectList"
+import ListInput from "../ListInput"
 
 type BaseProps = {
     onSuccess: (task: Task) => void
@@ -36,7 +37,6 @@ type TaskFormProps = NewProps | EditProps
 
 export default function TaskForm(props: TaskFormProps) {
     const [description, setDescription] = useState(DEFAULTS.description)
-    const [experience, setExperience] = useState(DEFAULTS.experience)
     const [occurs, setOccurs] = useState<"once" | "repeating">(DEFAULTS.occurs)
     const [hasDeadline, setHasDeadline] = useState(DEFAULTS.hasDeadline)
     const [onceDeadline, setOnceDeadline] = useState(DEFAULTS.onceDeadline)
@@ -46,12 +46,16 @@ export default function TaskForm(props: TaskFormProps) {
     const [loading, setLoading] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertOpen, setAlertOpen] = useState(false)
-    const experienceLabels = [ "First time doing this", "I've done something similar before", "I've done this many times" ]
+    const [clarity, setClarity] = useState(DEFAULTS.clarity)
+    const [friction, setFriction] = useState<string[]>(DEFAULTS.friction)
+    const [specifications, setSpecifications] = useState<string[]>(DEFAULTS.specifications)
 
     useEffect(() => {
         if (props.mode === "edit") {
             setDescription(props.task.description)
-            setExperience(props.task.experience)
+            setClarity(props.task.clarity)
+            setFriction(props.task.friction)
+            setSpecifications(props.task.specifications)
             setOccurs(props.task.occurs)
             setHasDeadline(Boolean(props.task.deadline))
             if (props.task.occurs === "once" && props.task.deadline) setOnceDeadline(Utility.loadLocalDate(props.task.deadline))
@@ -75,7 +79,9 @@ export default function TaskForm(props: TaskFormProps) {
         const body = {
             occurs,
             description,
-            experience,
+            clarity,
+            friction,
+            specifications,
             deadline: hasDeadline ? (occurs === "once" ? Utility.getDateKey(onceDeadline) : repeatingDeadline) : undefined,
             repeat: occurs === "repeating" ? repeat : undefined
         }
@@ -92,7 +98,9 @@ export default function TaskForm(props: TaskFormProps) {
 
     const clear = () => {
         setDescription(DEFAULTS.description)
-        setExperience(0)
+        setClarity(DEFAULTS.clarity)
+        setFriction(DEFAULTS.friction)
+        setSpecifications(DEFAULTS.specifications)
         setOccurs(DEFAULTS.occurs)
         setHasDeadline(DEFAULTS.hasDeadline)
         setOnceDeadline(DEFAULTS.onceDeadline)
@@ -106,8 +114,71 @@ export default function TaskForm(props: TaskFormProps) {
                 <Fieldset
                     description="Our AI breaks down tasks into actionable steps, and estimates importance and duration."
                 >
-                    <TextArea rows={8} fieldset placeholder="Describe the task..." value={description} onChange={setDescription} />
+                    <TextArea rows={6} fieldset placeholder="Describe the task..." value={description} onChange={setDescription} />
                 </Fieldset>
+                <Fieldset
+                    label="Clarity"
+                    description="How clear does this feel right now?"
+                >
+                    <SelectList
+                        fieldset
+                        multiple={false}
+                        options={[
+                            { value: "high", label: "I know exactly how I’ll do it" },
+                            { value: "medium", label: "I have a rough idea" },
+                            { value: "low", label: "I’m not sure where to start" }
+                        ]}
+                        value={clarity}
+                        onChange={setClarity}
+                    />
+                </Fieldset>
+                {clarity === "low" || clarity === "medium" ? (
+                    <Fieldset
+                        label="Unclear Areas"
+                        description="What feels least clear right now?"
+                    >
+                        <SelectList
+                            fieldset
+                            multiple
+                            value={friction}
+                            options={[
+                                { value: "starting", label: "How to start" },
+                                { value: "steps", label: "What steps are involved" },
+                                { value: "learning", label: "What I need to learn" },
+                                { value: "scope", label: "What the final result should include" },
+                                { value: "approach", label: "Which approach to take" },
+                                { value: "duration", label: "How long it will take" }
+                            ]}
+                            onChange={setFriction}
+                        />
+                    </Fieldset>
+                ) : <></>}
+                <Fieldset
+                    label="Specifications"
+                    description="What are the requirements? What tools are you using? This will help our AI breakdown the task and estimate duration accurately."
+                >
+                    <ListInput
+                        fieldset
+                        placeholder="Specification..."
+                        value={specifications}
+                        onChange={setSpecifications}
+                    />
+                </Fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <Fieldset
                     description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
                 >
@@ -182,12 +253,6 @@ export default function TaskForm(props: TaskFormProps) {
                             </SlideField>
                         </>
                     ) : null}
-                </Fieldset>
-                <Fieldset
-                    label="Experience"
-                    description={experienceLabels[experience]}
-                >
-                    <RangeInput fieldset min={0} max={2} step={1} value={experience} onChange={setExperience} />
                 </Fieldset>
             </FieldFrame>
             <Loading loading={loading} />

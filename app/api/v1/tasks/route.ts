@@ -12,7 +12,14 @@ export const POST = async (req: NextRequest) => {
     try {
         const user = await Auth.authenticate(req)
         const body = await Request.body(req, taskBodySchema)
-        const data = await AI.plan(user.id, body.description, body.experience)
+
+        const data = await AI.plan({
+            description: body.description,
+            clarity: body.clarity,
+            friction: body.friction,
+            specifications: body.specifications,
+            userId: user.id
+        })
 
         let task
         if (body.occurs === "once") {
@@ -21,7 +28,9 @@ export const POST = async (req: NextRequest) => {
                 user_id: user.id,
                 name: data.name,
                 description: body.description,
-                experience: body.experience,
+                clarity: body.clarity,
+                friction: body.friction,
+                specifications: body.specifications,
                 steps: data.steps,
                 importance: data.importance,
                 deadline: body.deadline
@@ -32,7 +41,9 @@ export const POST = async (req: NextRequest) => {
                 user_id: user.id,
                 name: data.name,
                 description: body.description,
-                experience: body.experience,
+                clarity: body.clarity,
+                friction: body.friction,
+                specifications: body.specifications,
                 steps: data.steps,
                 importance: data.importance,
                 deadline: body.deadline,

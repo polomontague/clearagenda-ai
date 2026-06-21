@@ -1,6 +1,6 @@
 import SimpleUser from "@/types/SimpleUser"
 
-type Model = "gpt-5.4-nano"
+export type Model = "gpt-5.4-nano"
 
 type Generation = {
     id: number,

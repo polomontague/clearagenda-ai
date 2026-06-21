@@ -1,7 +1,7 @@
 import { Prisma } from "@/lib/prisma"
 import assembleSimpleUser from "../UsersDAO/assembleSimpleUser"
 import tasksBaseQuery from "./tasksBaseQuery"
-import Task, { OnceTask, RepeatingTask } from "@/types/Task"
+import Task, { Friction, OnceTask, RepeatingTask, Specification } from "@/types/Task"
 import Repeat from "@/types/Repeat"
 import assembleStepCompletion from "./assembleStepCompletion"
 
@@ -15,6 +15,9 @@ const assembleOnceTask = (result: TaskResult): OnceTask => {
         user: assembleSimpleUser(result.user),
         name: result.name,
         description: result.description,
+        clarity: result.clarity,
+        friction: result.friction as Friction[],
+        specifications: result.specifications as Specification[],
         steps: result.steps.map(step => ({
             id: step.id,
             name: step.name,
@@ -37,6 +40,9 @@ const assembleRepeatingTask = (result: TaskResult): RepeatingTask => {
         user: assembleSimpleUser(result.user),
         name: result.name,
         description: result.description,
+        clarity: result.clarity,
+        friction: result.friction as Friction[],
+        specifications: result.specifications as Specification[],
         steps: result.steps.map(step => ({
             id: step.id,
             name: step.name,
