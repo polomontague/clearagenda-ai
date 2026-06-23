@@ -81,12 +81,14 @@ export default function AgendaPage() {
             }}
         >
             <div className={styles.frame}>
-                <AgendaOverview
-                    tasks={dateTasks}
-                    events={dateEvents}
-                    reminders={dateReminders}
-                    day={day}
-                />
+                <header className={styles.header}>
+                    <AgendaOverview
+                        tasks={dateTasks}
+                        events={dateEvents}
+                        reminders={dateReminders}
+                        day={day}
+                    />
+                </header>
                 {type === "tasks" ? (
                     <DateTasks tasks={dateTasks} />
                 ) : type === "events" ? (

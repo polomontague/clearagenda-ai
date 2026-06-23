@@ -1,11 +1,21 @@
 .frame{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-medium);
+    gap: var(--border-width);
+    background-color: var(--layer-1-border);
 }
 
 .frame > .column{
     min-width: 0;
+    background-color: var(--layer-1);
+}
+
+.columnLeft{
+    padding-right: var(--spacing-medium);
+}
+
+.columnRight{
+    padding-left: var(--spacing-medium);
 }
 
 .frameBtns{
@@ -17,5 +27,15 @@
 @media screen and (max-width: 600px){
     .frame{
         grid-template-columns: 100%;
+    }
+
+    .columnLeft{
+        padding: 0;
+        padding-bottom: var(--spacing-medium);
+    }
+
+    .columnRight{
+        padding: 0;
+        padding-top: var(--spacing-medium);
     }
 }

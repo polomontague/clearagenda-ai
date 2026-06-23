@@ -112,13 +112,13 @@ export default function TaskForm(props: TaskFormProps) {
         <Form onSubmit={handleSubmit}>
             <FieldFrame>
                 <Fieldset
-                    description="Our AI breaks down tasks into actionable steps, and estimates importance and duration."
+                    description="Describe what needs to be done. The clearer the task, the more accurate the steps, timing, and importance estimates will be."
                 >
                     <TextArea rows={6} fieldset placeholder="Describe the task..." value={description} onChange={setDescription} />
                 </Fieldset>
                 <Fieldset
                     label="Clarity"
-                    description="How clear does this feel right now?"
+                    description="Helps our AI decide how much structure and guidance to provide."
                 >
                     <SelectList
                         fieldset
@@ -135,7 +135,7 @@ export default function TaskForm(props: TaskFormProps) {
                 {clarity === "low" || clarity === "medium" ? (
                     <Fieldset
                         label="Unclear Areas"
-                        description="What feels least clear right now?"
+                        description="Calling out unknowns helps our AI identify missing steps and reduce ambiguity in the plan."
                     >
                         <SelectList
                             fieldset
@@ -155,7 +155,7 @@ export default function TaskForm(props: TaskFormProps) {
                 ) : <></>}
                 <Fieldset
                     label="Specifications"
-                    description="What are the requirements? What tools are you using? This will help our AI breakdown the task and estimate duration accurately."
+                    description="Include any requirements, preferences, or constraints. These details help our AI generate a plan that fits the actual work."
                 >
                     <ListInput
                         fieldset

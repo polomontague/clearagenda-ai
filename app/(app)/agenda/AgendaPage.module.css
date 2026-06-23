@@ -4,3 +4,8 @@
     flex-direction: column;
     gap: var(--spacing-medium);
 }
+
+.header{
+    padding-bottom: var(--spacing-medium);
+    border-bottom: var(--border-width) solid var(--layer-1-border);
+}

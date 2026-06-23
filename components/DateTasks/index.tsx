@@ -148,11 +148,12 @@ export default function DateTasks({ tasks}: {
 
     return (
         <div className={styles.frame}>
-            <div className={styles.column}>
+            <div className={`${styles.column} ${styles.columnLeft}`}>
                 <FieldFrame>
                     {tasks.map(occurrence => {
                         const current = currentOccurrenceAndStep && currentOccurrenceAndStep.occurrence.task.id === occurrence.task.id
                         const deadline = occurrence.effective_deadline && user ? getDeadline(occurrence.effective_deadline, user) : undefined
+                        const allComplete = occurrence.steps.every(step => step.completed)
                         return (
                             <Card
                                 key={`${occurrence.task.id}:${occurrence.date_available}`}
@@ -181,22 +182,16 @@ export default function DateTasks({ tasks}: {
                                             )
                                         })}
                                     </Fieldset>
-                                    <Fieldset>
-                                        <LabelField fieldset label="Length">
-                                            <InnerValue label={Tasks.getLength(occurrence)} />
-                                        </LabelField>
-                                        {deadline ? (
-                                            <LabelField fieldset label="Due">
-                                                <InnerValue color={deadline.color} label={deadline.label} />
-                                            </LabelField>
-                                        ) : <></>}
-                                    </Fieldset>
-                                    {current ? (
+                                    {!allComplete ? (
                                         <Fieldset>
-                                            <LabelField fieldset label="Progress">
-                                                <InnerValue label={Tasks.formatCompletion(occurrence.completion)} />
+                                            <LabelField fieldset label="Length">
+                                                <InnerValue label={Tasks.getLength(occurrence)} />
                                             </LabelField>
-                                            <Range fieldset value={occurrence.completion} />
+                                            {deadline ? (
+                                                <LabelField fieldset label="Due">
+                                                    <InnerValue color={deadline.color} label={deadline.label} />
+                                                </LabelField>
+                                            ) : <></>}
                                         </Fieldset>
                                     ) : <></>}
                                     <div className={styles.frameBtns}>
@@ -216,7 +211,7 @@ export default function DateTasks({ tasks}: {
                     })}
                 </FieldFrame>
             </div>
-            <div className={styles.column}>
+            <div className={`${styles.column} ${styles.columnRight}`}>
                 {currentOccurrenceAndStep ? (
                     <>
                         <Fieldset layer={2} label={currentOccurrenceAndStep.occurrence.task.name}>
@@ -251,6 +246,12 @@ export default function DateTasks({ tasks}: {
                                             running={stopwatchRunning}
                                             onRunningChange={setStopwatchRunning}
                                         />
+                                    </Fieldset>
+                                    <Fieldset>
+                                        <LabelField fieldset label="Progress">
+                                            <InnerValue label={Tasks.formatCompletion(currentOccurrenceAndStep.occurrence.completion)} />
+                                        </LabelField>
+                                        <Range fieldset value={currentOccurrenceAndStep.occurrence.completion} />
                                     </Fieldset>
                                     <Button
                                         label="Mark Complete"
