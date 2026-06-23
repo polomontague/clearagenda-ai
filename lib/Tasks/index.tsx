@@ -5,7 +5,6 @@ import getCompletion from "./getCompletion"
 import getStatus from "./getStatus"
 import getDateTasks from "./getDateTasks"
 import formatCompletion from "./formatCompletion"
-import { getNextTask } from "./getNextTask"
 import { getTotalDuration } from "./getTotalDuration"
 
 const Tasks = {
@@ -16,7 +15,6 @@ const Tasks = {
     getStatus,
     getDateTasks,
     formatCompletion,
-    getNextTask,
     getTotalDuration
 }
 
