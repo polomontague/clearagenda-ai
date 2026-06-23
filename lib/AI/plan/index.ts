@@ -8,7 +8,7 @@ const outputSchema = z.object({
     name: z.string().trim().min(1),
     steps: z.array(z.object({
         name: z.string().trim().min(1),
-        notes: z.string().trim().min(1),
+        notes: z.string().trim().min(1).optional(),
         duration: z.number().min(1)
     })),
     importance: z.number().min(0).max(1)
