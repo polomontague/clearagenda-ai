@@ -12,6 +12,8 @@ import { useMemo } from "react"
 import Reminders from "@/lib/Reminders"
 import Placeholder from "../Placeholder"
 import { MagnifyingGlassIcon } from "../Icons"
+import Range from "../Range"
+import FieldFrame from "../FieldFrame"
 
 type AgendaOverviewProps = {
     tasks: TaskOccurrence[],
@@ -21,25 +23,34 @@ type AgendaOverviewProps = {
 }
 
 export default function AgendaOverview({ tasks, events, reminders, day }: AgendaOverviewProps) {
-    const nextEvent = useMemo(() => Events.getNextEvent(events), [events])
-    const nextReminder = useMemo(() => Reminders.getNextReminder(reminders), [reminders])
+    const nextEvent = useMemo(() => Events.getNextEvent(events), [ events ])
+    const nextReminder = useMemo(() => Reminders.getNextReminder(reminders), [ reminders ])
+    const completion = useMemo(() => Tasks.getTotalCompletion(tasks), [ tasks ])
 
     return (
         <div className={styles.background}>
             <div className={styles.frame}>
                 <div className={styles.column}>
                     <h1 className={styles.date}>{Utility.formatDate(day, true)}</h1>
-                    <Fieldset>
-                        <LabelField fieldset label="Tasks">
-                            <InnerValue label={Utility.formatDuration(Tasks.getTotalDuration(tasks))} />
-                        </LabelField>
-                        <LabelField fieldset label="Events">
-                            <InnerValue label={Utility.formatDuration(Events.getTotalDuration(events))} />
-                        </LabelField>
-                        <LabelField fieldset label="Reminders">
-                            <InnerValue label={Utility.formatCount(reminders.length)} />
-                        </LabelField>
-                    </Fieldset>
+                    <FieldFrame>
+                        <Fieldset>
+                            <LabelField fieldset label="Tasks">
+                                <InnerValue label={Utility.formatDuration(Tasks.getTotalDuration(tasks))} />
+                            </LabelField>
+                            <LabelField fieldset label="Events">
+                                <InnerValue label={Utility.formatDuration(Events.getTotalDuration(events))} />
+                            </LabelField>
+                            <LabelField fieldset label="Reminders">
+                                <InnerValue label={Utility.formatCount(reminders.length)} />
+                            </LabelField>
+                        </Fieldset>
+                        <Fieldset>
+                            <LabelField fieldset label="Today's Progress">
+                                <InnerValue label={`${completion * 100}%`} />
+                            </LabelField>
+                            <Range fieldset value={completion} />
+                        </Fieldset>
+                    </FieldFrame>
                 </div>
                 <div className={styles.column}>
                     <div className={styles.innerFrame}>

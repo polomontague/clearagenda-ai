@@ -151,7 +151,6 @@ export default function DateTasks({ tasks}: {
             <div className={`${styles.column} ${styles.columnLeft}`}>
                 <FieldFrame>
                     {tasks.map(occurrence => {
-                        const current = currentOccurrenceAndStep && currentOccurrenceAndStep.occurrence.task.id === occurrence.task.id
                         const deadline = occurrence.effective_deadline && user ? getDeadline(occurrence.effective_deadline, user) : undefined
                         const allComplete = occurrence.steps.every(step => step.completed)
                         return (

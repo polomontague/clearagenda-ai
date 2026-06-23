@@ -11,7 +11,6 @@ import DateEvents from "@/components/DateEvents"
 import DateReminders from "@/components/DateReminders"
 import DateTasks from "@/components/DateTasks"
 import AgendaOverview from "@/components/AgendaOverview"
-import FieldFrame from "@/components/FieldFrame"
 import TasksContext from "@/contexts/TasksContext"
 import EventsContext from "@/contexts/EventsContext"
 import UserContext from "@/contexts/UserContext"
@@ -19,7 +18,6 @@ import Tasks from "@/lib/Tasks"
 import Events from "@/lib/Events"
 import RemindersContext from "@/contexts/RemindersContext"
 import Reminders from "@/lib/Reminders"
-import { styleText } from "util"
 
 export default function AgendaPage() {
     const { tasks } = useContext(TasksContext)
