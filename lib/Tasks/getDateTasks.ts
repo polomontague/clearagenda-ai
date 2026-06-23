@@ -33,7 +33,7 @@ export default function getDateTasks(tasks: Task[], events: Event[], user: User,
         const used = eventOccupancy + completedStepOccupancy + scheduledOccupancy
         let remaining = capacity - used
         if (!scheduledStepsByDate[dateKey]) scheduledStepsByDate[dateKey] = [] // Add date if it doesn't already exist
-        const blockedOccurrences = new Set<string>()
+        const blockedOccurrences = new Set<string>() // This prevents steps from being scheduled out of order if an ealier step is too long to fit in the day
         for (const stepInstance of queue) {
             const occurrenceKey = `${stepInstance.task.id}:${stepInstance.dateAvailable}`
             if (blockedOccurrences.has(occurrenceKey)) continue

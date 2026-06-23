@@ -88,7 +88,7 @@ export default function AgendaPage() {
                     day={day}
                 />
                 {type === "tasks" ? (
-                    <DateTasks tasks={dateTasks} day={day} />
+                    <DateTasks tasks={dateTasks} />
                 ) : type === "events" ? (
                     <DateEvents events={dateEvents} day={day} />
                 ) : type === "reminders" ? (

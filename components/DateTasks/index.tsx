@@ -26,9 +26,8 @@ import TaskForm from "../TaskForm"
 import User from "@/types/User"
 import UserContext from "@/contexts/UserContext"
 
-export default function DateTasks({ tasks, day }: {
-    tasks: TaskOccurrence[],
-    day: Date
+export default function DateTasks({ tasks}: {
+    tasks: TaskOccurrence[]
 }) {
     const { updateCompleted, updateCompletion, replaceTask, removeTask } = useContext(TasksContext)
     const currentOccurrenceAndStep = useMemo(() => Tasks.getCurrentOccurrenceAndStep(tasks), [tasks])
@@ -179,7 +178,7 @@ export default function DateTasks({ tasks, day }: {
                                     </Fieldset>
                                     <Fieldset>
                                         <LabelField fieldset label="Length">
-                                            <InnerValue label={Tasks.getLength(occurrence.task)} />
+                                            <InnerValue label={Tasks.getLength(occurrence)} />
                                         </LabelField>
                                         {deadline ? (
                                             <LabelField fieldset label="Due">
