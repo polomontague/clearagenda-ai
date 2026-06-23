@@ -13,6 +13,7 @@ type TextInputProps = {
 const TextInput = (props: TextInputProps) => {
     const handleKeyDown = (evt: KeyboardEvent<HTMLInputElement>) => {
         if (evt.key === "Enter" && props.onEnter) {
+            evt.preventDefault()
             props.onEnter()
         }
     }

@@ -30,7 +30,7 @@
     height: 100%;
     padding-left: var(--spacing-medium);
     padding-right: var(--spacing-medium);
-    font-weight: bolder;
+    font-weight: var(--bold);
 }
 
 .header .btnMonth > svg{
@@ -109,12 +109,12 @@
 }
 
 .btnDate.today{
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent);
 }
 
 .btnDate.selected{
     background-color: var(--accent);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent-contrast);
 }

@@ -31,7 +31,7 @@
 
 .label{
     padding-left: var(--spacing-medium);
-    font-weight: bolder;
+    font-weight: var(--bold);
     white-space: nowrap;
 }
 

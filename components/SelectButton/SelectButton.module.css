@@ -108,6 +108,6 @@
 .menu .btn:hover > .highlight > .label,
 .menu .btn:active > .highlight > .label,
 .menu .btn:focus > .highlight > .label{
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent-contrast);
 }

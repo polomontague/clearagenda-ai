@@ -41,7 +41,7 @@
 
 .containerHour > .hour{
     font-size: var(--font-size);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--contrast);
 }
 
@@ -76,7 +76,7 @@
 }
 
 .block > .label{
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent);
     line-height: normal;
 }
@@ -137,6 +137,6 @@
     background-color: var(--red);
     border-radius: var(--inner-border-radius);
     font-size: var(--inner-font-size);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--white);
 }

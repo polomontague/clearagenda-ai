@@ -1,22 +1,61 @@
+.background.wide{
+    display: flex;
+    flex: 1;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.wide > .btn{
+    width: 100%;
+}
+
 .btn{
-    align-items: center;
-    height: var(--field-size);
-    padding-left: var(--spacing-large);
-    padding-right: var(--spacing-large);
-    background-color: var(--layer-2);
-    border: var(--border-width) solid var(--layer-2-border);
-    border-radius: var(--border-radius);
-    font-weight: bolder;
-    color: var(--accent);
-}
-
-.btn.narrow{
-    display: -webkit-inline-flex;
-    display: inline-flex;
-}
-
-.btn.wide{
     display: -webkit-flex;
     display: flex;
-    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding-left: var(--spacing-large);
+    padding-right: var(--spacing-large);
+    height: var(--field-size);
+    border-radius: var(--border-radius);
+    font-weight: var(--bold);
+    color: var(--accent);
+    position: relative;
+}
+
+.containerSpinner{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.description{
+    font-size: var(--font-size-small);
+    color: var(--layer-2-light);
+    margin-left: var(--spacing-small);
+    margin-top: var(--spacing-very-small);
+}
+
+.layer2 > .btn{
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+}
+
+.layer2 > .btn:disabled{
+    color: var(--layer-2-light);
+}
+
+.layer3 > .btn{
+    background-color: var(--layer-3);
+    border: var(--border-width) solid var(--layer-3-border);
+}
+
+.layer3 > .btn:disabled{
+    color: var(--layer-3-light);
 }

@@ -78,7 +78,7 @@
     }
 
     .btn.selected > .label{
-        font-weight: bolder;
+        font-weight: var(--bold);
         color: var(--accent-contrast);
     }
 
@@ -99,7 +99,7 @@
         padding-right: var(--spacing-large);
         background-color: var(--accent);
         border-radius: var(--border-radius);
-        font-weight: bolder;
+        font-weight: var(--bold);
         color: var(--accent-contrast);
     }
 
@@ -186,7 +186,7 @@
     .btnMoreMenu:hover > .label,
     .btnMoreMenu:active > .label,
     .btnMoreMenu:focus > .label{
-        font-weight: bolder;
+        font-weight: var(--bold);
         color: var(--accent-contrast);
     }
 
@@ -355,7 +355,7 @@
     .btnMoreMenu:hover > .label,
     .btnMoreMenu:active > .label,
     .btnMoreMenu:focus > .label{
-        font-weight: bolder;
+        font-weight: var(--bold);
         color: var(--accent-contrast);
     }
 

@@ -28,7 +28,7 @@
 }
 
 .label{
-    font-weight: bolder;
+    font-weight: var(--bold);
     white-space: nowrap;
 }
 

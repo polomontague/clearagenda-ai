@@ -49,7 +49,7 @@
 }
 
 .option.selected > .label{
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--contrast);
 }
 

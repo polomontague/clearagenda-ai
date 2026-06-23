@@ -36,7 +36,7 @@
 
 .content{
     font-size: var(--font-size-large);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent);
 }
 

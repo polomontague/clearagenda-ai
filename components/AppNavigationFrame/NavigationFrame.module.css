@@ -87,7 +87,7 @@
     .btn:hover > .label,
     .btn:active > .label,
     .btn:focus > .label{
-        font-weight: bolder;
+        font-weight: var(--bold);
         color: var(--accent-contrast);
     }
 
@@ -101,7 +101,7 @@
     }
 
     .btn.selected > .label{
-        font-weight: bolder;
+        font-weight: var(--bold);
         color: var(--accent-contrast);
     }
 

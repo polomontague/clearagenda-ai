@@ -41,6 +41,6 @@
 
 .btnOption.selected{
     background-color: var(--accent);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent-contrast);
 }

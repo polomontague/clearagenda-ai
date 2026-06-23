@@ -78,7 +78,7 @@
 .slide .label{
     flex: 1;
     padding-left: var(--spacing-medium);
-    font-weight: bolder;
+    font-weight: var(--bold);
 }
 
 .containerBtns{

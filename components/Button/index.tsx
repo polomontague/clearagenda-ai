@@ -13,10 +13,10 @@ type ButtonProps = {
 
 const Button = (props: ButtonProps) => {
     return (
-        <div>
+        <div className={`${styles.background} ${props.narrow ? styles.narrow : styles.wide}`}>
             <button
                 type="submit"
-                className={`${styles.btn} ${props.narrow ? styles.narrow : styles.wide}`}
+                className={styles.btn}
                 disabled={(props.disabled || props.loading) ? true : false}
                 onClick={props.onClick}
             >

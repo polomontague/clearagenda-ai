@@ -1,3 +1,14 @@
+.background.wide{
+    display: flex;
+    flex: 1;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.wide > .btn{
+    width: 100%;
+}
+
 .btn{
     display: -webkit-flex;
     display: flex;
@@ -7,13 +18,9 @@
     height: var(--field-size);
     background-color: var(--accent);
     border-radius: var(--border-radius);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent-contrast);
     position: relative;
-}
-
-.btn.wide{
-    width: 100%;
 }
 
 .btn:disabled{

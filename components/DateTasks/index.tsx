@@ -25,6 +25,7 @@ import FormModal from "../FormModal"
 import TaskForm from "../TaskForm"
 import User from "@/types/User"
 import UserContext from "@/contexts/UserContext"
+import SecondaryButton from "../SecondaryButton"
 
 export default function DateTasks({ tasks}: {
     tasks: TaskOccurrence[]
@@ -141,6 +142,10 @@ export default function DateTasks({ tasks}: {
         }
     }
 
+    const handleStartClick = (task: Task) => {
+        console.log(task)
+    }
+
     return (
         <div className={styles.frame}>
             <div className={styles.column}>
@@ -194,10 +199,17 @@ export default function DateTasks({ tasks}: {
                                             <Range fieldset value={occurrence.completion} />
                                         </Fieldset>
                                     ) : <></>}
-                                    <Button
-                                        label="See Task"
-                                        onClick={() => handleTaskClick(occurrence.task)}
-                                    />
+                                    <div className={styles.frameBtns}>
+                                        <Button
+                                            label="Start Now"
+                                            disabled={occurrence.completion === 1}
+                                            onClick={() => handleStartClick(occurrence.task)}
+                                        />
+                                        <SecondaryButton
+                                            label="See Task"
+                                            onClick={() => handleTaskClick(occurrence.task)}
+                                        />
+                                    </div>
                                 </FieldFrame>
                             </Card>
                         )

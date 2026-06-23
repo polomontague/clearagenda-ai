@@ -6,7 +6,7 @@
     padding-right: var(--spacing-large);
     background-color: var(--accent);
     border-radius: var(--border-radius);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent-contrast);
 }
 

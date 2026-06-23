@@ -58,7 +58,7 @@
     min-width: max-content;
     height: 100%;
     padding-left: var(--spacing-medium);
-    font-weight: bolder;
+    font-weight: var(--bold);
     white-space: nowrap;
 }
 

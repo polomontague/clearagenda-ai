@@ -80,6 +80,6 @@
 .highlight:focus,
 .selected > .highlight{
     background-color: var(--accent);
-    font-weight: bolder;
+    font-weight: var(--bold);
     color: var(--accent-contrast);
 }
