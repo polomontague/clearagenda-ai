@@ -7,5 +7,6 @@ export default function getCompletion(task: OnceTask): number {
         totalMinutes += step.duration
         if (step.completed) completedMinutes += step.duration
     }
+    if (!totalMinutes) return 0
     return Math.round((completedMinutes / totalMinutes) * 100) / 100
 }

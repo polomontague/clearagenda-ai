@@ -1,4 +1,6 @@
+"use client"
 import styles from "./AgendaOverview.module.css"
+import { useState, useEffect } from "react"
 import Fieldset from "../Fieldset"
 import LabelField from "../LabelField"
 import InnerValue from "../InnerValue"
@@ -23,9 +25,14 @@ type AgendaOverviewProps = {
 }
 
 export default function AgendaOverview({ tasks, events, reminders, day }: AgendaOverviewProps) {
+    const [mounted, setMounted] = useState(false)
     const nextEvent = useMemo(() => Events.getNextEvent(events), [ events ])
     const nextReminder = useMemo(() => Reminders.getNextReminder(reminders), [ reminders ])
     const completion = useMemo(() => Tasks.getTotalCompletion(tasks), [ tasks ])
+    
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     return (
         <div className={styles.background}>
@@ -46,9 +53,9 @@ export default function AgendaOverview({ tasks, events, reminders, day }: Agenda
                         </Fieldset>
                         <Fieldset>
                             <LabelField fieldset label="Today's Progress">
-                                <InnerValue label={`${completion * 100}%`} />
+                                <InnerValue label={Tasks.formatCompletion(mounted ? completion : 0)} />
                             </LabelField>
-                            <Range fieldset value={completion} />
+                            <Range fieldset value={mounted ? completion : 0} />
                         </Fieldset>
                     </FieldFrame>
                 </div>

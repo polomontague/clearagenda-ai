@@ -9,5 +9,6 @@ export const getTotalCompletion = (tasks: TaskOccurrence[]): number => {
             if (step.completed) completedDuration += step.duration
         }
     }
+    if (!totalDuration) return 0
     return Math.round((completedDuration / totalDuration) * 100) / 100
 }

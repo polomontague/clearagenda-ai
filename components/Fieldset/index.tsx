@@ -10,7 +10,7 @@ type FieldsetProps = {
 
 export default function Fieldset({ layer = 3, label, description, children }: FieldsetProps) {
     return (
-        <div className={`${styles.background} ${styles[`layer${layer}`]}`}>
+        <div className={`${layer === 2 ? styles.layer2 : layer === 3 ? styles.layer3 : ""}`}>
             {label ? (
                 <p className={styles.label}>{label.toUpperCase()}</p>
             ) : null}
