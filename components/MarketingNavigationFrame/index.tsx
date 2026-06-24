@@ -1,8 +1,8 @@
 import styles from "./MarketingNavigationFrame.module.css"
 import { ReactNode } from "react"
-import LinkButton from "../LinkButton"
 import Logo from "../Logo"
 import Link from "next/link"
+import AuthButton from "../AuthButton"
 
 export default function MarketingNavigationFrame({ children }: { children: ReactNode }) {
     return (
@@ -12,7 +12,7 @@ export default function MarketingNavigationFrame({ children }: { children: React
                     <Logo />
                 </Link>
                 <div className={styles.containerCTA}>
-                    <LinkButton narrow href="/get-started" label="Get Started" />
+                    <AuthButton />
                 </div>
             </header>
             <div className={styles.containerChildren}>
