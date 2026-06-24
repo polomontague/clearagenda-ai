@@ -29,7 +29,8 @@ export default function AgendaOverview({ tasks, events, reminders, day }: Agenda
     const nextEvent = useMemo(() => Events.getNextEvent(events), [ events ])
     const nextReminder = useMemo(() => Reminders.getNextReminder(reminders), [ reminders ])
     const completion = useMemo(() => Tasks.getTotalCompletion(tasks), [ tasks ])
-    
+    const today = useMemo(() => Utility.getDateKey(day) === Utility.getDateKey(new Date()), [day])
+
     useEffect(() => {
         setMounted(true)
     }, [])
@@ -51,12 +52,14 @@ export default function AgendaOverview({ tasks, events, reminders, day }: Agenda
                                 <InnerValue label={Utility.formatCount(reminders.length)} />
                             </LabelField>
                         </Fieldset>
-                        <Fieldset>
-                            <LabelField fieldset label="Today's Progress">
-                                <InnerValue label={Tasks.formatCompletion(mounted ? completion : 0)} />
-                            </LabelField>
-                            <Range fieldset value={mounted ? completion : 0} />
-                        </Fieldset>
+                        {today ? (
+                            <Fieldset>
+                                <LabelField fieldset label="Progress">
+                                    <InnerValue label={Tasks.formatCompletion(mounted ? completion : 0)} />
+                                </LabelField>
+                                <Range fieldset value={mounted ? completion : 0} />
+                            </Fieldset>
+                        ) : <></>}
                     </FieldFrame>
                 </div>
                 <div className={styles.column}>

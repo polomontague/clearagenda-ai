@@ -22,4 +22,5 @@
 
 .containerMsg > .label{
     color: var(--layer-2-light);
+    text-transform: capitalize;
 }

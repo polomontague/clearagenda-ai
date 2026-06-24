@@ -1,6 +1,6 @@
 "use client"
 import styles from "./DateTasks.module.css"
-import { useContext, useMemo, useState } from "react"
+import { useContext, useMemo, useState, useEffect } from "react"
 import TasksContext from "@/contexts/TasksContext"
 import Tasks from "@/lib/Tasks"
 import FieldFrame from "../FieldFrame"
@@ -18,7 +18,7 @@ import { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
 import API from "@/lib/API"
 import Stopwatch from "../Stopwatch"
 import EmptyState from "../EmptyState"
-import { CheckMarkIcon, EditIcon, TrashCanIcon } from "../Icons"
+import { AgendaIcon, CalendarIcon, CheckMarkIcon, EditIcon, TrashCanIcon } from "../Icons"
 import Task from "@/types/Task"
 import TaskModal from "../TaskModal"
 import FormModal from "../FormModal"
@@ -27,8 +27,10 @@ import User from "@/types/User"
 import UserContext from "@/contexts/UserContext"
 import SecondaryButton from "../SecondaryButton"
 
-export default function DateTasks({ tasks}: {
-    tasks: TaskOccurrence[]
+export default function DateTasks({ tasks, day, onDayChange }: {
+    tasks: TaskOccurrence[],
+    day: Date,
+    onDayChange: (value: Date) => void
 }) {
     const { updateCompleted, updateCompletion, replaceTask, removeTask } = useContext(TasksContext)
     const currentOccurrenceAndStep = useMemo(() => Tasks.getCurrentOccurrenceAndStep(tasks), [tasks])
@@ -48,6 +50,12 @@ export default function DateTasks({ tasks}: {
         const deadline = currentOccurrenceAndStep.occurrence.effective_deadline
         return deadline ? getDeadline(deadline, user) : undefined
     }, [currentOccurrenceAndStep, user])
+    const today = useMemo(() => Utility.getDateKey(day) === Utility.getDateKey(new Date()), [day])
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
   
     const handleEditClick = (task: Task) => {
         setCurrentTask(task)
@@ -153,6 +161,8 @@ export default function DateTasks({ tasks}: {
                     {tasks.map(occurrence => {
                         const deadline = occurrence.effective_deadline && user ? getDeadline(occurrence.effective_deadline, user) : undefined
                         const allComplete = occurrence.steps.every(step => step.completed)
+                        const current = occurrence.task.id === currentOccurrenceAndStep?.occurrence.task.id
+                            && occurrence.date_available === currentOccurrenceAndStep.occurrence.date_available
                         return (
                             <Card
                                 key={`${occurrence.task.id}:${occurrence.date_available}`}
@@ -196,7 +206,7 @@ export default function DateTasks({ tasks}: {
                                     <div className={styles.frameBtns}>
                                         <Button
                                             label="Start Now"
-                                            disabled={occurrence.completion === 1}
+                                            disabled={occurrence.completion === 1 || !today || current}
                                             onClick={() => handleStartClick(occurrence.task)}
                                         />
                                         <SecondaryButton
@@ -209,9 +219,15 @@ export default function DateTasks({ tasks}: {
                         )
                     })}
                 </FieldFrame>
+                {mounted && !tasks.length ? (
+                    <EmptyState
+                        icon={<AgendaIcon />}
+                        message="No scheduled tasks"
+                    />
+                ) : null}
             </div>
             <div className={`${styles.column} ${styles.columnRight}`}>
-                {currentOccurrenceAndStep ? (
+                {today && currentOccurrenceAndStep ? (
                     <>
                         <Fieldset layer={2} label={currentOccurrenceAndStep.occurrence.task.name}>
                             <Card fieldset label={currentOccurrenceAndStep.step.name}>
@@ -267,6 +283,17 @@ export default function DateTasks({ tasks}: {
 
                         />
                     </>
+                ) : null}
+                {!today ? (
+                    <EmptyState
+                        icon={<CalendarIcon />}
+                        message="This day is not currently active"
+                        button={{
+                            type: "button",
+                            label: "Go To Today",
+                            onClick: () => onDayChange(new Date())
+                        }}
+                    />
                 ) : null}
                 {tasks.length && allCompleted ? (
                     <EmptyState
