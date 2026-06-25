@@ -29,7 +29,9 @@ export default function SlideField(props: SlideFieldProps) {
             <div className={`${styles.slide} ${open ? styles.open : styles.closed}`}>
                 <div className={styles.containerScroll}>
                     <div className={styles.containerChildren}>
-                        {props.children}
+                        <div className={styles.wrapperChildren}>
+                            {props.children}
+                        </div>
                     </div>
                 </div>
                 <header className={styles.header}>

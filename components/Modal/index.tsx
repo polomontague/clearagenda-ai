@@ -19,7 +19,9 @@ export default function Modal(props: ModalProps) {
             <div className={styles.window}>
                 <div className={styles.containerScroll}>
                     <div className={styles.containerChildren}>
-                        {props.children}
+                        <div className={styles.wrapperChildren}>
+                            {props.children}
+                        </div>
                     </div>
                 </div>
                 <header className={styles.header}>

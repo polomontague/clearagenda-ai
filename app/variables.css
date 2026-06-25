@@ -32,8 +32,6 @@
 	--spacing-medium: 12px;
 	--spacing-large: 18px;
 	--field-size: 32px;
-	--modal-width: 360px;
-	--modal-height: 500px;
 	--alert-width: 180px;
 	--inner-field-size: 24px;
 	--footer-height: 80px;
@@ -41,6 +39,9 @@
 	--header-height: 68px;
 	--spacing-very-large: 32px;
 	--spacing-huge: 90px;
+	--modal-width: 550px;
+	--modal-height: 450px;
+	--form-width: 350px;
 
 	/* Font */
 	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

@@ -123,5 +123,16 @@
 }
 
 .containerChildren{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 100%;
+    max-width: var(--form-width);
     padding: var(--spacing-medium);
+    margin: auto;
+}
+
+.wrapperChildren{
+    width: 100%;
 }

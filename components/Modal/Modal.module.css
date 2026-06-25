@@ -27,7 +27,7 @@
     flex-direction: column;
     width: 100%;
     max-width: var(--modal-width);
-    max-height: var(--modal-height);
+    height: var(--modal-height);
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
     border-radius: var(--border-radius);
@@ -94,5 +94,16 @@
 }
 
 .containerChildren{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 100%;
+    max-width: var(--form-width);
     padding: var(--spacing-medium);
+    margin: auto;
+}
+
+.wrapperChildren{
+    width: 100%;
 }

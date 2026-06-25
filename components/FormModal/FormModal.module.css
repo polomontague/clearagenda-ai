@@ -25,8 +25,9 @@
     display: -webkit-flex;
     display: flex;
     flex-direction: column;
-    width: var(--modal-width);
-    max-height: var(--modal-height);
+    width: 100%;
+    max-width: var(--modal-width);
+    height: var(--modal-height);
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
     border-radius: var(--outer-border-radius);
@@ -89,7 +90,18 @@
 }
 
 .containerChildren{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: var(--form-width);
+    min-height: 100%;
     padding: var(--spacing-medium);
+    margin: auto;
+}
+
+.wrapperChildren{
+    width: 100%;
 }
 
 .btnGhost{

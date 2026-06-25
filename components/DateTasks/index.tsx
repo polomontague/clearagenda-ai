@@ -295,7 +295,7 @@ export default function DateTasks({ tasks, day, onDayChange }: {
                         }}
                     />
                 ) : null}
-                {tasks.length && allCompleted ? (
+                {today && tasks.length && allCompleted ? (
                     <EmptyState
                         icon={<CheckMarkIcon />}
                         message="All Done For Today!"

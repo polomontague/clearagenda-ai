@@ -57,7 +57,9 @@ export default function FormModal(props: FormModalProps) {
                 <div className={styles.window}>
                     <div className={styles.containerScroll}>
                         <div className={styles.containerChildren}>
-                            {props.children}
+                            <div className={styles.wrapperChildren}>
+                                {props.children}
+                            </div>
                         </div>
                     </div>
                     <header className={styles.header}>
