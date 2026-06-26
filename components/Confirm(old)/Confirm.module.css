@@ -1,0 +1,73 @@
+.overlay{
+    background-color: var(--layer-1-translucent);
+    backdrop-filter: blur(var(--blur));
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+}
+
+.overlay.open{
+    display: -webkit-flex;
+    display: flex;
+}
+
+.overlay.closed{
+    display: none;
+}
+
+.overlay.inModal{
+    background-color: transparent;
+}
+
+.overlay.inModal > .container{
+    background-color: var(--black-translucent);
+}
+
+.confirm{
+    width: var(--alert-width);
+    background-color: var(--layer-2);
+    border: var(--border-width) solid var(--layer-2-border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 200px var(--layer-1);
+    overflow: hidden;
+    margin: auto;
+}
+
+.msg{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: var(--spacing-medium);
+    padding-top: var(--spacing-small);
+    padding-right: var(--spacing-medium);
+    padding-bottom: var(--spacing-small);
+    text-align: center;
+}
+
+.containerBtns{
+    display: -webkit-flex;
+    display: flex;
+    gap: var(--border-width);
+    background-color: var(--layer-2-border);
+    border-top: var(--border-width) solid var(--layer-2-border);
+}
+
+.containerBtns > button{
+    display: -webkit-flex;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    height: var(--field-size);
+    background-color: var(--layer-2);
+    border: none;
+    border-radius: 0;
+    outline: none;
+    color: var(--accent);
+}

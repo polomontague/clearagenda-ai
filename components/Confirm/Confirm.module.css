@@ -1,14 +1,14 @@
 .overlay{
-    background-color: var(--layer-1-translucent);
-    backdrop-filter: blur(var(--blur));
     justify-content: center;
     align-items: center;
+    background-color: var(--layer-1-translucent);
+    backdrop-filter: blur(var(--blur));
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 5;
+    z-index: 1000;
 }
 
 .overlay.open{
@@ -20,22 +20,55 @@
     display: none;
 }
 
-.overlay.inModal{
-    background-color: transparent;
-}
-
-.overlay.inModal > .container{
-    background-color: var(--black-translucent);
-}
-
-.confirm{
+.window{
     width: var(--alert-width);
     background-color: var(--layer-2);
     border: var(--border-width) solid var(--layer-2-border);
-    border-radius: var(--border-radius);
-    box-shadow: 0 0 200px var(--layer-1);
-    overflow: hidden;
-    margin: auto;
+    border-radius: var(--outer-border-radius);
+}
+
+.header{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: var(--field-size);
+    border-bottom: var(--border-width) solid var(--layer-2-border);
+}
+
+.header > .label{
+    font-weight: var(--bold);
+}
+
+.containerContent{
+    padding: var(--spacing-medium);
+}
+
+.containerIcon{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    padding-top: var(--spacing-large);
+    margin-bottom: var(--spacing-medium);
+}
+
+.containerIcon > div{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 1px solid var(--layer-3-border);
+    background-color: var(--layer-3);
+}
+
+.containerIcon svg{
+    width: var(--icon-size-very-large);
+    height: var(--icon-size-very-large);
+    fill: var(--accent);
 }
 
 .msg{
@@ -43,31 +76,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-left: var(--spacing-medium);
-    padding-top: var(--spacing-small);
-    padding-right: var(--spacing-medium);
-    padding-bottom: var(--spacing-small);
+    color: var(--layer-2-light);
     text-align: center;
+    margin-bottom: var(--spacing-large);
 }
 
-.containerBtns{
+.frameBtns{
     display: -webkit-flex;
     display: flex;
-    gap: var(--border-width);
-    background-color: var(--layer-2-border);
-    border-top: var(--border-width) solid var(--layer-2-border);
-}
-
-.containerBtns > button{
-    display: -webkit-flex;
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    height: var(--field-size);
-    background-color: var(--layer-2);
-    border: none;
-    border-radius: 0;
-    outline: none;
-    color: var(--accent);
+    gap: var(--spacing-small);
 }

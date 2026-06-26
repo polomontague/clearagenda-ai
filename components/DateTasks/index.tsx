@@ -326,6 +326,8 @@ export default function DateTasks({ tasks, day, onDayChange }: {
                         />
                     </FormModal>
                     <Confirm
+                        icon={<TrashCanIcon />}
+                        label="Delete Task"
                         message={`Delete "${currentTask.name}"?`}
                         open={deleteConfirmOpen}
                         onRequestCancel={() => setDeleteConfirmOpen(false)}
