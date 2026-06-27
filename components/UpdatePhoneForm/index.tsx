@@ -12,6 +12,7 @@ import PhoneInput from "@/components/PhoneInput"
 import User from "@/types/User"
 import Loading from "@/components/Loading"
 import API from "@/lib/API"
+import { WarningIcon } from "../Icons"
 
 export default function UpdatePhoneForm() {
     const [phone, setPhone] = useState("")
@@ -72,6 +73,8 @@ export default function UpdatePhoneForm() {
                 />
             </FieldFrame>
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

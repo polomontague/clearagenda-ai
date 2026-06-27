@@ -12,6 +12,7 @@ import Fieldset from "@/components/Fieldset"
 import Loading from "@/components/Loading"
 import API from "@/lib/API"
 import User from "@/types/User"
+import { WarningIcon } from "../Icons"
 
 export default function UpdateNameForm() {
     const [firstName, setFirstName] = useState("")
@@ -79,6 +80,8 @@ export default function UpdateNameForm() {
                 />
             </FieldFrame>
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

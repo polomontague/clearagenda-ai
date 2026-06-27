@@ -20,6 +20,7 @@ import Loading from "../Loading"
 import Collapses, { Collapse } from "../Collapses"
 import DatePicker from "../DatePicker"
 import TimePicker from "../TimePicker"
+import { WarningIcon } from "../Icons"
 
 type BaseProps = {
     onSuccess: (reminder: Reminder) => void
@@ -149,7 +150,13 @@ export default function ReminderForm(props: ReminderFormProps) {
                 </FieldFrame>
             </Collapses>
             <Loading loading={loading} />
-            <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+            <Alert
+                label="Error"
+                icon={<WarningIcon />}
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
             <DoneButton disabled={doneDisabled} />
         </Form>
     )

@@ -16,6 +16,7 @@ import Loading from "@/components/Loading"
 import API from "@/lib/API"
 import User from "@/types/User"
 import Routes from "@/constants/Routes"
+import { WarningIcon } from "../Icons"
 
 export default function ResetPasswordForm() {
     const [password, setPassword] = useState("")
@@ -75,6 +76,8 @@ export default function ResetPasswordForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

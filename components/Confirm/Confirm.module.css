@@ -58,11 +58,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    border: 1px solid var(--layer-3-border);
+    width: var(--icon-container-size);
+    height: var(--icon-container-size);
     background-color: var(--layer-3);
+    border: 1px solid var(--layer-3-border);
+    border-radius: 50%;
 }
 
 .containerIcon svg{
@@ -78,7 +78,7 @@
     align-items: center;
     color: var(--layer-2-light);
     text-align: center;
-    margin-bottom: var(--spacing-large);
+    margin-bottom: var(--spacing-medium);
 }
 
 .frameBtns{

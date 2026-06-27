@@ -12,6 +12,7 @@ import Alert from "@/components/Alert"
 import Validation from "@/lib/Validation"
 import Loading from "@/components/Loading"
 import API from "@/lib/API"
+import { WarningIcon } from "../Icons"
 
 export default function UpdateEmailForm() {
     const [email, setEmail] = useState("")
@@ -72,6 +73,8 @@ export default function UpdateEmailForm() {
                 />
             </FieldFrame>
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

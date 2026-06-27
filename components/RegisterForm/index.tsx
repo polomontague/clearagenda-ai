@@ -15,6 +15,7 @@ import Fieldset from "@/components/Fieldset"
 import PhoneInput from "@/components/PhoneInput"
 import Link from "@/components/Link"
 import Loading from "@/components/Loading"
+import { WarningIcon } from "../Icons"
 
 export default function RegisterForm() {
     const [firstName, setFirstName] = useState("")
@@ -95,6 +96,8 @@ export default function RegisterForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

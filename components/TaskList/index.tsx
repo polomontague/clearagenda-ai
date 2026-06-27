@@ -3,7 +3,7 @@ import { useContext, useState } from "react"
 import List, { ListItem } from "@/components/List"
 import Task from "@/types/Task"
 import Card from "@/components/Card"
-import { EditIcon, TrashCanIcon } from "@/components/Icons"
+import { EditIcon, TrashCanIcon, WarningIcon } from "@/components/Icons"
 import LabelField from "@/components/LabelField"
 import InnerValue from "@/components/InnerValue"
 import FieldFrame from "@/components/FieldFrame"
@@ -131,7 +131,9 @@ export default function TaskList(props: TaskListProps) {
                         />
                     </FormModal>
                     <Confirm
-                        message={`Delete "${currentTask.name}"?`}
+                        label="Delete Task"
+                        icon={<TrashCanIcon />}
+                        message={currentTask.name}
                         open={deleteConfirmOpen}
                         onRequestCancel={() => setDeleteConfirmOpen(false)}
                         onRequestConfirm={() => handleDeleteConfirm(currentTask)}
@@ -139,6 +141,8 @@ export default function TaskList(props: TaskListProps) {
                 </>
             ) : null}
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

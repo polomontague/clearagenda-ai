@@ -10,9 +10,9 @@ import Validation from "@/lib/Validation"
 import PasswordInput from "@/components/PasswordInput"
 import UserContext from "@/contexts/UserContext"
 import Fieldset from "@/components/Fieldset"
-import User from "@/types/User"
 import API from "@/lib/API"
 import Loading from "@/components/Loading"
+import { WarningIcon } from "../Icons"
 
 export default function UpdatePasswordForm() {
     const [currentPassword, setCurrentPassword] = useState("")
@@ -76,6 +76,8 @@ export default function UpdatePasswordForm() {
                 />
             </FieldFrame>
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

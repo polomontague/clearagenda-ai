@@ -43,6 +43,7 @@
 	--modal-height: 450px;
 	--form-width: 350px;
 	--alert-width: 250px;
+	--icon-container-size: 72px;
 
 	/* Font */
 	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

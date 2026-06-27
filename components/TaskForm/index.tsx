@@ -19,6 +19,7 @@ import Task from "@/types/Task"
 import MultiSelect from "../MultiSelect"
 import SelectList from "../SelectList"
 import ListInput from "../ListInput"
+import { WarningIcon } from "../Icons"
 
 type BaseProps = {
     onSuccess: (task: Task) => void
@@ -164,21 +165,6 @@ export default function TaskForm(props: TaskFormProps) {
                         onChange={setSpecifications}
                     />
                 </Fieldset>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <Fieldset
                     description={occurs === "repeating" ? Utility.getRepeatLabel(repeat) : undefined}
                 >
@@ -256,7 +242,13 @@ export default function TaskForm(props: TaskFormProps) {
                 </Fieldset>
             </FieldFrame>
             <Loading loading={loading} />
-            <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+            <Alert
+                label="Error"
+                icon={<WarningIcon />}
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
             <DoneButton disabled={doneDisabled} />
         </Form>
     )

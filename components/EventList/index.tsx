@@ -2,7 +2,7 @@
 import List, { ListItem } from "@/components/List"
 import Event from "@/types/Event"
 import Card from "@/components/Card"
-import { EditIcon, TrashCanIcon } from "@/components/Icons"
+import { EditIcon, TrashCanIcon, WarningIcon } from "@/components/Icons"
 import { useContext, useState } from "react"
 import UserContext from "@/contexts/UserContext"
 import FieldFrame from "@/components/FieldFrame"
@@ -131,7 +131,9 @@ export default function EventList(props: EventListProps) {
                         />
                     </FormModal>
                     <Confirm
-                        message={`Delete "${currentEvent.name}"?`}
+                        label="Delete Event"
+                        icon={<TrashCanIcon />}
+                        message={currentEvent.name}
                         open={deleteConfirmOpen}
                         onRequestCancel={() => setDeleteConfirmOpen(false)}
                         onRequestConfirm={() => handleDeleteConfirm(currentEvent)}
@@ -139,6 +141,8 @@ export default function EventList(props: EventListProps) {
                 </>
             ) : null}
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

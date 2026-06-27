@@ -9,6 +9,7 @@ import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
 import API from "@/lib/API"
 import Fieldset from "@/components/Fieldset"
+import { WarningIcon } from "../Icons"
 
 export default function ForgotPasswordForm() {
     const [email, setEmail] = useState("")
@@ -58,6 +59,8 @@ export default function ForgotPasswordForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

@@ -10,7 +10,7 @@ import { useContext, useState } from "react"
 import UserContext from "@/contexts/UserContext"
 import ReminderModal from "../ReminderModal"
 import Button from "../Button"
-import { EditIcon, TrashCanIcon } from "../Icons"
+import { EditIcon, TrashCanIcon, WarningIcon } from "../Icons"
 import FormModal from "../FormModal"
 import ReminderForm from "../ReminderForm"
 import RemindersContext from "@/contexts/RemindersContext"
@@ -135,7 +135,9 @@ export default function ReminderList(props: ReminderListProps) {
                         />
                     </FormModal>
                     <Confirm
-                        message={`Delete "${currentReminder.name}"?`}
+                        label="Delete Reminder"
+                        icon={<WarningIcon />}
+                        message={currentReminder.name}
                         open={deleteConfirmOpen}
                         onRequestCancel={() => setDeleteConfrimOpen(false)}
                         onRequestConfirm={() => handleDeleteConfirm(currentReminder)}
@@ -143,6 +145,8 @@ export default function ReminderList(props: ReminderListProps) {
                 </>
             ) : null}
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

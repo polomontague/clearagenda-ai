@@ -24,6 +24,7 @@ import DatePicker from "../DatePicker"
 import TimePicker from "../TimePicker"
 import TimezonePicker from "../TimezonePicker"
 import InnerValue from "../InnerValue"
+import { WarningIcon } from "../Icons"
 
 type BaseProps = {
     onSuccess: (event: Event) => void
@@ -192,7 +193,13 @@ export default function EventForm(props: EventFormProps) {
                 </FieldFrame>
             </Collapses>
             <Loading loading={loading} />
-            <Alert message={alertMessage} open={alertOpen} onRequestClose={() => setAlertOpen(false)} />
+            <Alert
+                label="Error"
+                icon={<WarningIcon />}
+                message={alertMessage}
+                open={alertOpen}
+                onRequestClose={() => setAlertOpen(false)}
+            />
             <DoneButton disabled={doneDisabled} />
         </Form>
     )

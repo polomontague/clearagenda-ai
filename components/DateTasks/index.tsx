@@ -18,7 +18,7 @@ import { Completion, StepOccurrence, TaskOccurrence } from "@/types/Task"
 import API from "@/lib/API"
 import Stopwatch from "../Stopwatch"
 import EmptyState from "../EmptyState"
-import { AgendaIcon, CalendarIcon, CheckMarkIcon, EditIcon, TrashCanIcon } from "../Icons"
+import { AgendaIcon, CalendarIcon, CheckMarkIcon, EditIcon, TrashCanIcon, WarningIcon } from "../Icons"
 import Task from "@/types/Task"
 import TaskModal from "../TaskModal"
 import FormModal from "../FormModal"
@@ -276,7 +276,9 @@ export default function DateTasks({ tasks, day, onDayChange }: {
                             </Card>
                         </Fieldset>
                         <Confirm
-                            message={`Mark "${currentOccurrenceAndStep.step.name}" Complete?`}
+                            label="Mark Complete"
+                            icon={<CheckMarkIcon />}
+                            message={currentOccurrenceAndStep.step.name}
                             open={completeConfirmOpen}
                             onRequestCancel={() => setCompleteConfirmOpen(false)}
                             onRequestConfirm={() => handleCompleteConfirm(currentOccurrenceAndStep.occurrence, currentOccurrenceAndStep.step)}
@@ -328,7 +330,7 @@ export default function DateTasks({ tasks, day, onDayChange }: {
                     <Confirm
                         icon={<TrashCanIcon />}
                         label="Delete Task"
-                        message={`Delete "${currentTask.name}"?`}
+                        message={currentTask.name}
                         open={deleteConfirmOpen}
                         onRequestCancel={() => setDeleteConfirmOpen(false)}
                         onRequestConfirm={() => handleDeleteConfirm(currentTask)}
@@ -336,6 +338,8 @@ export default function DateTasks({ tasks, day, onDayChange }: {
                 </>
             ) : null}
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

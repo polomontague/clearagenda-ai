@@ -15,6 +15,7 @@ import LabelField from "@/components/LabelField"
 import Toggle from "@/components/Toggle"
 import API from "@/lib/API"
 import Loading from "@/components/Loading"
+import { WarningIcon } from "../Icons"
 
 export default function UpdateThemeForm() {
     const [theme, setTheme] = useState<Exclude<Theme, "system">>(Appearance.DEFAULT_THEME)
@@ -71,6 +72,8 @@ export default function UpdateThemeForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}

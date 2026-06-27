@@ -1,28 +1,35 @@
 "use client"
 import styles from "./Alert.module.css"
-import { useEffect } from "react"
+import { ReactElement } from "react"
+import Button from "../Button"
 
-const Alert = (props: {
+type AlertProps = {
+    label: string,
+    icon: ReactElement<SVGElement>,
     message: string,
     open: boolean,
     onRequestClose: () => void
-}) => {
-    useEffect(() => {
-        document.documentElement.style.overflow = props.open ? "hidden" : "scroll"
-    }, [props.open])
+}
 
+export default function Alert({ label, icon, message, open, onRequestClose }: AlertProps) {
     return (
-        <div className={`${styles.overlay} ${props.open ? styles.open : ""}`}>
+        <div className={`${styles.overlay} ${open ? styles.open : styles.closed}`}>
             <div className={styles.window}>
-                <p className={styles.msg}>{props.message}</p>
-                <button
-                    type="button"
-                    className={styles.btnClose}
-                    onClick={props.onRequestClose}
-                >Cancel</button>
+                <header className={styles.header}>
+                    <p className={styles.label}>{label}</p>
+                </header>
+                <div className={styles.containerContent}>
+                    <div className={styles.containerIcon}>
+                        <div>
+                            {icon}
+                        </div>
+                    </div>
+                    <p className={styles.msg}>
+                        {message}
+                    </p>
+                    <Button label="Close" onClick={onRequestClose} />
+                </div>
             </div>
         </div>
     )
 }
-
-export default Alert

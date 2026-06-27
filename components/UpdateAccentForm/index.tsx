@@ -15,6 +15,7 @@ import LabelField from "@/components/LabelField"
 import InnerValue from "@/components/InnerValue"
 import Loading from "@/components/Loading"
 import API from "@/lib/API"
+import { WarningIcon } from "../Icons"
 
 export default function UpdateAccentForm() {
     const [accent, setAccent] = useState<Accent>(Appearance.DEFAULT_ACCENT)
@@ -83,6 +84,8 @@ export default function UpdateAccentForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
+                label="Error"
+                icon={<WarningIcon />}
                 message={alertMessage}
                 open={alertOpen}
                 onRequestClose={() => setAlertOpen(false)}
