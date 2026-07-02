@@ -44,8 +44,7 @@ export default function ReminderForm(props: ReminderFormProps) {
     const [repeat, setRepeat] = useState<RepeatType>(DEFAULTS.repeat)
     const [doneDisabled, setDoneDisabled] = useState(true)
     const [loading, setLoading] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
     const [open, setOpen] = useState<"once_at_date" | "once_at_time" | "repeating_at" | undefined>(undefined)
 
     useEffect(() => {
@@ -82,8 +81,12 @@ export default function ReminderForm(props: ReminderFormProps) {
             props.onSuccess(data.reminder)
         }).catch(err => {
             setLoading(false)
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -151,11 +154,11 @@ export default function ReminderForm(props: ReminderFormProps) {
             </Collapses>
             <Loading loading={loading} />
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
             <DoneButton disabled={doneDisabled} />
         </Form>

@@ -10,7 +10,7 @@ import { useContext, useState } from "react"
 import UserContext from "@/contexts/UserContext"
 import ReminderModal from "../ReminderModal"
 import Button from "../Button"
-import { EditIcon, TrashCanIcon, WarningIcon } from "../Icons"
+import { CheckMarkIcon, EditIcon, TrashCanIcon, WarningIcon } from "../Icons"
 import FormModal from "../FormModal"
 import ReminderForm from "../ReminderForm"
 import RemindersContext from "@/contexts/RemindersContext"
@@ -31,8 +31,7 @@ export default function ReminderList(props: ReminderListProps) {
     const [editModalOpen, setEditModalOpen] = useState(false)
     const { replaceReminder, removeReminder } = useContext(RemindersContext)
     const [deleteConfirmOpen, setDeleteConfrimOpen] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
 
     const handleEditClick = (reminder: Reminder) => {
         setCurrentReminder(reminder)
@@ -58,11 +57,19 @@ export default function ReminderList(props: ReminderListProps) {
         setDeleteConfrimOpen(false)
         API.delete<{ reminder: Reminder }>(`/api/v1/reminders/${reminder.id}`, true).then(data => {
             removeReminder(data.reminder)
-            setAlertMessage(`"${data.reminder.name}" Deleted Successfully!`)
-            setAlertOpen(true)
+            setAlert({
+                label: "Deleted",
+                icon: <CheckMarkIcon />,
+                message: data.reminder.name,
+                open: true
+            })
         }).catch(err => {
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -145,11 +152,11 @@ export default function ReminderList(props: ReminderListProps) {
                 </>
             ) : null}
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
         </>
     )

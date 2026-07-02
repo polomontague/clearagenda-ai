@@ -27,7 +27,7 @@ export default function Alert({ label, icon, message, open, onRequestClose }: Al
                     <p className={styles.msg}>
                         {message}
                     </p>
-                    <Button label="Close" onClick={onRequestClose} />
+                    <Button type="button" label="Close" onClick={onRequestClose} />
                 </div>
             </div>
         </div>

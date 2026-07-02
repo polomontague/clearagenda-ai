@@ -12,7 +12,7 @@ import UserContext from "@/contexts/UserContext"
 import Fieldset from "@/components/Fieldset"
 import API from "@/lib/API"
 import Loading from "@/components/Loading"
-import { WarningIcon } from "../Icons"
+import { CheckMarkIcon, WarningIcon } from "../Icons"
 
 export default function UpdatePasswordForm() {
     const [currentPassword, setCurrentPassword] = useState("")
@@ -21,8 +21,7 @@ export default function UpdatePasswordForm() {
     const [submitDisabled, setSubmitDisabled] = useState(true)
     const [cookies] = useCookies()
     const router = useRouter()
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
     const [loading, setLoading] = useState(false)
     const { user } = useContext(UserContext)
 
@@ -49,13 +48,20 @@ export default function UpdatePasswordForm() {
                 setCurrentPassword("")
                 setNewPassword("")
                 setConfirmNewPassword("")
-
-                setAlertMessage("Password Changed Successfully")
-                setAlertOpen(true)
+                setAlert({
+                    label: "Password Changed",
+                    icon: <CheckMarkIcon />,
+                    message: "Password Changed Successfully",
+                    open: true
+                })
             }).catch(err => {
                 setLoading(false)
-                setAlertMessage(err.message)
-                setAlertOpen(true)
+                setAlert({
+                    label: "Error",
+                    icon: <WarningIcon />,
+                    message: err.message,
+                    open: true
+                })
             })
         } else {
             router.push("/login")
@@ -76,11 +82,11 @@ export default function UpdatePasswordForm() {
                 />
             </FieldFrame>
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
             <Loading loading={loading} />
         </Form>

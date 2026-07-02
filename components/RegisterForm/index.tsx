@@ -16,6 +16,8 @@ import PhoneInput from "@/components/PhoneInput"
 import Link from "@/components/Link"
 import Loading from "@/components/Loading"
 import { WarningIcon } from "../Icons"
+import API from "@/lib/API"
+import User from "@/types/User"
 
 export default function RegisterForm() {
     const [firstName, setFirstName] = useState("")
@@ -25,8 +27,7 @@ export default function RegisterForm() {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [submitDisabled, setSubmitDisabled] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
     const [loading, setLoading] = useState(false)
     const { setUser } = useContext(UserContext)
     const [ cookies, setCookie ] = useCookies()
@@ -49,7 +50,7 @@ export default function RegisterForm() {
 
     const handleSubmit = () => {
         setLoading(true)
-        axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/register`, {
+        API.post<{ user: User, token: string, type: String, expires: number }>("/api/v1/register", {
             name: {
                 first: firstName,
                 last: lastName
@@ -57,12 +58,12 @@ export default function RegisterForm() {
             email,
             phone,
             password
-        }).then(res => {
+        }).then(data => {
             setLoading(false)
-            setUser(res.data.data.user)
-            setCookie("token", res.data.data.token, {
+            setUser(data.user)
+            setCookie("token", data.token, {
                 path: "/",
-                expires: new Date(new Date().getTime() + (res.data.data.expires * 1000)),
+                expires: new Date(new Date().getTime() + (data.expires * 1000)),
                 sameSite: "strict",
                 secure: process.env.NODE_ENV === "production",
                 httpOnly: false,
@@ -70,8 +71,12 @@ export default function RegisterForm() {
             router.push("/set-up")
         }).catch(err => {
             setLoading(false)
-            setAlertMessage(err.response.data.error.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -96,11 +101,11 @@ export default function RegisterForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
         </Form>
     )

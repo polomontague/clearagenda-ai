@@ -45,8 +45,7 @@ export default function TaskForm(props: TaskFormProps) {
     const [repeat, setRepeat] = useState<RepeatType>(DEFAULTS.repeat)
     const [doneDisabled, setDoneDisabled] = useState(true)
     const [loading, setLoading] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
     const [clarity, setClarity] = useState(DEFAULTS.clarity)
     const [friction, setFriction] = useState<string[]>(DEFAULTS.friction)
     const [specifications, setSpecifications] = useState<string[]>(DEFAULTS.specifications)
@@ -92,8 +91,12 @@ export default function TaskForm(props: TaskFormProps) {
             props.onSuccess(data.task)
         }).catch(err => {
             setLoading(false)
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -243,11 +246,11 @@ export default function TaskForm(props: TaskFormProps) {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
             <DoneButton disabled={doneDisabled} />
         </Form>

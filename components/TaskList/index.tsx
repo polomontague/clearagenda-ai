@@ -3,7 +3,7 @@ import { useContext, useState } from "react"
 import List, { ListItem } from "@/components/List"
 import Task from "@/types/Task"
 import Card from "@/components/Card"
-import { EditIcon, TrashCanIcon, WarningIcon } from "@/components/Icons"
+import { CheckMarkIcon, EditIcon, TrashCanIcon, WarningIcon } from "@/components/Icons"
 import LabelField from "@/components/LabelField"
 import InnerValue from "@/components/InnerValue"
 import FieldFrame from "@/components/FieldFrame"
@@ -31,8 +31,7 @@ export default function TaskList(props: TaskListProps) {
     const [modalOpen, setModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
 
     const handleEditClick = (task: Task) => {
         setCurrentTask(task)
@@ -58,11 +57,19 @@ export default function TaskList(props: TaskListProps) {
         setDeleteConfirmOpen(false)
         API.delete<{ task: Task }>(`/api/v1/tasks/${task.id}`, true).then(data => {
             removeTask(data.task)
-            setAlertMessage(`"${data.task.name}" Deleted Successfully!`)
-            setAlertOpen(true)
+            setAlert({
+                label: "Deleted",
+                icon: <CheckMarkIcon />,
+                message: data.task.name,
+                open: true
+            })
         }).catch(err => {
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -141,11 +148,11 @@ export default function TaskList(props: TaskListProps) {
                 </>
             ) : null}
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
         </>
     )

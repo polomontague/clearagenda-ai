@@ -9,13 +9,12 @@ import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
 import API from "@/lib/API"
 import Fieldset from "@/components/Fieldset"
-import { WarningIcon } from "../Icons"
+import { EnvelopeIcon, WarningIcon } from "../Icons"
 
 export default function ForgotPasswordForm() {
     const [email, setEmail] = useState("")
     const [submitDisabled, setSubmitDisabled] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -35,12 +34,20 @@ export default function ForgotPasswordForm() {
         }).then(() => {
             setLoading(false)
             setEmail("")
-            setAlertMessage("Password Reset Link Sent if Email is Linked to an Account")
-            setAlertOpen(true)
+            setAlert({
+                label: "Check Your Email",
+                icon: <EnvelopeIcon />,
+                message: "Password Reset Link Sent if Email is Linked to an Account",
+                open: true
+            })
         }).catch(err => {
             setLoading(false)
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -59,11 +66,11 @@ export default function ForgotPasswordForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
         </Form>
     )

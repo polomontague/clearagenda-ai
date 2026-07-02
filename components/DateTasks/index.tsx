@@ -35,8 +35,6 @@ export default function DateTasks({ tasks, day, onDayChange }: {
     const { updateCompleted, updateCompletion, replaceTask, removeTask } = useContext(TasksContext)
     const currentOccurrenceAndStep = useMemo(() => Tasks.getCurrentOccurrenceAndStep(tasks), [tasks])
     const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
     const [stopwatchSeconds, setStopwatchSeconds] = useState(0)
     const [stopwatchRunning, setStopwatchRunning] = useState(false)
     const allCompleted = tasks.every(task => task.steps.every(step => step.completed))
@@ -52,6 +50,7 @@ export default function DateTasks({ tasks, day, onDayChange }: {
     }, [currentOccurrenceAndStep, user])
     const today = useMemo(() => Utility.getDateKey(day) === Utility.getDateKey(new Date()), [day])
     const [mounted, setMounted] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
 
     useEffect(() => {
         setMounted(true)
@@ -76,11 +75,19 @@ export default function DateTasks({ tasks, day, onDayChange }: {
         setDeleteConfirmOpen(false)
         API.delete<{ task: Task }>(`/api/v1/tasks/${task.id}`, true).then(data => {
             removeTask(data.task)
-            setAlertMessage(`"${data.task.name}" Deleted Successfully!`)
-            setAlertOpen(true)
+            setAlert({
+                label: "Deleted",
+                icon: <CheckMarkIcon />,
+                message: data.task.name,
+                open: true
+            })
         }).catch(err => {
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -108,11 +115,19 @@ export default function DateTasks({ tasks, day, onDayChange }: {
             if ("completion" in data) {
                 updateCompletion(occurrence.task.id, step.id, data.completion)
             }
-            setAlertMessage(`"${step.name}" Marked Complete Successfully!`)
-            setAlertOpen(true)
+            setAlert({
+                label: "Marked Complete",
+                icon: <CheckMarkIcon />,
+                message: step.name,
+                open: true
+            })
         }).catch(err => {
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -338,11 +353,11 @@ export default function DateTasks({ tasks, day, onDayChange }: {
                 </>
             ) : null}
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
         </div>
     )

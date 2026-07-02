@@ -15,15 +15,14 @@ import LabelField from "@/components/LabelField"
 import Toggle from "@/components/Toggle"
 import API from "@/lib/API"
 import Loading from "@/components/Loading"
-import { WarningIcon } from "../Icons"
+import { CheckMarkIcon, WarningIcon } from "../Icons"
 
 export default function UpdateThemeForm() {
     const [theme, setTheme] = useState<Exclude<Theme, "system">>(Appearance.DEFAULT_THEME)
     const [cookies] = useCookies()
     const router = useRouter()
     const { user, setUser } = useContext(UserContext)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
     const [loading, setLoading] = useState(false)
     const [deviceSettings, setDeviceSettings] = useState(true)
 
@@ -44,13 +43,20 @@ export default function UpdateThemeForm() {
                 const newUser = { ...user! }
                 newUser.preferences.theme = data.theme
                 setUser(newUser)
-
-                setAlertMessage("Theme Saved Successfully")
-                setAlertOpen(true)
+                setAlert({
+                    label: "Updated",
+                    icon: <CheckMarkIcon />,
+                    message: "Theme Updated Successfully",
+                    open: true
+                })
             }).catch(err => {
                 setLoading(false)
-                setAlertMessage(err.message)
-                setAlertOpen(true)
+                setAlert({
+                    label: "Error",
+                    icon: <WarningIcon />,
+                    message: err.message,
+                    open: true
+                })
             })
         } else {
             router.push("/login")
@@ -72,11 +78,11 @@ export default function UpdateThemeForm() {
             </FieldFrame>
             <Loading loading={loading} />
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
         </Form>
     )

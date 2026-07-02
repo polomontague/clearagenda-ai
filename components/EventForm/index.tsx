@@ -51,8 +51,7 @@ export default function EventForm(props: EventFormProps) {
     const [notes, setNotes] = useState(DEFAULTS.notes)
     const [doneDisabled, setDoneDisabled] = useState(true)
     const [loading, setLoading] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertOpen, setAlertOpen] = useState(false)
+    const [alert, setAlert] = useState({ label: "", icon: <></>, message: "", open: false })
     const [open, setOpen] = useState<"once_starts_date" | "once_starts_time" | "repeating_starts" | undefined>(undefined)
 
     useEffect(() => {
@@ -96,8 +95,12 @@ export default function EventForm(props: EventFormProps) {
             props.onSuccess(data.event)
         }).catch(err => {
             setLoading(false)
-            setAlertMessage(err.message)
-            setAlertOpen(true)
+            setAlert({
+                label: "Error",
+                icon: <WarningIcon />,
+                message: err.message,
+                open: true
+            })
         })
     }
 
@@ -194,11 +197,11 @@ export default function EventForm(props: EventFormProps) {
             </Collapses>
             <Loading loading={loading} />
             <Alert
-                label="Error"
-                icon={<WarningIcon />}
-                message={alertMessage}
-                open={alertOpen}
-                onRequestClose={() => setAlertOpen(false)}
+                label={alert.label}
+                icon={alert.icon}
+                message={alert.message}
+                open={alert.open}
+                onRequestClose={() => setAlert({ ...alert, open: false })}
             />
             <DoneButton disabled={doneDisabled} />
         </Form>

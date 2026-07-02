@@ -3,6 +3,7 @@ import Spinner from "@/components/Spinner"
 import { MouseEvent, ReactElement } from "react"
 
 type ButtonProps = {
+    type?: "button" | "submit",
     narrow?: boolean,
     label: string,
     description?: string | ReactElement,
@@ -11,24 +12,24 @@ type ButtonProps = {
     onClick?: (event: MouseEvent) => void
 }
 
-const Button = (props: ButtonProps) => {
+const Button = ({ type = "submit", narrow = false, label, description, disabled = false, loading, onClick }: ButtonProps) => {
     return (
-        <div className={`${styles.background} ${props.narrow ? styles.narrow : styles.wide}`}>
+        <div className={`${styles.background} ${narrow ? styles.narrow : styles.wide}`}>
             <button
-                type="submit"
+                type={type}
                 className={styles.btn}
-                disabled={(props.disabled || props.loading) ? true : false}
-                onClick={props.onClick}
+                disabled={(disabled || loading) ? true : false}
+                onClick={onClick}
             >
-                {props.label}
-                {props.loading ? (
+                {label}
+                {loading ? (
                     <div className={styles.containerSpinner}>
                         <Spinner />
                     </div>
                 ) : null}
             </button>
-            {props.description ? (
-                <p className={styles.description}>{props.description}</p>
+            {description ? (
+                <p className={styles.description}>{description}</p>
             ) : null}
         </div>
     )
