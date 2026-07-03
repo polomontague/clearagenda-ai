@@ -6,7 +6,8 @@ import Utility from "@/lib/Utility"
 export type Block = {
     starts: Date,
     ends: Date,
-    label: string
+    label: string,
+    onClick: () => void
 }
 
 export type Point = {
@@ -93,17 +94,19 @@ export default function Timeline(props: TimelineProps) {
                         const height = getHeight(block.starts, block.ends)
                         const top = getTop(new Date(block.starts), props.date)
                         return (
-                            <div
+                            <button
                                 key={i}
+                                type="button"
                                 className={styles.block}
                                 style={{
                                     height: `${height}%`,
                                     top: `${top}%`
                                 }}
+                                onClick={() => block.onClick()}
                             >
                                 <h5 className={styles.label}>{block.label}</h5>
                                 <h6 className={styles.from}>{getFrom(block.starts, block.ends, props.date)}</h6>
-                            </div>
+                            </button>
                         )
                     })}
                     {props.points.map((point, i) => {

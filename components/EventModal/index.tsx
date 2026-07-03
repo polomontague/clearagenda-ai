@@ -34,12 +34,12 @@ export default function EventModal({ event, open, onRequestClose }: EventModalPr
                     <LabelField fieldset label="From">
                         <InnerValue label={Events.getFrom(event)} />
                     </LabelField>
-                    {event.notes ? (
-                        <Fieldset label="Notes">
-                            <ValueBox value={event.notes} />
-                        </Fieldset>
-                    ) : null}
                 </Fieldset>
+                {event.notes ? (
+                    <Fieldset label="Notes">
+                        <ValueBox fieldset value={event.notes} />
+                    </Fieldset>
+                ) : <></>}
             </FieldFrame>
         </Modal>
     )
