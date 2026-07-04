@@ -32,7 +32,7 @@ export default function occursOnLocalDate(repeat: Repeat, date: Date): boolean {
         if (diffYears < 0 || diffYears % repeat.interval !== 0) return false
         if (!repeat.months.includes(date.getMonth())) return false
         if (repeat.type === "day") {
-            return repeat.day === date.getDay()
+            return repeat.day === date.getDate()
         }
         if (repeat.type === "weekday") {
             const day = getLocalNthWeekdayOfMonth(date.getFullYear(), date.getMonth(), repeat.weekday, repeat.ordinal)
